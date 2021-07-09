@@ -1,0 +1,130 @@
+@font-face { font-family: 'Noto_Sans'; src: url(./Noto_Sans/NotoSansKR-Bold.otf); font-weight: 700 format('opentype'); }
+@font-face { font-family: 'Noto_Sans'; src: url(./Noto_Sans/NotoSansKR-Medium.otf); font-weight: 500 format('opentype'); }
+@font-face { font-family: 'Noto_Sans'; src: url(./Noto_Sans/NotoSansKR-Regular.otf); font-weight:normal format('opentype'); }
+
+.btn_one{
+    background-color: #9c31c6;
+    border-radius: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn_one_disible{
+    background-color: #c4c4c4;
+    border-radius: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 14px;
+    position: absolute;
+    font-weight: bold;
+}
+
+.btn_one_big{
+    background-color: #9c31c6;
+    border-radius: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn_one_big2{
+    background-color: #fff;
+    border:3px solid #9c31c6;
+    border-radius: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #9c31c6;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn_two{
+    background-color: #fff;
+    border-radius: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border:1px solid #9C31C6;
+    color: #9c31c6;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn_three{
+    background-color: #fff;
+    border-radius: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border:1px solid #e5e5e5;
+    color: #505050;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn_four{
+    background-color: #e5e5e5;
+    border-radius: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #505050;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+*{
+    box-sizing: border-box;
+    outline: none;
+    margin:0px;
+    padding:0px;
+    font-family: "Noto_Sans";
+    transition: 0.3s;
+}
+
+a{
+    text-decoration: none;
+    color:#505050;
+}
+
+input::placeholder{
+    color:#a5a5a5;
+}
+
+.ql-editor.ql-blank::before {
+    color: #a5a5a5;
+    content: attr(data-placeholder);
+    pointer-events: none;
+    left:16;
+    font-size: 14px;
+    position: absolute;
+  }
+
+  .ql-clipboard{
+      display: none;
+  }
+
+  strong{
+    color:#9C31C6;
+  }
+
+  .btn_up{
+      background-color: #9C31C6;
+  }
+  .btn_up:hover{
+    background-color: #9120BD;
+  }
+
