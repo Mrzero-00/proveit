@@ -6,19 +6,32 @@ import icon_nonChecked from '../../image/nonChecked.svg';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
+const convertURLtoFile = async (url) => {
+    const response = await fetch(url);
+    const data = await response.blob();
+    const ext = url.split(".").pop(); // url 구조에 맞게 수정할 것
+    const metadata = { type: `image/${ext}` };
+    return new File([data],JSON.parse(sessionStorage.getItem("googleProfile")).name, metadata);
+  };
+  
 
-const SignUp = ({})=>{
+const SignUp = ()=>{
 
     const [checkState1,setCheckeState1]=useState(false);
     const [checkState2,setCheckeState2]=useState(false);
     const [renderState,setRenderState] =useState(false);
     const [privacyWindow,setPrivacyWindow] =useState(false);
     const [termsOfServiceWindow,setTermsOfService] =useState(false);
-    const [currentImg,setCurrentImg] = useState("");
+    const [currentImg,setCurrentImg] = useState(JSON.parse(sessionStorage.getItem("googleProfile")).imageUrl);
     const [currentUserInfo,setCurrnetUserInfo] =useState({
-
+        thumbnail:"",
+        nick:"",
+        department:"",
+        position:"",
+        mailing:true,
     });
 
+    
     useEffect(()=>{
         if(currentUserInfo!==""){
             setRenderState(true);
@@ -327,7 +340,7 @@ const SignUp = ({})=>{
     const userInfoApi = async()=>{
         var data = new FormData();
         data.append('email', sessionStorage.getItem("email"));
-        data.append('hash', sessionStorage.getItem("hash"));
+        data.append('token', sessionStorage.getItem("token"));
         data.append('type', 'update');
         data.append('thumbnail', currentUserInfo.thumbnail);
         data.append('nick', currentUserInfo.nick===""?sessionStorage.getItem("userName"):currentUserInfo.nick);
@@ -342,7 +355,13 @@ const SignUp = ({})=>{
       
             }).then((e)=>{
                 if(e.data.ret_code === "0000"){
+                    sessionStorage.setItem("hash",e.data.user.hash);
                     sessionStorage.setItem("userInfo",JSON.stringify(e.data.user));
+                    const alink = document.createElement("a");
+                    alink.href ="/";
+                    setTimeout(() => {
+                        alink.click();       
+                    }, 100);
                 }else{
       
                 }
@@ -389,15 +408,15 @@ const SignUp = ({})=>{
             alignItems:"center",
             position: "relative",
             color:"#505050"}}>
-            <div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`,marginTop:'40px',marginBottom:'24px'}}></div>
+            <Link to="/"><div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`,marginTop:'40px',marginBottom:'24px'}}></div></Link>
             <div style={{fontSize:"16px",height:"16px",lineHeight:'16px',fontWeight:"bold"}}>회원가입</div>
             <div style={{width:"512px",marginTop:"40px"}}>
                 <div style={{fontSize:"20px",fontWeight:'bold',height:"20px",lineHeight:'20px',textAlign:"left",width:"100%",marginBottom:"24px"}}>반갑습니다</div>
                 <div style={{backgroundColor:"#fff",borderRadius:"2px",width:"100%",height:"166px",display:"flex",flexDirection:"column",paddingLeft:"24px"}}>
                     <div style={{height:"14px",fontSize:"14px",lineHeight:'14px',fontWeight:'bold',color:"#505050",marginTop:"24px",width:"380px",textAlign:"left"}}>이름</div>
-                    <div style={{width:"380px",fontSize:"13px",textAlign:"left",marginTop:"16px",color:"#a5a5a5"}}>{sessionStorage.getItem("userName")}</div>
+                    <div style={{width:"380px",fontSize:"13px",textAlign:"left",marginTop:"16px",color:"#a5a5a5"}}>{JSON.parse(sessionStorage.getItem("googleProfile")).name}</div>
                     <div style={{height:"14px",fontSize:"14px",lineHeight:'14px',marginTop:"24px",fontWeight:'bold',color:"#505050",width:"380px",textAlign:"left"}}>이메일</div>
-                    <div style={{width:"380px",fontSize:"13px",textAlign:"left",marginTop:"16px",color:"#a5a5a5"}}>{sessionStorage.getItem("email")}</div>
+                    <div style={{width:"380px",fontSize:"13px",textAlign:"left",marginTop:"16px",color:"#a5a5a5"}}>{JSON.parse(sessionStorage.getItem("googleProfile")).email}</div>
                 </div>
             </div>
             <div style={{marginTop:"40px",marginBottom:"24px"}}>
@@ -470,10 +489,9 @@ const SignUp = ({})=>{
 
             <div style={{width:"100%",display:"flex",justifyContent:"center",position:"relative"}}>
                 <div className="btn_one" style={{width:"104px",height:'32px',marginBottom:'24px'}}
-                onClick={(e)=>{userInfoApi();}}>시작하기→</div>
-                {(currentUserInfo.position===""||!checkState1)&&<div className="btn_one_disible" style={{width:"104px",height:'32px',top:"0px",position:'absolute'}}>시작하기→</div>}
+                onClick={(e)=>{userInfoApi();}}>가입 완료</div>
+                {(currentUserInfo.position===""||!checkState1)&&<div className="btn_one_disible" style={{width:"104px",height:'32px',top:"0px",position:'absolute'}}>가입 완료</div>}
             </div>
-            <Link to="/"><div style={{width:"368px",height:'13px',lineHeight:"13px",textAlign:"center",fontSize:'13px',color:"#a5a5a5",marginBottom:'77px',cursor:"pointer"}}>메인화면으로 돌아가기</div></Link>
             {(privacyWindow||termsOfServiceWindow)&&<div style={{width:"100%",height:"100%",position:'absolute',top:"0px",left:"0px",backgroundColor:"rgba(80,80,80,0.8)",display:"flex",flexDirection:"column",alignItems:"center",paddingTop:"80px"}} onClick={()=>{setPrivacyWindow(false);setTermsOfService(false)}}>
                 <div style={{width:"1040px",height:"80vh",backgroundColor:"#fff",overflow:"scroll",overflowX:"hidden"}}>
                     {privacyWindow&&<Privacy></Privacy>}

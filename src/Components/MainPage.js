@@ -38,18 +38,19 @@ const Header=({setModal,modal,setLoginWindow,setSignUpWindow})=>{
         top:0
       });
   }
+
   return(
       <>
         <div id="header" style={{width:"100%",height:"48px",backgroundColor:"#fff",display:"flex",justifyContent:"center",alignItems:"center",minHeight:"48px"}}>
             <div style={{width:"1040px",display:"flex",justifyContent:"space-between",alignItems:"center",position:"relative"}}>  
                     <Link to="/"><div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`}}></div></Link>
                     <div>
-                {sessionStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
+                {(sessionStorage.getItem("hash")===null||sessionStorage.getItem("hash")==="undefined")&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
                     <div style={{marginRight:"16px",fontSize:"14px",color:"#828282",cursor:"pointer"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
                     <div className="btn_one" style={{width:"72px",height:"32px"}} onClick={()=>{setLoginWindow(true);}}>로그인</div>
                     </div>
                 }
-                {sessionStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
+                {(sessionStorage.getItem("hash")!==null&&sessionStorage.getItem("hash")!=="undefined")&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
                     <Link to="/registerproduct"><div style={{marginRight:"16px",fontSize:"14px",color:"#505050",cursor:"pointer"}}>프로젝트 등록하기</div></Link>
                     <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:sessionStorage.getItem("userInfo")&&`url(${"http://www.proveit.co.kr/"+JSON.parse(sessionStorage.getItem("userInfo")).thumbnail})`
                     ,backgroundColor:"#c5c5c5",backgroundSize:"contain",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
@@ -64,12 +65,12 @@ const Header=({setModal,modal,setLoginWindow,setSignUpWindow})=>{
           <div style={{width:"1040px",display:"flex",justifyContent:"space-between",alignItems:"center",position:"relative"}}>  
                   <Link to="/"><div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`}}></div></Link>
                   <div>
-              {sessionStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
+              {(sessionStorage.getItem("hash")===null||sessionStorage.getItem("hash")==="undefined")&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
                   <div style={{marginRight:"16px",fontSize:"14px",color:"#828282",cursor:"pointer"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
                   <div className="btn_one" style={{width:"72px",height:"32px"}} onClick={()=>{setLoginWindow(true);}}>로그인</div>
                   </div>
               }
-              {sessionStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
+              {(sessionStorage.getItem("hash")!==null&&sessionStorage.getItem("hash")!=="undefined")&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
                   <Link to="/registerproduct"><div style={{marginRight:"16px",fontSize:"14px",color:"#505050",cursor:"pointer"}}>프로젝트 등록하기</div></Link>
                   <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:sessionStorage.getItem("userInfo")&&`url(${"http://www.proveit.co.kr/"+JSON.parse(sessionStorage.getItem("userInfo")).thumbnail})`
                   ,backgroundColor:"#c5c5c5",backgroundSize:"contain",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
@@ -87,14 +88,13 @@ const Header=({setModal,modal,setLoginWindow,setSignUpWindow})=>{
           </div>}
           </div>
       </div>
-        <div className="btn_up" style={{width:"40px",height:"40px",backgroundImage:`url(${icon_upBtn})`,position:"fixed",bottom:"84px",right:"80px",
-                    display:header!==47&&"none",cursor:"pointer",backgroundPosition:"center",backgroundRepeat:"no-repeat",
-
-                  }}
+        <div style={{width:"40px",height:"40px",backgroundImage:`url(${icon_upBtn})`,position:"fixed",bottom:"84px",right:"80px",
+                    display:header!==47&&"none",cursor:"pointer"}}
                     onClick={upEvt}></div>      
       </>
   )
 }
+
 
 const Body=()=>{
   const [renderState,setRenderState] = useState(true);
@@ -148,7 +148,7 @@ const Body=()=>{
           style={{width:"688px",height:"120px",display:"flex",alignItems:"center",backgroundColor:"#fff",position:"relative",cursor:"pointer",borderBottom:"1px solid #e5e5e5"}}
           onClick={(e)=>{e.stopPropagation();}}
         >
-          <div style={{width:"88px",marginLeft:"16px",height:"88px",marginRight:"16px",backgroundImage:`url(${item.thumbnail})`,backgroundColor:"#000",backgroundPosition:"center",backgroundSize:"cover"}}></div>
+          <div style={{width:"88px",marginLeft:"16px",height:"88px",marginRight:"16px",backgroundImage:`url(${item.thumbnail})`,backgroundPosition:"center",backgroundSize:"contain",backgroundRepeat:"no-repeat"}}></div>
           <div style={{width:"480px",textAlign:"left",marginRight:"24px"}}>
             <div style={{color:"#505050",height:"16px",fontWeight:"bold",fontSize:'16px',marginBottom:"12px",lineHeight:"16px"}}>{item.title}</div>
             <div style={{color:"#828282",height:"14px",fontSize:'13px',marginBottom:'16px',lineHeight:"14px"}}>{item.sub_title}</div>
@@ -294,7 +294,10 @@ const MainPage = ()=>{
   const [loginWindow,setLoginWindow] = useState(false);
   const [signupWindow,setSignUpWindow] = useState(false);
   const [modal,setModal] = useState(false);
+  const [reRendering,setReRendering] = useState(false);
 
+  
+  
   const submitGoogleData= async(name,id,token)=>{
     //유효성 검사
     //let crt = document.getElementById('crt');
@@ -317,7 +320,8 @@ const MainPage = ()=>{
                 window.sessionStorage.setItem("hash",e.data.hash);
                 window.sessionStorage.setItem("email",id);
                 window.sessionStorage.setItem("userName",name);
-                userInfoApi(id,e.data.hash);
+                setReRendering(true);
+                userInfoApi(id,token);
                 setSignUpWindow(false);
                 setLoginWindow(false);
 
@@ -338,14 +342,16 @@ const MainPage = ()=>{
   const responseGoogle = (response) => {
   const profileObj = response.profileObj;
   const tokenObj = response.tokenObj;
+  sessionStorage.setItem("googleProfile",JSON.stringify(response.profileObj));
+  sessionStorage.setItem("token",tokenObj.access_token);
   submitGoogleData(profileObj.givenName,profileObj.email,tokenObj.access_token);
   }
 
   
-  const userInfoApi = async(id,hash)=>{
+  const userInfoApi = async(id,token)=>{
     var data = new FormData();
     data.append('email', id);
-    data.append('hash', hash);
+    data.append('token', token);
     data.append('type', 'select');
     try{
         await axios({
@@ -369,6 +375,7 @@ const MainPage = ()=>{
   <div style={{width:"100%",display:"flex",flexDirection:"column"}}
   onClick={()=>{setModal(false)}}>
     <Header 
+    reRendering={reRendering}
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}
     setSignUpWindow={setSignUpWindow}

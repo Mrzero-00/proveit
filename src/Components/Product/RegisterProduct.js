@@ -88,6 +88,7 @@ const Header=({setModal,modal,setLoginWindow,setSignUpWindow})=>{
 
 const Body=()=>{
       const [pageNum,setPageNum] = useState(1);
+      const [dataState,setDataState] =useState(false);
       const [renderState,setRenderState] =useState(false); 
       const imgNum = useRef(0);
       const [productInfo,setProductInfo] =useState({
@@ -403,7 +404,6 @@ const Body=()=>{
     
             }).then((e)=>{
                 if(e.data.ret_code === "0000"){
-                    console.log(e);
                     if(id==="thumbnailImg"){
                         setProductInfo(
                             {
@@ -599,10 +599,32 @@ const Body=()=>{
                                                         comment:[{...productInfo,text:e}]})}} style={{width:"464px",position:"relative",height:"168px",textAlign:"left",border:"1px solid #e5e5e5",padding:"16px",overflow:"auto"}}></ReactQuill>
                                         </div>
                             </div>}
-                      <div style={{display:"flex",flexDirection:"row-reverse"}}>
-                          {pageNum!==3&&<div className="btn_one" style={{marginTop:"16px",width:"72px",height:"32px"}} onClick={(e)=>{setPageNum(pageNum+1);e.stopPropagation();}}>다음</div>}
-                          {pageNum===3&&<div className="btn_one" style={{marginTop:"16px",width:"96px",height:"32px"}} onClick={(e)=>{setRegisterState(true);e.stopPropagation();}}>등록하기</div>}
-                          {pageNum!==1&&<div className="btn_three" style={{marginTop:"16px",width:"72px",height:"32px",marginRight:"8px"}} onClick={(e)=>{setPageNum(pageNum-1);e.stopPropagation();}}>이전</div>}
+                      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",position:""}}>
+                          {!dataState&&<div style={{width:"10px"}}></div>}
+                          {dataState&&<div style={{color:'#EA4335',fontSize:"13px"}}>필수 항목을 빠짐없이 입력해 주세요.</div>}
+                          <div style={{display:"flex",flexDirection:"row-reverse"}}>
+                            {pageNum!==3&&<div className="btn_one" style={{marginTop:"16px",width:"72px",height:"32px"}} onClick={(e)=>{
+                                if(pageNum===1){
+                                    if(productInfo.link===""||productInfo.title===""||productInfo.subTitle===""||productInfo.category===""||productInfo.thumbnail===""){
+                                        setDataState(true);
+                                    }else{
+                                        setPageNum(pageNum+1);
+                                        setDataState(false);
+                                    }
+                                }else if(pageNum===2){
+                                    if(productInfo.image.length===0||productInfo.mainText===""){
+                                        setDataState(true);
+                                    }else{
+                                        setPageNum(pageNum+1);
+                                        setDataState(false);
+                                    }
+                                }
+                                
+                                e.stopPropagation();
+                                }}>다음</div>}
+                            {pageNum===3&&<div className="btn_one" style={{marginTop:"16px",width:"96px",height:"32px"}} onClick={(e)=>{setRegisterState(true);e.stopPropagation();}}>등록하기</div>}
+                            {pageNum!==1&&<div className="btn_three" style={{marginTop:"16px",width:"72px",height:"32px",marginRight:"8px"}} onClick={(e)=>{setPageNum(pageNum-1);e.stopPropagation();}}>이전</div>}
+                          </div>
                       </div>
 
                   </div>
@@ -618,11 +640,11 @@ const Body=()=>{
             onClick={(e)=>{setRegisterState(false);e.stopPropagation();}}>
                 <div style={{width:"336px",height:"235px",backgroundColor:"#fff",display:"flex",alignItems:"center",flexDirection:"column",marginTop:"179px"}}>
                     <div style={{fontSize:"14px",fontWeight:"bold",color:'#505050',marginBottom:"16px",marginTop:"32px"}}>프로젝트를 등록하시겠습니까?</div>
-                    <div style={{fontSize:"13px",color:'#505050',lineHeight:'23px',textAlign:"center"}}>
+                    {/* <div style={{fontSize:"13px",color:'#505050',lineHeight:'23px',textAlign:"center"}}>
                         프로젝트는<br/>
                         <span style={{color:"#9C31C6"}}>{registerDate.year}년 {registerDate.month}월 {registerDate.date}일 12:00</span>에<br/> 
                         오픈됩니다.
-                    </div>
+                    </div> */}
                     <div style={{display:"flex",marginTop:"24px"}}>
                         <div className="btn_two" style={{width:"120px",height:"40px",marginRight:"8px"}} onClick={(e)=>{setRegisterState(false);e.stopPropagation();}}>취소</div>
                         <div className="btn_one" style={{width:"120px",height:"40px"}} onClick={()=>{productRegisterApi();}}>예, 등록합니다</div>

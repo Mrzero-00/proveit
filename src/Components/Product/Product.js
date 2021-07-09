@@ -147,7 +147,7 @@ const Body = ({setModal,modal})=>{
         const [replyWindow,setReplyWindow] = useState(false);
         const [modifyState,setModifyState] = useState(false);
         const [listHover,setListHover] = useState(0);
-        
+
         const depthReplyApi = async()=>{
             var data = new FormData();
             data.append('parent_id', item.depth==="1"?item.parent_id:item.id);
@@ -363,7 +363,6 @@ const Body = ({setModal,modal})=>{
 
         }).then((e)=>{
             if(e.data.ret_code === "0000"){
-                console.log(e);
                 const data = e.data.product;
                 setProduct({
                     id:data.id,
@@ -446,7 +445,6 @@ const Body = ({setModal,modal})=>{
                 data:data
       
             }).then((e)=>{
-                console.log(e);
                 if(e.data.ret_code === "0000"){
                     setRerender(true);
                 }else{
@@ -644,6 +642,7 @@ const Product = ()=>{
             }).then((e)=>{
                 if(e.data.ret_code === "0000"){
                     window.sessionStorage.setItem("hash",e.data.hash);
+                    window.sessionStorage.setItem("token",token);
                     window.sessionStorage.setItem("email",id);
                     window.sessionStorage.setItem("userName",name);
                     userInfoApi(id,token);
@@ -667,6 +666,8 @@ const Product = ()=>{
     const responseGoogle = (response) => {
     const profileObj = response.profileObj;
     const tokenObj = response.tokenObj;
+    sessionStorage.setItem("googleProfile",JSON.stringify(response.profileObj));
+    sessionStorage.setItem("token",tokenObj.access_token);
     submitGoogleData(profileObj.givenName,profileObj.email,tokenObj.access_token);
     }
     

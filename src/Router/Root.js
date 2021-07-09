@@ -14,10 +14,10 @@ const Root = ()=>{
   <div style={{
     width:"100vw"}}>
       <Route exact path="/" component={MainPage}></Route>
-      <Route exact path="/signup" component={SignUp}></Route>
-      <Route exact path="/profile" component={Profile}></Route>
-      <Route exact path="/registerproduct" component={RegisterProduct}></Route>
-      <Route exact path="/modifyProduct" component={ModifyProduct}></Route>
+      {sessionStorage.getItem("googleProfile")!==null?<Route exact path="/signup" component={SignUp}></Route>:<Route exact path="/signup" component={MainPage}></Route>}
+      {sessionStorage.getItem("userInfo")!==null?<Route exact path="/profile" component={Profile}></Route>:<Route exact path="/profile" component={MainPage}></Route>}
+      {sessionStorage.getItem("userInfo")!==null?<Route exact path="/registerproduct" component={RegisterProduct}></Route>:<Route exact path="/registerproduct" component={MainPage}></Route>}
+      {sessionStorage.getItem("userInfo")!==null?<Route exact path="/modifyProduct" component={ModifyProduct}></Route>:<Route exact path="/modifyProduct" component={MainPage}></Route>}
       <Route exact path="/product" component={Product}></Route>
       <Route exact path="/guideline" component={HelpUs}></Route>
       <Route exact path="/tos" component={HelpUs}></Route>

@@ -306,7 +306,6 @@ const Body=()=>{
                 data:data
     
             }).then((e)=>{
-                console.log(e);
                 if(e.data.ret_code === "0000"){
                     const data = e.data.product;
                     setProductInfo({
@@ -356,7 +355,6 @@ const Body=()=>{
     
             }).then((e)=>{
                 if(e.data.ret_code === "0000"){
-                    console.log(e);
                     const alink = document.createElement("a");
                     alink.href="/profile";
                     alink.click();

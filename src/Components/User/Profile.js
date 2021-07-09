@@ -262,7 +262,7 @@ const Body =()=>{
     const userInfoGetApi = async()=>{
         var data = new FormData();
         data.append('email', sessionStorage.getItem("email"));
-        data.append('hash', sessionStorage.getItem("hash"));
+        data.append('token', sessionStorage.getItem("token"));
         data.append('type', 'select');
         try{
             await axios({
@@ -296,8 +296,11 @@ const Body =()=>{
                 data:data
       
             }).then((e)=>{
-                console.log(e);
                 if(e.data.ret_code === "0000"){
+                    sessionStorage.clear();
+                    const alink =document.createElement("a");
+                    alink.href="/";
+                    alink.click();
                 }else{
       
                 }
@@ -313,7 +316,6 @@ const Body =()=>{
     },[pageNum])
     
     const ProductRender =({item,type,index})=>{
-        console.log(type);
         return(
             <div style={{position:"relative"}}>
             {index<4&&<Link to={`/product?productnum=${item.id}`}><div id={item.id} 
@@ -366,9 +368,9 @@ const Body =()=>{
             </Link>}
             
             {(index<4&&type==="myProduct")&&<Link to={`/modifyproduct?productnum=${item.id}`}><div className="btn_one" style={{width:"64px",height:"32px",zIndex:"9999",top:"50%",left:"520px",transform:"translate(0,-50%)",position:"absolute"}}
-              onClick={(e)=>{console.log("수정");e.stopPropagation();}}>수정</div></Link>}
+              onClick={(e)=>{e.stopPropagation();}}>수정</div></Link>}
             {index===undefined&&<Link to={`/modifyproduct?productnum=${item.id}`}><div className="btn_one" style={{width:"64px",height:"32px",zIndex:"9999",top:"50%",left:"520px",transform:"translate(0,-50%)",position:"absolute"}}
-              onClick={(e)=>{console.log("수정");e.stopPropagation();}}>수정</div></Link>}
+              onClick={(e)=>{e.stopPropagation();}}>수정</div></Link>}
             </div>
         )
     }
@@ -518,11 +520,11 @@ const Body =()=>{
                                 </div>
                             </div>
                             <div style={{fontSize:"14px",fontWeight:"bold",color:'#505050',marginBottom:"10px"}}>닉네임</div>
-                            <input name="nick" style={styled.input} value={currentUserInfo.nick} onChange={inputLogic}></input>
+                            <input name="nick" style={styled.input} value={currentUserInfo.nick} placeholder="닉네임을 입력해주세요" onChange={inputLogic}></input>
                             <div style={{fontSize:"14px",fontWeight:"bold",color:'#505050',marginBottom:"10px"}}>직책/직군 - 필수</div>
-                            <input name="position" style={styled.input} value={currentUserInfo.position} onChange={inputLogic}></input>
+                            <input name="position" style={styled.input} placeholder="직책 및 직군을 입력해주세요" value={currentUserInfo.position} onChange={inputLogic}></input>
                             <div style={{fontSize:"14px",fontWeight:"bold",color:'#505050',marginBottom:"10px"}}>소속</div>
-                            <input name="department" style={styled.input} value={currentUserInfo.department} onChange={inputLogic}></input>
+                            <input name="department" style={styled.input} placeholder="소속을 입력해주세요" value={currentUserInfo.department} onChange={inputLogic}></input>
                         </div> 
                         <div style={{width:"512px",marginRight:"16px",backgroundColor:"#fff",padding:"24px 24px 32px 24px",marginBottom:"24px"}}>
                             <div style={{fontSize:"14px",fontWeight:"bold",color:'#505050',marginBottom:"18px"}}>뉴스레터 수신</div>
