@@ -221,9 +221,11 @@ const Body=()=>{
 
     useEffect(()=>{
       setDate();
+      console.log(item);
       setFastestArray(item.product);
     },[])
-
+    console.log(fastestArray);
+    console.log(popularArray);
     return(
       <div style={{marginBottom:"40px"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",width:"100%",marginBottom:"16px"}}>
@@ -258,7 +260,7 @@ const Body=()=>{
 
         }).then((e)=>{
             if(e.data.ret_code === "0000"){
-              setProject(e.data.product)
+              setProject(e.data.product);
             }else{
 
             }
@@ -294,7 +296,6 @@ const MainPage = ()=>{
   const [loginWindow,setLoginWindow] = useState(false);
   const [signupWindow,setSignUpWindow] = useState(false);
   const [modal,setModal] = useState(false);
-  const [reRendering,setReRendering] = useState(false);
 
   
   
@@ -320,7 +321,6 @@ const MainPage = ()=>{
                 window.sessionStorage.setItem("hash",e.data.hash);
                 window.sessionStorage.setItem("email",id);
                 window.sessionStorage.setItem("userName",name);
-                setReRendering(true);
                 userInfoApi(id,token);
                 setSignUpWindow(false);
                 setLoginWindow(false);
@@ -375,7 +375,6 @@ const MainPage = ()=>{
   <div style={{width:"100%",display:"flex",flexDirection:"column"}}
   onClick={()=>{setModal(false)}}>
     <Header 
-    reRendering={reRendering}
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}
     setSignUpWindow={setSignUpWindow}

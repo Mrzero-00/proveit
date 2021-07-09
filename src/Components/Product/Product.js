@@ -362,6 +362,7 @@ const Body = ({setModal,modal})=>{
             data:data
 
         }).then((e)=>{
+            console.log(e);
             if(e.data.ret_code === "0000"){
                 const data = e.data.product;
                 setProduct({
@@ -445,6 +446,7 @@ const Body = ({setModal,modal})=>{
                 data:data
       
             }).then((e)=>{
+                console.log(e);
                 if(e.data.ret_code === "0000"){
                     setRerender(true);
                 }else{
