@@ -11,7 +11,7 @@ const convertURLtoFile = async (url) => {
     const data = await response.blob();
     const ext = url.split(".").pop(); // url 구조에 맞게 수정할 것
     const metadata = { type: `image/${ext}` };
-    return new File([data],JSON.parse(sessionStorage.getItem("googleProfile")).name, metadata);
+    return new File([data],JSON.parse(localStorage.getItem("googleProfile")).name, metadata);
   };
   
 
@@ -22,7 +22,8 @@ const SignUp = ()=>{
     const [renderState,setRenderState] =useState(false);
     const [privacyWindow,setPrivacyWindow] =useState(false);
     const [termsOfServiceWindow,setTermsOfService] =useState(false);
-    const [currentImg,setCurrentImg] = useState(JSON.parse(sessionStorage.getItem("googleProfile")).imageUrl);
+    const [historyBack,setHistoryBack] =useState(false);
+    const [currentImg,setCurrentImg] = useState(JSON.parse(localStorage.getItem("googleProfile")).imageUrl);
     const [currentUserInfo,setCurrnetUserInfo] =useState({
         thumbnail:"",
         nick:"",
@@ -339,24 +340,24 @@ const SignUp = ()=>{
 
     const userInfoApi = async()=>{
         var data = new FormData();
-        data.append('email', sessionStorage.getItem("email"));
-        data.append('token', sessionStorage.getItem("token"));
+        data.append('email', localStorage.getItem("email"));
+        data.append('token', localStorage.getItem("token"));
         data.append('type', 'update');
         data.append('thumbnail', currentUserInfo.thumbnail);
-        data.append('nick', currentUserInfo.nick===""?sessionStorage.getItem("userName"):currentUserInfo.nick);
+        data.append('nick', currentUserInfo.nick===""?localStorage.getItem("userName"):currentUserInfo.nick);
         data.append('department', currentUserInfo.department);
         data.append('position', currentUserInfo.position);
         data.append('mailing', currentUserInfo.mailing);
         try{
             await axios({
                 method:"post",
-                url : "http://proveit.co.kr/api/user.php",
+                url : "https://www.proveit.co.kr/api/user.php",
                 data:data
       
             }).then((e)=>{
                 if(e.data.ret_code === "0000"){
-                    sessionStorage.setItem("hash",e.data.user.hash);
-                    sessionStorage.setItem("userInfo",JSON.stringify(e.data.user));
+                    localStorage.setItem("hash",e.data.user.hash);
+                    localStorage.setItem("userInfo",JSON.stringify(e.data.user));
                     const alink = document.createElement("a");
                     alink.href ="/";
                     setTimeout(() => {
@@ -398,6 +399,13 @@ const SignUp = ()=>{
         //input 내부 값 초기화
         e.target.value = "";
         }
+
+        window.history.pushState(null,"",window.location.href);
+
+        window.onpopstate = ()=>{
+            window.history.go(1);
+            setHistoryBack(true);
+        }
   return(
       <>
       {renderState&&
@@ -408,15 +416,21 @@ const SignUp = ()=>{
             alignItems:"center",
             position: "relative",
             color:"#505050"}}>
-            <Link to="/"><div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`,marginTop:'40px',marginBottom:'24px'}}></div></Link>
+            <div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`,marginTop:'40px',marginBottom:'24px',cursor:"pointer"}}
+            onClick={()=>{
+                localStorage.clear();
+                const alink = document.createElement("a");
+                alink.href = "/";
+                alink.click();
+            }}></div>
             <div style={{fontSize:"16px",height:"16px",lineHeight:'16px',fontWeight:"bold"}}>회원가입</div>
             <div style={{width:"512px",marginTop:"40px"}}>
                 <div style={{fontSize:"20px",fontWeight:'bold',height:"20px",lineHeight:'20px',textAlign:"left",width:"100%",marginBottom:"24px"}}>반갑습니다</div>
                 <div style={{backgroundColor:"#fff",borderRadius:"2px",width:"100%",height:"166px",display:"flex",flexDirection:"column",paddingLeft:"24px"}}>
                     <div style={{height:"14px",fontSize:"14px",lineHeight:'14px',fontWeight:'bold',color:"#505050",marginTop:"24px",width:"380px",textAlign:"left"}}>이름</div>
-                    <div style={{width:"380px",fontSize:"13px",textAlign:"left",marginTop:"16px",color:"#a5a5a5"}}>{JSON.parse(sessionStorage.getItem("googleProfile")).name}</div>
+                    <div style={{width:"380px",fontSize:"13px",textAlign:"left",marginTop:"16px",color:"#a5a5a5"}}>{JSON.parse(localStorage.getItem("googleProfile")).name}</div>
                     <div style={{height:"14px",fontSize:"14px",lineHeight:'14px',marginTop:"24px",fontWeight:'bold',color:"#505050",width:"380px",textAlign:"left"}}>이메일</div>
-                    <div style={{width:"380px",fontSize:"13px",textAlign:"left",marginTop:"16px",color:"#a5a5a5"}}>{JSON.parse(sessionStorage.getItem("googleProfile")).email}</div>
+                    <div style={{width:"380px",fontSize:"13px",textAlign:"left",marginTop:"16px",color:"#a5a5a5"}}>{JSON.parse(localStorage.getItem("googleProfile")).email}</div>
                 </div>
             </div>
             <div style={{marginTop:"40px",marginBottom:"24px"}}>
@@ -425,7 +439,7 @@ const SignUp = ()=>{
                     <div style={{height:"14px",fontSize:"14px",lineHeight:'14px',fontWeight:'bold',color:"#505050",marginTop:"24px",width:"380px",textAlign:"left"}}>프로필 이미지 변경</div>
                     <div style={{marginTop:"18px",display:"flex"}}>
                         <div style={{width:"80px",height:"80px",borderRadius:"50%",backgroundColor:"#c4c4c4",marginRight:"20px",
-                                    backgroundImage:`url(${currentImg})`,backgroundPosition:"center",backgroundRepeat:"no-repeat",backgroundSize:"contain"}}></div>
+                                    backgroundImage:`url(${currentImg})`,backgroundPosition:"center",backgroundRepeat:"no-repeat",backgroundSize:"cover"}}></div>
                         <div style={{width:"364px",textAlign:"left",fontSize:"13px",marginBottom:'24px'}}>
                             <form style={{display:"block"}}>
                                 <input type='file' id="thumbnailImg" style={{display:"none"}}  accept=".jpg,.jpeg,.png,.bmp" onChange={FileUploder}></input>
@@ -438,17 +452,17 @@ const SignUp = ()=>{
                     <div style={{textAlign:"left"}}>
                         <div style={{fontWeight:"bold",fontSize:'14px',height:'14px',lineHeight:"14px",marginBottom:"10px",textAlign:"left"}}>닉네임</div>
                         <input name="nick" placeholder="닉네임을 입력해주세요. 입력하지 않으면 구글 계정명으로 표시됩니다." value={currentUserInfo.nick} onChange={inputLogic}
-                        style={{width:"464px",height:"40px",lineHeight:'40px',color:"#a5a5a5",border:'1px solid #e5e5e5',borderRadius:"2px",paddingLeft:"12px"}}></input>
+                        style={{width:"464px",height:"40px",lineHeight:'40px',color:"#505050",border:'1px solid #e5e5e5',borderRadius:"2px",paddingLeft:"12px"}}></input>
                     </div> 
                     <div style={{textAlign:"left",marginTop:'16px'}}>
                         <div style={{fontWeight:"bold",fontSize:'14px',height:'14px',lineHeight:"14px",marginBottom:"10px",textAlign:"left"}}>직책/직군 - 필수 <span style={{color:"#f00"}}>*</span></div>
                         <input name="position" placeholder="CEO, 대표이사, 예비창업자, 디자이너, 개발자, 투자자등" value={currentUserInfo.position} onChange={inputLogic}
-                        style={{width:"464px",height:"40px",lineHeight:'40px',color:"#a5a5a5",border:'1px solid #e5e5e5',borderRadius:"2px",paddingLeft:"12px"}}></input>
+                        style={{width:"464px",height:"40px",lineHeight:'40px',color:"#505050",border:'1px solid #e5e5e5',borderRadius:"2px",paddingLeft:"12px"}}></input>
                     </div>  
                     <div style={{textAlign:"left",marginTop:'16px'}}>
                         <div style={{fontWeight:"bold",fontSize:'14px',height:'14px',lineHeight:"14px",marginBottom:"10px",textAlign:"left"}}>소속</div>
                         <input name="department" placeholder="소속을 알려주세요 - 회사명, 팀, 프리랜서 등" value={currentUserInfo.department} onChange={inputLogic}
-                        style={{width:"464px",height:"40px",lineHeight:'40px',color:"#a5a5a5",border:'1px solid #e5e5e5',borderRadius:"2px",paddingLeft:"12px"}}></input>
+                        style={{width:"464px",height:"40px",lineHeight:'40px',color:"#505050",border:'1px solid #e5e5e5',borderRadius:"2px",paddingLeft:"12px"}}></input>
                     </div>  
                     <div style={{display:"flex",marginTop:'24px'}}>
                         <div style={{width:"16px",height:'16px',marginRight:'8px',backgroundImage:checkState1?`url(${icon_checked})`:`url(${icon_nonChecked})`,cursor:"pointer"}}
@@ -497,8 +511,25 @@ const SignUp = ()=>{
                     {privacyWindow&&<Privacy></Privacy>}
                     {termsOfServiceWindow&&<TermsOfService></TermsOfService>}
                 </div>
-                <div style={{width:"1040px",textAlign:"right",color:"#fff",cursor:"pointer"}}>닫기</div>
+                <div style={{width:"1040px",textAlign:"right",color:"#fff",cursor:"pointer",fontSize:"14px"}}>닫기</div>
             </div>}
+            {historyBack&&<div style={{width:"100%",height:"100%",position:"absolute",display:"flex",justifyContent:"center",alignItems:"center",backgroundColor:"rgba(80,80,80,0.8)"}}
+            onClick={()=>{setHistoryBack(false);}}>
+                    <div style={{width:"336px",height:"184px",backgroundColor:"#fff",display:"flex",justifyContent:"center",alignItems:"center",flexDirection:"column"}}>
+                        <div style={{fontWeight:"bold",fontSize:"16px",marginBottom:"16px"}}>회원 가입 취소</div>
+                        <div style={{fontSize:"13px",marginBottom:"25px"}}>회원 가입을 취소하시겠습니까?</div>
+                        <div style={{display:"flex"}}>
+                            <div style={{width:"120px",height:"40px",marginRight:"8px"}} className="btn_two" onClick={(e)=>{e.stopPropagation();setHistoryBack(false);}}>계속 진행</div>
+                            <div style={{width:"120px",height:"40px"}} className="btn_one" onClick={(e)=>{
+                                e.stopPropagation();
+                                localStorage.clear();
+                                const alink = document.createElement("a");
+                                alink.href = "/";
+                                alink.click();
+                            }}>가입 취소</div>
+                        </div>
+                    </div>
+                </div>}
         </div>        
       }
       </>

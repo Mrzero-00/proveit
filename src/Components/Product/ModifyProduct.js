@@ -7,6 +7,7 @@ import icon_checked from '../../image/icon_checked.svg';
 import icon_dropBox from '../../image/icon_dropBox.svg';
 import icon_radioChecked from '../../image/icon_radioChecked.svg';
 import icon_radioUnChecked from '../../image/icon_radioUnChecked.svg';
+import icon_upBtn from '../../image/icon_upBtn.svg';
 import icon_noneimg from '../../image/icon_noneimg.svg';
 import icon_imgRemoveBtn from '../../image/icon_imgRemoveBtn.svg';
 import icon_likeBtn from '../../image/icon_likeBtn.svg';
@@ -14,7 +15,7 @@ import ReactQuill from 'react-quill';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const Header=({setModal,modal,setLoginWindow,setSignUpWindow})=>{
+const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpWindow})=>{
     const [hover,setHover] = useState(0);
     const [header,setHeader] = useState(0);
   
@@ -29,45 +30,54 @@ const Header=({setModal,modal,setLoginWindow,setSignUpWindow})=>{
                 setHeader(0);
             }
         })
-      }
-      useEffect(()=>{
-          upBtnMount();
-      },[])
+    }
+  
+    useEffect(()=>{
+        upBtnMount();
+    },[])
+  
+    const upEvt = ()=>{
+        window.scroll({
+          behavior:"smooth",
+          left:0,
+          top:0
+        });
+    }
     return(
         <>
-        <div id="header" style={{width:"100%",height:"48px",backgroundColor:"#fff",display:"flex",justifyContent:"center",alignItems:"center",minHeight:"48px"}}>
-            <div style={{width:"1040px",display:"flex",justifyContent:"space-between",alignItems:"center",position:"relative"}}>  
-                    <Link to="/"><div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`}}></div></Link>
-                    <div>
-                {sessionStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                    <div style={{marginRight:"16px",fontSize:"14px",color:"#828282",cursor:"pointer"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
-                    <div className="btn_one" style={{width:"72px",height:"32px"}} onClick={()=>{setLoginWindow(true);}}>로그인</div>
-                    </div>
-                }
-                {sessionStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                    <Link to="/registerproduct"><div style={{marginRight:"16px",fontSize:"14px",color:"#505050",cursor:"pointer"}}>프로젝트 등록하기</div></Link>
-                    <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:sessionStorage.getItem("userInfo")&&`url(${"http://www.proveit.co.kr/"+JSON.parse(sessionStorage.getItem("userInfo")).thumbnail})`
-                    ,backgroundColor:"#c5c5c5",backgroundSize:"contain",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
-                    </div>
-                }  
-            </div>
+          <div id="header" style={{width:"100%",height:"48px",backgroundColor:"#fff",display:"flex",justifyContent:"center",alignItems:"center",minHeight:"48px"}}>
+              <div style={{width:"1040px",display:"flex",justifyContent:"space-between",alignItems:"center",position:"relative"}}>  
+                      <Link to="/"><div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`}}></div></Link>
+                      <div>
+                  {localStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
+                      <div className="btn_textBtn" style={{marginRight:"16px"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
+                      <div className="btn_one" style={{width:"72px",height:"32px"}} onClick={()=>{setLoginWindow(true);}}>로그인</div>
+                      </div>
+                  }
+                  {localStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
+                      <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>내 서비스 등록하기</div></Link>
+                      <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
+                      ,backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
+                      </div>
+                  }  
+              </div>
   
-            </div>
-        </div>
-        <div id="header" style={{width:"100%",height:"48px",backgroundColor:"#fff",position:"fixed",top:"-48px",display:"flex",justifyContent:"center",alignItems:"center",minHeight:"48px",
+              </div>
+          </div>
+          {(!loginWindow&&!signupWindow)&&<div id="header" style={{width:"100%",height:"48px",backgroundColor:"#fff",position:"fixed",top:"-48px",display:"flex",justifyContent:"center",alignItems:"center",minHeight:"48px",
                                 transform:`translate(0,${header}px)`,transition:"0.3s",zIndex:"9999"}}>
             <div style={{width:"1040px",display:"flex",justifyContent:"space-between",alignItems:"center",position:"relative"}}>  
                     <Link to="/"><div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`}}></div></Link>
                     <div>
-                {sessionStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                    <div style={{marginRight:"16px",fontSize:"14px",color:"#828282",cursor:"pointer"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
+                {localStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
+                    <div className="btn_textBtn" style={{marginRight:"16px"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
                     <div className="btn_one" style={{width:"72px",height:"32px"}} onClick={()=>{setLoginWindow(true);}}>로그인</div>
                     </div>
                 }
-                {sessionStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                    <Link to="/registerproduct"><div style={{marginRight:"16px",fontSize:"14px",color:"#505050",cursor:"pointer"}}>프로젝트 등록하기</div></Link>
-                    <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:sessionStorage.getItem("userInfo")&&`url(${"http://www.proveit.co.kr/"+JSON.parse(sessionStorage.getItem("userInfo")).thumbnail})`
-                    ,backgroundColor:"#c5c5c5",backgroundSize:"contain",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
+                {localStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
+                    <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>내 서비스 등록하기</div></Link>
+                    <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
+                    ,backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
                     </div>
                 }  
             </div>
@@ -78,14 +88,22 @@ const Header=({setModal,modal,setLoginWindow,setSignUpWindow})=>{
             <div style={{width:"100%",height:"40px",cursor:"pointer",lineHeight:"40px",paddingLeft:"16px",fontSize:'14px',color:"#505050",backgroundColor:hover===2?"rgba(156, 49, 198, 0.1)":"#fff"}}
             onMouseOver={()=>{setHover(2)}}
             onMouseLeave={()=>{setHover(0)}}
-            onClick={()=>{sessionStorage.clear();}}>로그아웃</div>
+            onClick={()=>{
+                const alink = document.createElement("a");
+                alink.href="/";
+                localStorage.clear();
+                // alink.click();
+                }}>로그아웃</div>
             </div>}
             </div>
-        </div>
+        </div>}
+            <div className="btn_up" style={{width:"40px",height:"40px",backgroundImage:`url(${icon_upBtn})`,position:"fixed",bottom:"84px",right:"80px",backgroundRepeat:"no-repeat",backgroundPosition:"center",
+                display:header!==47&&"none",
+                cursor:"pointer"}}
+                onClick={upEvt}></div>   
         </>
     )
-}
-
+  }
 const Body=()=>{
       const [pageNum,setPageNum] = useState(1);
       const [renderState,setRenderState] =useState(false); 
@@ -129,11 +147,10 @@ const Body=()=>{
       const [imgHover,setImgHover] = useState(0);
       const styled={
         input:{
-            border:"1px solid #e5e5e5",
             width:"464px",
             height: "40px",
             padding:"13px 12px 14px 12px",
-            color:"#a5a5a5",
+            color:"#505050",
             borderRadius:"2px",
             backgroundColor:"#fff",
             fontSize:'13px'
@@ -143,7 +160,7 @@ const Body=()=>{
             width:"464px",
             height: "40px",
             padding:"0px 12px 0px 12px",
-            color:"#a5a5a5",
+            color:"#505050",
             borderRadius:"2px",
             backgroundColor:"#fff",
             textAlign:"left",
@@ -297,12 +314,12 @@ const Body=()=>{
     const productListApi = async()=>{
         var data = new FormData();
         data.append("product_id",window.location.search.substring(12));
-        data.append("user_email",sessionStorage.getItem("email"));
-        data.append("hash",sessionStorage.getItem("hash"));
+        data.append("user_email",localStorage.getItem("email"));
+        data.append("hash",localStorage.getItem("hash"));
         try{
             await axios({
                 method:"post",
-                url : "http://proveit.co.kr/api/productList.php",
+                url : "https://www.proveit.co.kr/api/productList.php",
                 data:data
     
             }).then((e)=>{
@@ -322,7 +339,6 @@ const Body=()=>{
                         thumbnail:data.thumbnail,
                         like_m:data.like_m,
                     });
-                    setRenderState(true);
                 }
             })
         }catch{
@@ -343,14 +359,14 @@ const Body=()=>{
         data.append('link', productInfo.link);
         data.append('thumbnail', productInfo.thumbnail);
         data.append('youtube', productInfo.youtube);
-        data.append('user_email', sessionStorage.getItem("email"));
-        data.append('user_name',sessionStorage.getItem("userName"));
-        data.append('hash', sessionStorage.getItem("hash"));
+        data.append('user_email', localStorage.getItem("email"));
+        data.append('user_name',localStorage.getItem("userName"));
+        data.append('hash', localStorage.getItem("hash"));
         data.append('product_id', window.location.search.substring(12));
         try{
             await axios({
                 method:"post",
-                url : "http://proveit.co.kr/api/productRegister.php",
+                url : "https://www.proveit.co.kr/api/productRegister.php",
                 data:data
     
             }).then((e)=>{
@@ -373,7 +389,7 @@ const Body=()=>{
         try{
             await axios({
                 method:"post",
-                url : "http://proveit.co.kr/api/imgUpload.php",
+                url : "https://www.proveit.co.kr/api/imgUpload.php",
                 data:data
     
             }).then((e)=>{
@@ -382,23 +398,25 @@ const Body=()=>{
                         setProductInfo(
                             {
                                 ...productInfo,
-                                thumbnail:`http://proveit.co.kr/${e.data.img}`
+                                thumbnail:`https://www.proveit.co.kr/${e.data.img}`
                             }
                         )
                     }else{
-                        setProductInfo(
-                            {
-                                ...productInfo,
-                                image:[
-                                    ...productInfo.image,
-                                    {
-                                        id:productInfo.image.length,
-                                        imageUrl:`http://proveit.co.kr/${e.data.img}`
-                                    }
-
-                                ]
-                            }
-                        )
+                        if(productInfo.image.length!==6){
+                            setProductInfo(
+                                {
+                                    ...productInfo,
+                                    image:[
+                                        ...productInfo.image,
+                                        {
+                                            id:productInfo.image.length,
+                                            imageUrl:"https://www.proveit.co.kr"+e.data.img
+                                        }
+    
+                                    ]
+                                }
+                            )
+                        }
                     }
                 }else{
                 }
@@ -458,9 +476,18 @@ const Body=()=>{
                 )}}></div>}
             </div>)
     }
+  
     useEffect(()=>{
-        productListApi();
-      },[])
+        if(JSON.parse(localStorage.getItem("userInfo"))){
+            productListApi();
+            setRenderState(true);
+        }else{
+            const alink = document.createElement("a");
+            alink.href = "/";
+            alink.click();
+        }
+
+        },[])
 
       return(
           <>
@@ -525,11 +552,14 @@ const Body=()=>{
                       {pageNum===2&&<div style={{width:"100%",padding:"24px 24px 32px 24px",backgroundColor:"#fff"}}>
                             <div style={{marginBottom:"16px"}}>
                                             <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>대표 이미지<span style={{color:"#f00"}}>*</span></div>
-                                            <form style={{display:"block"}}>
-                                                        <input type='file' id="productImg" style={{display:"none"}}  accept=".jpg,.jpeg,.png,.bmp" onChange={FileUploder}></input>
-                                                        <label for="productImg" className="btn_three" style={{width:"120px",height:"40px"}}>이미지 등록
-                                                        </label>
-                                            </form>
+                                            <div style={{display:"flex",alignItems:"center"}}>
+                                                <form style={{display:"block"}}>
+                                                            <input type='file' id="productImg" style={{display:"none"}}  accept=".jpg,.jpeg,.png,.bmp" onChange={FileUploder}></input>
+                                                            <label for="productImg" className="btn_three" style={{width:"120px",height:"40px"}}>이미지 등록
+                                                            </label>
+                                                </form>
+                                                <div style={{marginLeft:"16px",fontSize:'13px',color:"#a5a5a5"}}>{`최대 6장 등록 가능(${productInfo.image.length}/6)`}</div>
+                                            </div>
                                         </div>
                                         <div style={{marginBottom:"16px",display:"flex"}}>
                                             {productInfo.image.length!==0&&productInfo.image.map((item)=>(<ProductImgRender 
@@ -558,8 +588,9 @@ const Body=()=>{
                                         <div style={{marginBottom:"33px",fontSize:"13px",lineHeight:"13px",height:'13px',color:"#a5a5a5"}}>추천 사이즈 : 1280*720 (16:9) jpg, png, gif, 최대 파일크기 각 2MB, 최소 1장 필수</div>
                                         <div style={{marginBottom:"16px"}}>
                                             <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>서비스 설명<span style={{color:"#f00"}}>*</span></div>
-                                            <ReactQuill value={productInfo.main_text}  placeholder="내용을 입력해주세요. 공백 포함 280자까지 입력할 수 있습니다."
-                                             theme="" onChange={(e)=>{setProductInfo({...productInfo,main_text:e})}} style={{width:"464px",position:"relative",height:"168px",textAlign:"left",border:"1px solid #e5e5e5",padding:"16px",overflow:"auto"}}></ReactQuill>
+                                            <ReactQuill className="quillInput" value={productInfo.main_text}  placeholder="내용을 입력해주세요. 공백 포함 280자까지 입력할 수 있습니다."
+                                             onFocus={(e)=>{console.log(e)}}
+                                             theme="" onChange={(e)=>{setProductInfo({...productInfo,main_text:e})}} style={{width:"464px",position:"relative",height:"168px",textAlign:"left",padding:"16px",overflow:"auto"}}></ReactQuill>
                                         </div>     
                                         <div style={{marginBottom:"16px"}}>
                                             <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>유튜브 동영상 링크</div>
@@ -582,16 +613,11 @@ const Body=()=>{
           </div>}
           {registerState&&<div style={{width:"100%",height:"100%",position:"absolute",backgroundColor:"rgba(80,80,80,0.4)",display:"flex",justifyContent:"center"}}
             onClick={(e)=>{setRegisterState(false);e.stopPropagation();}}>
-                <div style={{width:"336px",height:"235px",backgroundColor:"#fff",display:"flex",alignItems:"center",flexDirection:"column",marginTop:"179px"}}>
-                    <div style={{fontSize:"14px",fontWeight:"bold",color:'#505050',marginBottom:"16px",marginTop:"32px"}}>프로젝트를 등록하시겠습니까?</div>
-                    <div style={{fontSize:"13px",color:'#505050',lineHeight:'23px',textAlign:"center"}}>
-                        프로젝트는<br/>
-                        <span style={{color:"#9C31C6"}}>{registerDate.year}년 {registerDate.month}월 {registerDate.date}일 12:00</span>에<br/> 
-                        오픈됩니다.
-                    </div>
+                <div style={{width:"336px",height:"144px",backgroundColor:"#fff",display:"flex",alignItems:"center",flexDirection:"column",marginTop:"179px"}}>
+                    <div style={{fontSize:"14px",fontWeight:"bold",color:'#505050',marginTop:"32px"}}>프로젝트를 수정하시겠습니까?</div>
                     <div style={{display:"flex",marginTop:"24px"}}>
                         <div className="btn_two" style={{width:"120px",height:"40px",marginRight:"8px"}} onClick={(e)=>{setRegisterState(false);e.stopPropagation();}}>취소</div>
-                        <div className="btn_one" style={{width:"120px",height:"40px"}} onClick={()=>{productRegisterApi();}}>예, 등록합니다</div>
+                        <div className="btn_one" style={{width:"120px",height:"40px"}} onClick={()=>{productRegisterApi();}}>예, 수정합니다</div>
                     </div>
                 </div>
             </div>}

@@ -14,6 +14,10 @@
     cursor: pointer;
 }
 
+.btn_one:hover{
+    background-color:#9120BD;
+}
+
 .btn_one_disible{
     background-color: #c4c4c4;
     border-radius: 2px;
@@ -36,6 +40,10 @@
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
+}
+
+.btn_one_big:hover{
+    background-color:#9120BD;
 }
 
 .btn_one_big2{
@@ -63,6 +71,7 @@
     cursor: pointer;
 }
 
+
 .btn_three{
     background-color: #fff;
     border-radius: 2px;
@@ -86,13 +95,37 @@
     cursor: pointer;
 }
 
+.btn_textBtn{
+    font-size:14px;
+    color:#505050;
+    cursor:pointer;
+    line-height: 14px;
+    height:14px;
+}
+
+.btn_textBtn13{
+    font-size:13px;
+    color:#505050;
+    cursor:pointer;
+    line-height: 13px;
+    height:13px;
+}
+.btn_textBtn13:hover{
+    color: #9C31C6;
+}
+
+
+.btn_textBtn:hover{
+    color: #9C31C6;
+  }
+
 *{
     box-sizing: border-box;
     outline: none;
     margin:0px;
     padding:0px;
     font-family: "Noto_Sans";
-    transition: 0.3s;
+    transition: 0.2s;
 }
 
 a{
@@ -102,6 +135,25 @@ a{
 
 input::placeholder{
     color:#a5a5a5;
+}
+
+input{
+    border: 1px solid #e5e5e5;
+}
+
+input:hover{
+    border: 1px solid rgba(156,49,198,0.3);
+}
+
+.quillInput{
+    border:1px solid #e5e5e5;
+}
+.quillInput:hover{
+    border: 1px solid rgba(156,49,198,0.3);
+}
+
+.quillInput::selection{
+    border: 1px solid rgba(156,49,198,0.3);
 }
 
 .ql-editor.ql-blank::before {

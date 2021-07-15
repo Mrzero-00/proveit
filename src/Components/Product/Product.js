@@ -1,17 +1,26 @@
 import React, { useEffect, useState } from 'react';
-
 import icon_logo from '../../image/logo.svg';
 import icon_commentModify from '../../image/icon_commentModify.png';
-import icon_likeBtn from '../../image/icon_likeBtn.svg';
+import icon_like_off from '../../image/icon_like_off.svg';
+import icon_like_on from '../../image/icon_like_on.svg';
 import icon_upBtn from '../../image/icon_upBtn.svg';
+import icon_upBtn_black from '../../image/icon_upBtn_black.svg';
+import icon_facebook from '../../image/icon_facebook.svg';
+import icon_kakao from '../../image/icon_kakao.svg';
+import icon_link from '../../image/icon_link.svg';
+import icon_twitter from '../../image/icon_twitter.svg';
+import icon_bigImg_off from '../../image/icon_bigImg_off.svg';
 import googleLogin from '../../image/googleLogin.svg';
 import googleSign from '../../image/googleSign.svg';
 import ReactQuill from 'react-quill';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+/*global Kakao*/
 import GoogleLogin from 'react-google-login';
 
-const Header=({setModal,modal,setLoginWindow,setSignUpWindow})=>{
+
+
+const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpWindow})=>{
     const [hover,setHover] = useState(0);
     const [header,setHeader] = useState(0);
   
@@ -45,35 +54,35 @@ const Header=({setModal,modal,setLoginWindow,setSignUpWindow})=>{
               <div style={{width:"1040px",display:"flex",justifyContent:"space-between",alignItems:"center",position:"relative"}}>  
                       <Link to="/"><div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`}}></div></Link>
                       <div>
-                  {sessionStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                      <div style={{marginRight:"16px",fontSize:"14px",color:"#828282",cursor:"pointer"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
+                  {localStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
+                      <div className="btn_textBtn" style={{marginRight:"16px"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
                       <div className="btn_one" style={{width:"72px",height:"32px"}} onClick={()=>{setLoginWindow(true);}}>로그인</div>
                       </div>
                   }
-                  {sessionStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                      <Link to="/registerproduct"><div style={{marginRight:"16px",fontSize:"14px",color:"#505050",cursor:"pointer"}}>프로젝트 등록하기</div></Link>
-                      <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:sessionStorage.getItem("userInfo")&&`url(${"http://www.proveit.co.kr/"+JSON.parse(sessionStorage.getItem("userInfo")).thumbnail})`
-                      ,backgroundColor:"#c5c5c5",backgroundSize:"contain",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
+                  {localStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
+                      <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>내 서비스 등록하기</div></Link>
+                      <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
+                      ,backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
                       </div>
                   }  
               </div>
   
               </div>
           </div>
-          <div id="header" style={{width:"100%",height:"48px",backgroundColor:"#fff",position:"fixed",top:"-48px",display:"flex",justifyContent:"center",alignItems:"center",minHeight:"48px",
+          {(!loginWindow&&!signupWindow)&&<div id="header" style={{width:"100%",height:"48px",backgroundColor:"#fff",position:"fixed",top:"-48px",display:"flex",justifyContent:"center",alignItems:"center",minHeight:"48px",
                                 transform:`translate(0,${header}px)`,transition:"0.3s",zIndex:"9999"}}>
             <div style={{width:"1040px",display:"flex",justifyContent:"space-between",alignItems:"center",position:"relative"}}>  
                     <Link to="/"><div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`}}></div></Link>
                     <div>
-                {sessionStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                    <div style={{marginRight:"16px",fontSize:"14px",color:"#828282",cursor:"pointer"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
+                {localStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
+                    <div className="btn_textBtn" style={{marginRight:"16px"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
                     <div className="btn_one" style={{width:"72px",height:"32px"}} onClick={()=>{setLoginWindow(true);}}>로그인</div>
                     </div>
                 }
-                {sessionStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                    <Link to="/registerproduct"><div style={{marginRight:"16px",fontSize:"14px",color:"#505050",cursor:"pointer"}}>프로젝트 등록하기</div></Link>
-                    <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:sessionStorage.getItem("userInfo")&&`url(${"http://www.proveit.co.kr/"+JSON.parse(sessionStorage.getItem("userInfo")).thumbnail})`
-                    ,backgroundColor:"#c5c5c5",backgroundSize:"contain",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
+                {localStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
+                    <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>내 서비스 등록하기</div></Link>
+                    <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
+                    ,backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
                     </div>
                 }  
             </div>
@@ -84,23 +93,30 @@ const Header=({setModal,modal,setLoginWindow,setSignUpWindow})=>{
             <div style={{width:"100%",height:"40px",cursor:"pointer",lineHeight:"40px",paddingLeft:"16px",fontSize:'14px',color:"#505050",backgroundColor:hover===2?"rgba(156, 49, 198, 0.1)":"#fff"}}
             onMouseOver={()=>{setHover(2)}}
             onMouseLeave={()=>{setHover(0)}}
-            onClick={()=>{sessionStorage.clear();}}>로그아웃</div>
+            onClick={()=>{
+                const alink = document.createElement("a");
+                alink.href="/";
+                localStorage.clear();
+                // alink.click();
+                }}>로그아웃</div>
             </div>}
             </div>
-        </div>
-          <div style={{width:"40px",height:"40px",backgroundImage:`url(${icon_upBtn})`,position:"fixed",bottom:"84px",right:"80px",
-                      display:header!==47&&"none",cursor:"pointer"}}
-                      onClick={upEvt}></div>      
+        </div>}
+            <div className="btn_up" style={{width:"40px",height:"40px",backgroundImage:`url(${icon_upBtn})`,position:"fixed",bottom:"84px",right:"80px",backgroundRepeat:"no-repeat",backgroundPosition:"center",
+                display:header!==47&&"none",
+                cursor:"pointer"}}
+                onClick={upEvt}></div>   
         </>
     )
-}
+  }
 
-const Body = ({setModal,modal})=>{
+const Body = ({setModal,modal,setLoginWindow})=>{
 
     const [renderState,setRenderState] = useState(false);
     const [replyList,setReplyList] = useState([]);
     const [currentComment,setCurrentComment] = useState("");
     const [rerender,setRerender] =useState(false);
+    const [copyState,setCopyState] =useState(false);
     const [product,setProduct] =useState({
         id:0,
         producerInfo:{
@@ -126,14 +142,18 @@ const Body = ({setModal,modal})=>{
         link:"",
         thumbnail:"",
     })
-
+    const [btnOnOff,setBtnOnOff] = useState(false);
+    const [bigImgWindow,setBigImgWindow] = useState(false);
     const [imgNum,setImgNum] =useState(0);
+    const [replyState,setReplyState] = useState(true);
 
-    const ImageArray =({item,setImgNum})=>{
+    const ImageArray =({item,imgNum,setImgNum})=>{
         return(
             <div style={{width:"40px",height:"40px",marginRight:"8px",backgroundImage:`url(${item.imageUrl})`,cursor:"pointer",
-            backgroundSize:"contain",backgroundRepeat:"no-repeat",backgroundPosition:"center"}}
-            onClick={()=>{setImgNum(item.id)}}>      
+            backgroundSize:"cover",backgroundRepeat:"no-repeat",backgroundPosition:"center",
+            border:imgNum===item.id ? "1px solid #e5e5e5": "1px solid transparent"}}
+            onMouseOver={()=>{setImgNum(item.id)}}
+            >      
             </div>
         )
     }
@@ -143,7 +163,7 @@ const Body = ({setModal,modal})=>{
         const [hover,setHover] =useState(0);
         const [modal,setModal] = useState(false);
         const [replyText,setReplyText] =useState(`<p><div style="display:inline-block;">@${item.nick}</div></br></p>`);
-        const [modifyText,setModifyText] = useState("");
+        const [modifyText,setModifyText] = useState(item.reply);
         const [replyWindow,setReplyWindow] = useState(false);
         const [modifyState,setModifyState] = useState(false);
         const [listHover,setListHover] = useState(0);
@@ -152,18 +172,19 @@ const Body = ({setModal,modal})=>{
             var data = new FormData();
             data.append('parent_id', item.depth==="1"?item.parent_id:item.id);
             data.append('reply', replyText);
-            data.append('user_email',sessionStorage.getItem("email"));
-            data.append('nick',JSON.parse(sessionStorage.getItem("userInfo")).nick);
-            data.append('hash', sessionStorage.getItem("hash"));
+            data.append('user_email',localStorage.getItem("email"));
+            data.append('nick',JSON.parse(localStorage.getItem("userInfo")).nick);
+            data.append('hash', localStorage.getItem("hash"));
             data.append("product_id",window.location.search.substring(12));
             try{
                 await axios({
                     method:"post",
-                    url : "http://proveit.co.kr/api/replySubmit.php",
+                    url : "https://www.proveit.co.kr/api/replySubmit.php",
                     data:data
           
                 }).then((e)=>{
                     if(e.data.ret_code === "0000"){
+                        localStorage.setItem("replyId",e.data.reply_id);
                         setRerender(true);
                     }else{
           
@@ -178,23 +199,22 @@ const Body = ({setModal,modal})=>{
             var data = new FormData();
             data.append('parent_id', item.depth==="1"?item.parent_id:item.id);
             data.append('reply', modifyText);
-            data.append('user_email',sessionStorage.getItem("email"));
+            data.append('user_email',localStorage.getItem("email"));
             data.append("reply_id",item.id);
-            data.append('nick',JSON.parse(sessionStorage.getItem("userInfo")).nick);
-            data.append('hash', sessionStorage.getItem("hash"));
+            data.append('nick',JSON.parse(localStorage.getItem("userInfo")).nick);
+            data.append('hash', localStorage.getItem("hash"));
             data.append("product_id",window.location.search.substring(12));
             data.append("type","update");
             try{
                 await axios({
                     method:"post",
-                    url : "http://proveit.co.kr/api/replySubmit.php",
+                    url : "https://www.proveit.co.kr/api/replySubmit.php",
                     data:data
           
                 }).then((e)=>{
                     if(e.data.ret_code === "0000"){
                         setRerender(true);
                     }else{
-          
                     }
                 })
             }catch{
@@ -206,16 +226,16 @@ const Body = ({setModal,modal})=>{
             var data = new FormData();
             data.append('parent_id', item.depth==="1"?item.parent_id:item.id);
             data.append('reply', replyText);
-            data.append('user_email',sessionStorage.getItem("email"));
+            data.append('user_email',localStorage.getItem("email"));
             data.append("reply_id",item.id);
-            data.append('nick',JSON.parse(sessionStorage.getItem("userInfo")).nick);
-            data.append('hash', sessionStorage.getItem("hash"));
+            data.append('nick',JSON.parse(localStorage.getItem("userInfo")).nick);
+            data.append('hash', localStorage.getItem("hash"));
             data.append("product_id",window.location.search.substring(12));
             data.append("type","delete");
             try{
                 await axios({
                     method:"post",
-                    url : "http://proveit.co.kr/api/replySubmit.php",
+                    url : "https://www.proveit.co.kr/api/replySubmit.php",
                     data:data
           
                 }).then((e)=>{
@@ -230,19 +250,21 @@ const Body = ({setModal,modal})=>{
             }
         }
 
-        useEffect(()=>{
-            setModifyText(item.reply);
-        },[])
+        // useEffect(()=>{
+        //     setModifyText(item.reply);
+        // },[])
+
 
         return(
-            <div style={{
+            <div id={item.id} style={{
                 width:item.depth==="0"?"616px":"520px",
                 display:"flex",
-                position:"relative"
-                ,marginBottom:"28px",
+                position:"relative",
+                height: "100%",
+                marginBottom:"28px",
                 marginLeft:item.depth==="1"&&"56px"
-                }} id={item.id}>
-                <div style={{
+                }}>
+                <Link to={item.user_email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${item.user_email}`}><div style={{
                     width:"40px",
                     height:"40px",
                     minHeight:"40px",
@@ -250,18 +272,20 @@ const Body = ({setModal,modal})=>{
                     borderRadius:"50%",
                     marginRight:'16px',
                     backgroundColor:"#c4c4c4",
-                    backgroundImage:`url(${"http://www.proveit.co.kr"+item.thumbnail})`,
-                    backgroundSize:"contain",
+                    backgroundImage:`url(${"https://www.proveit.co.kr/"+item.thumbnail})`,
+                    backgroundSize:"cover",
                     backgroundPosition:"center",
                     backgroundRepeat:"no-repeat"
-                    }}>
+                    }}
+                    >
                 </div>
+                </Link>
                 <div>
                     <div style={{display:"flex"}}>
-                        <div style={{fontWeight:"bold",marginBottom:'8px',height:"14px",lineHeight:"14px",marginRight:"4px"}}>{item.nick}</div>
+                    <Link to={item.user_email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${item.user_email}`}><div style={{fontWeight:"bold",marginBottom:'8px',height:"14px",lineHeight:"14px",marginRight:"4px",fontSize:'14px',color:"#505050"}}>{item.nick}</div></Link>
                         {item.user_email ===product.produce_info.email&&<div style={{color:'#9c31c6',lineHeight:"16px",height:"16px",fontSize:'10px',textAlign:"center",width:"48px",borderRadius:"8px",backgroundColor:"#f1f1f1"}}>제작자</div>}
                     </div>
-                    <div style={{color:"#a5a5a5",marginBottom:'16px',height:"14px",lineHeight:"14px"}}>{item.position}</div>
+                    <div style={{color:"#a5a5a5",marginBottom:'16px',height:"14px",lineHeight:"14px",fontSize:'14px'}}>{item.position}</div>
                     {!modifyState&&<div style={{width:"100%",position:"relative",marginBottom:"16px"}}>
                        <ReactQuill theme=""
                         value={item.reply} style={{textAlign:"left",color:"#505050",fontSize:'14px',width:"100%"}}
@@ -269,14 +293,13 @@ const Body = ({setModal,modal})=>{
                         <div style={{width:"100%",height:"100%",position:'absolute',top:0,left:0}}></div>
                     </div>}
                     {modifyState&&<div style={{width:"100%",display:"flex",marginBottom:"16px"}}>
-                       <ReactQuill theme=""
+                       <ReactQuill className="quillInput" theme=""
                         value={modifyText} style={{
                             textAlign:"left",
                             color:"#505050",
                             fontSize:'14px',
                             width:"474px",
                             minHeight:"84px",
-                            border:"1px solid rgba(156,49,198,0.3)",
                             borderRadius:"2px",
                             marginRight:"8px",
                             padding:"16px"}}
@@ -290,8 +313,8 @@ const Body = ({setModal,modal})=>{
                     </div>}
                     {!modifyState&&<div style={{display:"flex",height:"32px"}}>
                         <div style={{width:"42px",cursor:"pointer",height:"100%",marginRight:"8px",
-                        backgroundColor:listHover===1&&"#f1f1f1",
-                        textAlign:"center",lineHeight:"32px"}}
+                        backgroundColor:listHover===1&&"#f1f1f1",color:"#a5a5a5",
+                        textAlign:"center",lineHeight:"32px",fontSize:'14px'}}
                         onMouseLeave={()=>{setListHover(0)}}
                         onMouseOver={()=>{setListHover(1)}}
                         onClick={()=>{setReplyWindow(!replyWindow);}}>답글</div>
@@ -299,7 +322,7 @@ const Body = ({setModal,modal})=>{
                             <div style={{width:"14px",height:"14px",backgroundImage:`url(${icon_likeBtn})`,marginRight:"4px",backgroundPosition:"center",backgroundSize:"100% 100%"}}></div>
                             <div>추천({item.like_count})</div>
                         </div> */}
-                        {item.user_email===sessionStorage.getItem("email")&& <div style={{width:"32px",cursor:"pointer",height:"100%",marginRight:"8px",
+                        {item.user_email===localStorage.getItem("email")&& <div style={{width:"32px",cursor:"pointer",height:"100%",marginRight:"8px",
                         backgroundPosition:"center",backgroundRepeat:"no-repeat",
                         backgroundColor:listHover===2&&"#f1f1f1",textAlign:"center",position:"relative",lineHeight:"32px",backgroundImage:`url(${icon_commentModify})`}}
                         onMouseLeave={()=>{setListHover(0)}}
@@ -319,14 +342,13 @@ const Body = ({setModal,modal})=>{
                         </div>}
                     </div>}
                     {replyWindow&&<div style={{display:"flex",paddingBottom:"16px"}}>
-                        <ReactQuill theme="" placeholder="서비스에 관한 의견이나 궁금한 점을 남겨보세요"
+                        <ReactQuill className="quillInput" theme="" placeholder="서비스에 관한 의견이나 궁금한 점을 남겨보세요"
                             value={replyText} style={{
                                 textAlign:"left",
                                 color:"#505050",
                                 fontSize:'14px',
                                 width:item.depth==="0"?"474px":"418px",
                                 marginTop:"19px",
-                                border:"1px solid rgba(156,49,198,0.3)",
                                 borderRadius:"2px",
                                 padding:"6px 6px 6px 6px",
                                 boxSizing:"border-box",
@@ -337,7 +359,7 @@ const Body = ({setModal,modal})=>{
                             onChange={(e)=>{setReplyText(e)}}></ReactQuill>
                         <div className="btn_one" style={{width:"78px",height:"48px",marginLeft:"8px",marginTop:"19px"}}
                         onClick={()=>{
-                            if(sessionStorage.getItem("hash")){
+                            if(localStorage.getItem("hash")){
                                 depthReplyApi();
                                 setReplyText(`${item.nick}`);
                             }
@@ -349,20 +371,18 @@ const Body = ({setModal,modal})=>{
         )
     }
 
-
     const productListApi = async()=>{
     var data = new FormData();
     data.append("product_id",window.location.search.substring(12));
-    data.append("user_email",sessionStorage.getItem("email"));
-    data.append("hash",sessionStorage.getItem("hash"));
+    data.append("user_email",localStorage.getItem("email"));
+    data.append("hash",localStorage.getItem("hash"));
     try{
         await axios({
             method:"post",
-            url : "http://proveit.co.kr/api/productList.php",
+            url : "https://www.proveit.co.kr/api/productList.php",
             data:data
 
         }).then((e)=>{
-            console.log(e);
             if(e.data.ret_code === "0000"){
                 const data = e.data.product;
                 setProduct({
@@ -391,21 +411,24 @@ const Body = ({setModal,modal})=>{
         var data = new FormData();
         data.append('parent_id',"");
         data.append('reply', currentComment);
-        data.append('user_email',sessionStorage.getItem("email"));
-        data.append('nick',JSON.parse(sessionStorage.getItem("userInfo")).nick);
-        data.append('hash', sessionStorage.getItem("hash"));
+        data.append('user_email',localStorage.getItem("email"));
+        data.append('nick',JSON.parse(localStorage.getItem("userInfo")).nick);
+        data.append('hash', localStorage.getItem("hash"));
         data.append("product_id",window.location.search.substring(12));
         try{
             await axios({
                 method:"post",
-                url : "http://proveit.co.kr/api/replySubmit.php",
+                url : "https://www.proveit.co.kr/api/replySubmit.php",
                 data:data
       
             }).then((e)=>{
+                console.log(e);
                 if(e.data.ret_code === "0000"){
+                    localStorage.setItem("replyId",e.data.reply_id);
                     setRerender(true);
+                    setReplyState(true);
                 }else{
-      
+                    setReplyState(false);
                 }
             })
         }catch{
@@ -419,7 +442,7 @@ const Body = ({setModal,modal})=>{
         try{
             await axios({
                 method:"post",
-                url : "http://proveit.co.kr/api/replyList.php",
+                url : "https://www.proveit.co.kr/api/replyList.php",
                 data:data
       
             }).then((e)=>{
@@ -436,17 +459,16 @@ const Body = ({setModal,modal})=>{
 
     const likeApi = async()=>{
         var data = new FormData();
-        data.append("user_email",sessionStorage.getItem("email"));
-        data.append("hash",sessionStorage.getItem("hash"));
+        data.append("user_email",localStorage.getItem("email"));
+        data.append("hash",localStorage.getItem("hash"));
         data.append("product_id",window.location.search.substring(12));
         try{
             await axios({
                 method:"post",
-                url : "http://proveit.co.kr/api/productLike.php",
+                url : "https://www.proveit.co.kr/api/productLike.php",
                 data:data
       
             }).then((e)=>{
-                console.log(e);
                 if(e.data.ret_code === "0000"){
                     setRerender(true);
                 }else{
@@ -456,19 +478,25 @@ const Body = ({setModal,modal})=>{
         }catch{
       
         }
-    }
-
-    useEffect(()=>{
-        productListApi();
-        replayListApi();
-        
-    },[])
+    }  
 
     useEffect(()=>{
         productListApi();
         replayListApi();
         setRerender(false);
-    },[rerender,sessionStorage.getItem("hash")])
+    },[rerender,localStorage.getItem("hash")])
+
+
+    const replyNavi = ()=>{
+        if(localStorage.getItem("replyId")){
+            
+            const navi = document.getElementById("replyNavi");
+            if(navi){
+                navi.click();
+                localStorage.removeItem("replyId");
+            }
+        }
+    }
 
     const clip=()=>{
         var url = '';
@@ -479,14 +507,77 @@ const Body = ({setModal,modal})=>{
         textarea.select();
         document.execCommand("copy");
         document.body.removeChild(textarea);
-        alert("URL이 복사되었습니다.")
+        setCopyState(true);
+        setTimeout(() => {
+            setCopyState(false);
+        }, 1000);
     }
+
+    const kakaoApi = ()=>{ 
+        var sendUrl = `https://www.proveit.co.kr${window.document.location.pathname}${window.document.location.search}`;
+        Kakao.init('23171cd8148017846b0514bae6409fc6');
+        // 카카오링크 버튼 생성
+        Kakao.Link.createDefaultButton({
+          container: '#btnKakao', // 카카오공유버튼ID
+          objectType: 'feed',
+          content: {
+            title: product.title, // 보여질 제목
+            description: product.sub_title, // 보여질 설명
+            imageUrl: product.image[0].imageUrl, // 콘텐츠 URL
+            link: {
+               mobileWebUrl:sendUrl,
+               webUrl:sendUrl
+            }
+          },
+          social: {
+            likeCount: product.like_count*1,
+            commentCount: replyList.length*1,
+          },
+          buttons: [
+            {
+              title: '자세히 보기',
+              link: {
+                mobileWebUrl: sendUrl,
+                webUrl: sendUrl,
+              },
+            },
+        ]}
+        );
+    }
+
+    const sharefacebook = ()=>{
+        let sendUrl = `proveit.co.kr${window.document.location.pathname}${window.document.location.search}`; // 전달할 URL
+        let opstion = "width=526, height=700, toolbar=no, menubar=no, scrollbars=no";
+        window.open("http://www.facebook.com/sharer/sharer.php?u=" + sendUrl,product.title,opstion);
+    }
+
+    const shareTwitter=()=> {
+        let sendText = product.title; // 전달할 텍스트
+        let opstion = "width=800, height=700, toolbar=no, menubar=no, scrollbars=no";
+        let sendUrl = `proveit.co.kr${window.document.location.pathname}${window.document.location.search}`; // 전달할 URL
+        console.log(window)
+        window.open("https://twitter.com/intent/tweet?text=" + sendText + "&url=" + sendUrl,product.title,opstion );
+    }
+
+    useEffect(()=>{
+        productListApi();
+        replayListApi();
+    },[])
+    useEffect(()=>{
+        setTimeout(() => {
+            replyNavi();
+        }, 100);
+    },[localStorage.getItem("replyId")])
+
+
     return(
     <>
-        {renderState&&<div style={{height:"100%",width:'100%',backgroundColor:"#f9f9f9",display:"flex",alignItems:"center",flexDirection:"column"}}>
+        {renderState&&<div style={{width:'100%',backgroundColor:"#f9f9f9",display:"flex",alignItems:"center",flexDirection:"column"}}
+        onClick={()=>{setBigImgWindow(false)}}>
+                <a id="replyNavi" style={{display:"none"}} href={`#${localStorage.getItem("replyId")}`}></a>
                 <div style={{textAlign:"left",marginTop:"48px",marginBottom:"32px"}}>
                 <div style={{width:"1040px",height:"88px",display:"flex",alignItems:"center"}}>
-                    <div style={{width:"88px",height:"88px",marginRight:"16px",backgroundImage:`url(${product.thumbnail})`,backgroundColor:"#000",backgroundSize:"cover",backgroundRepeat:"no-repeat",backgroundPosition:"center"}}></div>
+                    <div style={{width:"88px",height:"88px",marginRight:"16px",backgroundImage:`url(${product.thumbnail})`,backgroundSize:"cover",backgroundRepeat:"no-repeat",backgroundPosition:"center"}}></div>
                     <div style={{width:"480px",textAlign:"left",marginRight:"24px"}}>
                         <div style={{color:"#505050",height:"16px",fontWeight:"bold",fontSize:'16px',marginBottom:"12px",lineHeight:"16px"}}>{product.title}</div>
                         <div style={{color:"#828282",height:"14px",fontSize:'13px',marginBottom:'16px',lineHeight:"14px"}}>{product.sub_title}</div>
@@ -500,27 +591,50 @@ const Body = ({setModal,modal})=>{
                 </div>
                 <div style={{display:"flex"}}>
                     <div>
-                    <div style={{width:"688px",backgroundColor:"#fff",padding:"24px",boxSizing:"border-box",marginRight:"16px",marginBottom:"40px"}}>
-                        <div style={{width:"640px",height:"360px",marginBottom:"16px",backgroundImage:`url(${product.image[imgNum].imageUrl})`,
-                    backgroundSize:"contain",backgroundRepeat:"no-repeat",backgroundPosition:"center",transition:"0.3s"}}></div>
-                            <div style={{display:"flex",marginBottom:"24px"}}>
-                                {product.image.map((item)=>(<ImageArray item={item} key={item.id} setImgNum={setImgNum}></ImageArray>))}
+                        <div style={{width:"688px",backgroundColor:"#fff",padding:"24px",boxSizing:"border-box",marginRight:"16px",marginBottom:"40px"}}>
+                            <div style={{width:"640px",height:"360px",marginBottom:"16px",backgroundImage:`url(${product.image[imgNum].imageUrl})`,cursor:"pointer",
+                            backgroundSize:"cover",backgroundRepeat:"no-repeat",backgroundPosition:"center",transition:"0.3s",position:"relative"}}
+                            onMouseOver={()=>{setBtnOnOff(true);}}
+                            onMouseLeave={()=>{setBtnOnOff(false)}}
+                            onClick={(e)=>{e.stopPropagation();setBigImgWindow(true);}}>
+                                {btnOnOff&&<div>
+                                    {imgNum!==0&&<div style={{width:"40px",height:"100%",position:"absolute",display:"flex",alignItems:"center",cursor:"pointer",justifyContent:"center"}}
+                                    onClick={(e)=>{setImgNum(imgNum-1);e.stopPropagation();}}
+                                    onMouseOver={(e)=>{e.stopPropagation();e.target.style.backgroundColor="rgba(255,255,255,0.3)"}}
+                                    onMouseLeave={(e)=>{e.stopPropagation();e.target.style.backgroundColor="transparent"}}>
+                                        <div style={{backgroundImage:`url(${icon_upBtn_black})`,backgroundRepeat:"no-repeat",backgroundPosition:"center",width:"20px",height:'13px',transform:"rotate(270deg)"}}>
+                                        </div>
+                                    </div>}
+                                    {imgNum+1!==product.image.length&&<div style={{width:"40px",height:"100%",position:"absolute",right:"0px",display:"flex",alignItems:"center",cursor:"pointer",justifyContent:"center"}}
+                                    onClick={(e)=>{setImgNum(imgNum+1);e.stopPropagation();}}
+                                    onMouseOver={(e)=>{e.stopPropagation();e.target.style.backgroundColor="rgba(255,255,255,0.3)"}}
+                                    onMouseLeave={(e)=>{e.stopPropagation();e.target.style.backgroundColor="transparent"}}>
+                                        <div style={{backgroundImage:`url(${icon_upBtn_black})`,backgroundRepeat:"no-repeat",backgroundPosition:"center",width:"20px",height:'13px',transform:"rotate(90deg)"}}>
+                                        </div>    
+                                    </div>}
+                                </div>}
                             </div>
-                            <div style={{width:"640px",position:"relative",marginBottom:"24px"}}>
-                                <ReactQuill theme=""
-                                value={product.main_text} style={{textAlign:"left",color:"#505050",fontSize:'14px',width:"100%"}}></ReactQuill>
-                                <div style={{width:"100%",height:"100%",position:'absolute',top:0,left:0}}></div>
-                            </div>
-                            <div style={{display:"flex"}}>
-                                <div className="btn_three" style={{width:"84px",height:"40px",marginRight:"4px"}}>카카오톡</div>
-                                <div className="btn_three" style={{width:"84px",height:"40px",marginRight:"4px"}}>페이스북</div>
-                                <div className="btn_three" style={{width:"84px",height:"40px",marginRight:"4px"}}>트위터</div>
-                                <div className="btn_three" style={{width:"84px",height:"40px",marginRight:"4px"}} onClick={clip}>링크복사</div>
-                            </div>
-                    </div>
-                    <div style={{textAlign:"left",fontWeight:"bold",fontSize:"14px",marginBottom:"21px"}}>댓글({replyList.length})</div>
-                    <div style={{width:"688px",backgroundColor:"#fff",boxSizing:"border-box",marginRight:"16px",marginBottom:"67px"}}>
-                        <div style={{display:"flex",paddingBottom:"24px",borderBottom:"1px solid #f1f1f1"}}>
+                                <div style={{display:"flex",marginBottom:"24px"}}>
+                                    {product.image.map((item)=>(<ImageArray item={item} imgNum={imgNum} key={item.id} setImgNum={setImgNum}></ImageArray>))}
+                                </div>
+                                <div style={{width:"640px",position:"relative",marginBottom:"24px"}}>
+                                    <ReactQuill theme=""
+                                    value={product.main_text} style={{textAlign:"left",color:"#505050",fontSize:'14px',width:"100%"}}></ReactQuill>
+                                    <div style={{width:"100%",height:"100%",position:'absolute',top:0,left:0}}></div>
+                                </div>
+                                <div style={{display:"flex"}}>
+                                    <div id="btnKakao" style={{width:"96px",height:"40px",marginRight:"8px",backgroundImage:`url(${icon_kakao})`,cursor:"pointer"}}
+                                    onClick={kakaoApi}></div>
+                                    <div style={{width:"96px",height:"40px",marginRight:"8px",backgroundImage:`url(${icon_facebook})`,cursor:"pointer"}}
+                                    onClick={sharefacebook}></div>
+                                    <div style={{width:"96px",height:"40px",marginRight:"8px",backgroundImage:`url(${icon_twitter})`,cursor:"pointer"}}
+                                    onClick={shareTwitter}></div>
+                                    <div style={{width:"96px",height:"40px",backgroundImage:`url(${icon_link})`,cursor:"pointer"}} onClick={clip}></div>
+                                </div>
+                        </div>
+                        <div style={{textAlign:"left",fontWeight:"bold",fontSize:"14px",marginBottom:"21px"}}>댓글({replyList.length})</div>
+                        <div style={{width:"688px",backgroundColor:"#fff",boxSizing:"border-box",marginRight:"16px",marginBottom:"67px"}}>
+                        <div style={{display:"flex",borderBottom:"1px solid #f1f1f1"}}>
                             <div style={{
                                 width:"40px",
                                 height:"40px",
@@ -529,35 +643,34 @@ const Body = ({setModal,modal})=>{
                                 marginRight:"16px",
                                 borderRadius:"50%",
                                 backgroundColor:"#c4c4c4",
-                                backgroundImage:sessionStorage.getItem("userInfo")&&`url(${"http://www.proveit.co.kr/"+JSON.parse(sessionStorage.getItem("userInfo")).thumbnail})`,
-                                backgroundSize:"contain",
+                                backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`,
+                                backgroundSize:"cover",
                                 backgroundRepeat:"no-repeat",
                                 backgroundPosition:"center"
                             }}
                                 >
                             </div>
-                            <ReactQuill theme="" placeholder="서비스에 관한 의견이나 궁금한 점을 남겨보세요"
-                                value={currentComment} style={{textAlign:"left",color:"#505050",fontSize:'14px',width:"474px",marginTop:"19px",border:"1px solid rgba(156,49,198,0.3)",borderRadius:"2px",
-                            padding:"6px 6px 6px 6px",boxSizing:"border-box",display:"flex",flexDirection:"column",justifyContent:"center",minHeight:"48px"}}
-                            onFocus={()=>{
-                                if(sessionStorage.getItem("hash")){
-                                }else{
-                                    console.log("로그인후 댓글을 남겨주세요");
-                                }
-                            }}
-                                onChange={(e)=>{setCurrentComment(e)}}></ReactQuill>
+                                <div><ReactQuill className="quillInput" theme="" placeholder="서비스에 관한 의견이나 궁금한 점을 남겨보세요"
+                                    value={currentComment} style={{textAlign:"left",color:"#505050",fontSize:'14px',width:"474px",marginTop:"19px",borderRadius:"2px",
+                                padding:"6px 6px 6px 6px",boxSizing:"border-box",display:"flex",flexDirection:"column",justifyContent:"center",minHeight:"48px"}}
+                                    onChange={(e)=>{setCurrentComment(e)}}></ReactQuill>
+                                    {replyState&&<div style={{marginBottom:"24px"}}></div>}
+                                    {!replyState&&<div style={{color:"#ea4335",fontSize:'14px',marginTop:"8px",marginBottom:'16px',height:'14px',lineHeight:"14px"}}>내용을 입력해 주세요.</div>}
+                            </div>
                             <div className="btn_one" style={{width:"78px",height:"48px",marginLeft:"8px",marginTop:"19px"}}
                             onClick={()=>{
-                                if(sessionStorage.getItem("hash")){
+                                if(localStorage.getItem("hash")){
                                     replyAddApi();
                                     setCurrentComment("");
+                                }else{
+                                    setLoginWindow(true);
                                 }
                             }}>남기기</div>
                         </div>
                         <div style={{width:"100%",backgroundColor:"#fff",padding:"32px 48px 31px 24px",boxSizing:"border-box"}}>
                             {replyList.map((item)=>(<CommentRender key={item.id} product={product} modal={modal} setModal={setModal} item={item}></CommentRender>))}
                         </div>
-                        {replyList.length>=10&&<div style={{display:"flex",paddingBottom:"37px",borderTop:"1px solid #f1f1f1"}}>
+                        {replyList.length>=10&&<div style={{display:"flex",borderTop:"1px solid #f1f1f1",paddingBottom:"16px"}}>
                             <div style={{
                                 width:"40px",
                                 height:"40px",
@@ -566,19 +679,22 @@ const Body = ({setModal,modal})=>{
                                 marginRight:"16px",
                                 borderRadius:"50%",
                                 backgroundColor:"#c4c4c4",
-                                backgroundImage:sessionStorage.getItem("userInfo")&&`url(${"http://www.proveit.co.kr/"+JSON.parse(sessionStorage.getItem("userInfo")).thumbnail})`,
-                                backgroundSize:"contain",
+                                backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`,
+                                backgroundSize:"cover",
                                 backgroundRepeat:"no-repeat",
                                 backgroundPosition:"center"
                                 }}>
                             </div>
-                            <ReactQuill theme="" placeholder="서비스에 관한 의견이나 궁금한 점을 남겨보세요"
-                                value={currentComment} style={{textAlign:"left",color:"#505050",fontSize:'14px',width:"474px",marginTop:"32px",border:"1px solid rgba(156,49,198,0.3)",borderRadius:"2px",
+                            <div><ReactQuill className="quillInput" theme="" placeholder="서비스에 관한 의견이나 궁금한 점을 남겨보세요"
+                                value={currentComment} style={{textAlign:"left",color:"#505050",fontSize:'14px',width:"474px",marginTop:"32px",borderRadius:"2px",
                             padding:"6px 6px 6px 6px",boxSizing:"border-box",display:"flex",flexDirection:"column",justifyContent:"center",minHeight:"48px"}}
                                 onChange={(e)=>{setCurrentComment(e)}}></ReactQuill>
+                                {replyState&&<div style={{marginBottom:"24px"}}></div>}
+                                {!replyState&&<div style={{color:"#ea4335",fontSize:'14px',marginTop:"8px",marginBottom:'16px',height:'14px',lineHeight:"14px"}}>내용을 입력해 주세요.</div>}
+                            </div>
                             <div className="btn_one" style={{width:"78px",height:"48px",marginLeft:"8px",marginTop:"32px"}}
                             onClick={()=>{
-                            if(sessionStorage.getItem("hash")){
+                            if(localStorage.getItem("hash")){
                                 replyAddApi();
                                 setCurrentComment("");
                             }}}>남기기</div>
@@ -594,24 +710,88 @@ const Body = ({setModal,modal})=>{
                             alink.click();
                         }}>써보러 가기</div>
                         {product.like_m==="0"&&<div className="btn_one_big" style={{width:"216px",height:"56px"}}
-                        onClick={likeApi}>↑ 추천하기{product.like_count}</div>}
+                        onClick={()=>{
+                            if(localStorage.getItem("hash")){
+                                likeApi();
+                            }else{
+                                setLoginWindow(true);
+                            }
+                            }}
+                            >
+                            <div style={{width:'16px',height:"16px",backgroundImage:`url(${icon_like_off})`,marginRight:"8px"}}></div>
+                            <div  style={{marginRight:"4px"}}>추천해요</div>
+                            {product.like_count}
+                            </div>}
                         {product.like_m==="1"&&<div className="btn_one_big2" style={{width:"216px",height:"56px"}}
-                        onClick={likeApi}>↑ 추천했어요{product.like_count}</div>}
+                        onClick={()=>{
+                            if(localStorage.getItem("hash")){
+                                likeApi();
+                            }else{
+                                setLoginWindow(true);
+                            }
+                            }}
+                        >
+                            <div style={{width:'16px',height:"16px",backgroundImage:`url(${icon_like_on})`,marginRight:"8px"}}></div>
+                            <div  style={{marginRight:"4px"}}>추천했음</div>
+                            {product.like_count}
+                            </div>}
                     </div>
                     <div style={{width:"336px",height:"108px",backgroundColor:"#fff",borderRadius:"2px",fontSize:"14px",padding:"16px 24px 24px 24px",textAlign:"left"}}>
                         <div style={{color:"#a5a5a5",marginBottom:"16px"}}>제작자</div>
                         <div style={{display:"flex"}}>
-                            <div style={{width:"32px",height:'32px',borderRadius:"50%",backgroundImage:`url(${product.produce_info.thumbnail})`,backgroundColor:"#c4c4c4",marginRight:"24px",
-                        backgroundPosition:"center",backgroundSize:"contain",backgroundRepeat:"no-repeat"}}></div>
+                            <div style={{width:"32px",height:'32px',borderRadius:"50%",backgroundImage:`url(${"https://www.proveit.co.kr/"+product.produce_info.thumbnail})`,backgroundColor:"#c4c4c4",marginRight:"24px",
+                        backgroundPosition:"center",backgroundSize:"cover",backgroundRepeat:"no-repeat"}}></div>
                             <div style={{textAlign:"left"}}>
                                 <div style={{fontWeight:'bold',color:'#505050',marginBottom:"8px",height:"14px",lineHeight:"14px"}}>{product.produce_info.nick}</div>
-                                <div style={{color:"#a5a5a5",height:"14px",lineHeight:"14px"}}>{product.produce_info.department},{product.produce_info.position}</div>
+                                <div style={{color:"#a5a5a5",height:"14px",lineHeight:"14px"}}>{product.produce_info.position},{product.produce_info.department}</div>
                             </div>
                         </div>
                     </div>
                 </div>
                 </div>
-            </div>
+                {bigImgWindow&&
+                <div style={{position:"fixed",width:"100vw",height:"100vh",display:"flex",backgroundColor:"rgba(80,80,80,0.4)",justifyContent:"center",alignItems:"center",zIndex:999}}>
+                    <div style={{width:"1040px",backgroundColor:"#fff",height:"586px",backgroundImage:`url(${product.image[imgNum].imageUrl})`,zIndex:999,
+                    backgroundSize:"cover",backgroundRepeat:"no-repeat",backgroundPosition:"center",transition:"0.3s",top:"50%",transform:"translate(0,-50%)",position:"fixed",display:"flex"}}
+                    onMouseOver={()=>{setBtnOnOff(true);}}
+                    onMouseLeave={()=>{setBtnOnOff(false)}}
+                    onClick={(e)=>{e.stopPropagation();}}>
+                        {btnOnOff&&<div>
+                            {imgNum!==0&&<div style={{width:"40px",height:"100%",position:"absolute",display:"flex",alignItems:"center",cursor:"pointer",justifyContent:"center"}}
+                            onClick={(e)=>{setImgNum(imgNum-1);e.stopPropagation();}}
+                            onMouseOver={(e)=>{e.stopPropagation();e.target.style.backgroundColor="rgba(255,255,255,0.3)"}}
+                            onMouseLeave={(e)=>{e.stopPropagation();e.target.style.backgroundColor="transparent"}}>
+                                <div style={{backgroundImage:`url(${icon_upBtn_black})`,backgroundRepeat:"no-repeat",backgroundPosition:"center",width:"20px",height:'13px',transform:"rotate(270deg)"}}>
+                                </div>
+                            </div>}
+                            {imgNum+1!==product.image.length&&<div style={{width:"40px",height:"100%",position:"absolute",right:"0px",display:"flex",alignItems:"center",cursor:"pointer",justifyContent:"center"}}
+                            onClick={(e)=>{setImgNum(imgNum+1);e.stopPropagation();}}
+                            onMouseOver={(e)=>{e.stopPropagation();e.target.style.backgroundColor="rgba(255,255,255,0.3)"}}
+                            onMouseLeave={(e)=>{e.stopPropagation();e.target.style.backgroundColor="transparent"}}>
+                                <div style={{backgroundImage:`url(${icon_upBtn_black})`,backgroundRepeat:"no-repeat",backgroundPosition:"center",width:"20px",height:'13px',transform:"rotate(90deg)"}}>
+                                </div>    
+                            </div>}
+                        </div>}
+                        <div style={{position:"absolute",bottom:"-40px",right:"0px",width:"40px",height:"40px",backgroundImage:`url(${icon_bigImg_off})`,cursor:"pointer",backgroundSize:"cover"}}
+                        onClick={()=>{setBigImgWindow(false)}}></div>
+                    </div>   
+                </div>
+                }
+                <div className="linkCopy" style={{
+                        position:"fixed",
+                        width:"100vw",
+                        height:"40px",
+                        backgroundColor:"rgba(150,150,150,0.5)",
+                        top:"50%",
+                        transform:"translate(0,-50%)",
+                        display:copyState?"flex":"none",
+                        zIndex:99,
+                        opacity: copyState?1:0,
+                        justifyContent:'center',
+                        color:"#fff",
+                        transition: "0.3s",
+                        alignItems:"center"}}>링크가 복사 되었습니다.</div>
+        </div>
         }
     </>
 )}
@@ -635,7 +815,7 @@ const Product = ()=>{
         try{
             await axios({
                 method:"post",
-                url : "http://proveit.co.kr/api/login.php",
+                url : "https://www.proveit.co.kr/api/login.php",
                 headers: {
                     //'Header-110': 'UxgOISh44O3eJxbKInDj3',
                 },
@@ -643,18 +823,18 @@ const Product = ()=>{
     
             }).then((e)=>{
                 if(e.data.ret_code === "0000"){
-                    window.sessionStorage.setItem("hash",e.data.hash);
-                    window.sessionStorage.setItem("token",token);
-                    window.sessionStorage.setItem("email",id);
-                    window.sessionStorage.setItem("userName",name);
+                    window.localStorage.setItem("hash",e.data.hash);
+                    window.localStorage.setItem("token",token);
+                    window.localStorage.setItem("email",id);
+                    window.localStorage.setItem("userName",name);
                     userInfoApi(id,token);
                     setSignUpWindow(false);
                     setLoginWindow(false);
     
                 }else if(e.data.ret_code ==="1000"){
-                  window.sessionStorage.setItem("token",token);
-                  window.sessionStorage.setItem("email",id);
-                  window.sessionStorage.setItem("userName",name);
+                  window.localStorage.setItem("token",token);
+                  window.localStorage.setItem("email",id);
+                  window.localStorage.setItem("userName",name);
                   const alink = document.createElement("a");
                   alink.href="/signup";
                   alink.click();
@@ -668,8 +848,8 @@ const Product = ()=>{
     const responseGoogle = (response) => {
     const profileObj = response.profileObj;
     const tokenObj = response.tokenObj;
-    sessionStorage.setItem("googleProfile",JSON.stringify(response.profileObj));
-    sessionStorage.setItem("token",tokenObj.access_token);
+    localStorage.setItem("googleProfile",JSON.stringify(response.profileObj));
+    localStorage.setItem("token",tokenObj.access_token);
     submitGoogleData(profileObj.givenName,profileObj.email,tokenObj.access_token);
     }
     
@@ -681,12 +861,12 @@ const Product = ()=>{
       try{
           await axios({
               method:"post",
-              url : "http://proveit.co.kr/api/user.php",
+              url : "https://www.proveit.co.kr/api/user.php",
               data:data
     
           }).then((e)=>{
               if(e.data.ret_code === "0000"){
-                sessionStorage.setItem("userInfo",JSON.stringify(e.data.user))
+                localStorage.setItem("userInfo",JSON.stringify(e.data.user))
               }else{
     
               }
@@ -697,25 +877,31 @@ const Product = ()=>{
     }
 
   return(
-    <div style={{width:"100%",height:"100vh",display:"flex",flexDirection:"column"}}
+    <div id="renderPage" style={{
+        width:"100%",
+        display:"flex",
+        flexDirection:"column",
+        position:"relative"
+    }}
     onClick={()=>{setModal(false)}}>
     <Header 
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}
-    setSignUpWindow={setSignUpWindow}
     signupWindow={signupWindow}
+    setSignUpWindow={setSignUpWindow}
     modal={modal}
     setModal={setModal}
     ></Header>
     <Body
     modal={modal}
     setModal={setModal}
+    setLoginWindow={setLoginWindow}
     ></Body>
     {loginWindow&&<div 
       style={{
         position:"absolute",
-        width:'100vw',
-        height:'100vh',
+        width:'100%',
+        height:'100%',
         backgroundColor:"rgba(80,80,80,0.9)",
         display:"flex",
         justifyContent:"center"
@@ -730,12 +916,16 @@ const Product = ()=>{
         display:"flex",
         alignItems:"center",
         flexDirection:"column",
+        position:"fixed",
+        top:"50%",
+        left:"50%",
+        transform: "translate(-50%,-100%)",
         color:"#505050"}}
         onClick={(e)=>{setLoginWindow(true);e.stopPropagation();}}>
           <div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`,marginTop:"56px",marginBottom:"32px"}}></div>
           <div style={{height:'23px',lineHeight:"23px",fontSize:"20px",fontWeight:'bold',marginBottom:"40px"}}>로그인</div>
           <div style={{fontSize:"16px",lineHeight:"28.8px",textAlign:"left",marginBottom:"49px"}}>
-            <li>최소 기능 제품을 만들었다면, 프루브잇에 소개하고 커뮤니티 피드백을 받아보세요.</li>
+            <li>서비스를 프루브잇에 소개하고 커뮤니티 피드백을 받아보세요.</li>
             <li>랜딩페이지만 있으면 아이디어만으로도 충분히 검증해 볼 수 있어요.</li>
             <li>지금 어떤 서비스들이 만들어지고 있는지 확인하세요</li>
           </div>
@@ -756,8 +946,8 @@ const Product = ()=>{
     {signupWindow&&<div 
       style={{
         position:"absolute",
-        width:'100vw',
-        height:'100vh',
+        width:'100%',
+        height:'100%',
         backgroundColor:"rgba(80,80,80,0.9)",
         display:"flex",
         justifyContent:"center"
@@ -772,12 +962,16 @@ const Product = ()=>{
         display:"flex",
         alignItems:"center",
         flexDirection:"column",
+        position:"fixed",
+        top:"50%",
+        left:"50%",
+        transform: "translate(-50%,-100%)",
         color:"#505050"}}
         onClick={(e)=>{setSignUpWindow(true);e.stopPropagation();}}>
           <div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`,marginTop:"56px",marginBottom:"32px"}}></div>
           <div style={{height:'23px',lineHeight:"23px",fontSize:"20px",fontWeight:'bold',marginBottom:"40px"}}>회원가입</div>
           <div style={{fontSize:"16px",lineHeight:"28.8px",textAlign:"left",marginBottom:"49px"}}>
-            <li>최소 기능 제품을 만들었다면, 프루브잇에 소개하고 커뮤니티 피드백을 받아보세요.</li>
+            <li>서비스를 프루브잇에 소개하고 커뮤니티 피드백을 받아보세요.</li>
             <li>랜딩페이지만 있으면 아이디어만으로도 충분히 검증해 볼 수 있어요.</li>
             <li>지금 어떤 서비스들이 만들어지고 있는지 확인하세요</li>
           </div>

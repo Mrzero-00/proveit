@@ -4,6 +4,7 @@ import icon_logo from '../../image/logo.svg';
 import icon_like from '../../image/likeIcon.svg';
 import icon_upBtn from '../../image/icon_upBtn.svg';
 import icon_comment from '../../image/commentIcon.svg';
+import icon_profileModify from '../../image/icon_profileModify.svg';
 import icon_radioChecked from '../../image/icon_radioChecked.svg';
 import icon_radioUnChecked from '../../image/icon_radioUnChecked.svg';
 import icon_checked from '../../image/icon_checked.svg';
@@ -14,7 +15,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import ReactQuill from 'react-quill';
 
-const Header=({setModal,modal,setLoginWindow,setSignUpWindow})=>{
+const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpWindow})=>{
     const [hover,setHover] = useState(0);
     const [header,setHeader] = useState(0);
   
@@ -48,35 +49,35 @@ const Header=({setModal,modal,setLoginWindow,setSignUpWindow})=>{
               <div style={{width:"1040px",display:"flex",justifyContent:"space-between",alignItems:"center",position:"relative"}}>  
                       <Link to="/"><div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`}}></div></Link>
                       <div>
-                  {sessionStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                      <div style={{marginRight:"16px",fontSize:"14px",color:"#828282",cursor:"pointer"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
+                  {localStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
+                      <div className="btn_textBtn" style={{marginRight:"16px"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
                       <div className="btn_one" style={{width:"72px",height:"32px"}} onClick={()=>{setLoginWindow(true);}}>로그인</div>
                       </div>
                   }
-                  {sessionStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                      <Link to="/registerproduct"><div style={{marginRight:"16px",fontSize:"14px",color:"#505050",cursor:"pointer"}}>프로젝트 등록하기</div></Link>
-                      <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:sessionStorage.getItem("userInfo")&&`url(${"http://www.proveit.co.kr/"+JSON.parse(sessionStorage.getItem("userInfo")).thumbnail})`
-                      ,backgroundColor:"#c5c5c5",backgroundSize:"contain",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
+                  {localStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
+                      <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>내 서비스 등록하기</div></Link>
+                      <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
+                      ,backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
                       </div>
                   }  
               </div>
   
               </div>
           </div>
-          <div id="header" style={{width:"100%",height:"48px",backgroundColor:"#fff",position:"fixed",top:"-48px",display:"flex",justifyContent:"center",alignItems:"center",minHeight:"48px",
+          {(!loginWindow&&!signupWindow)&&<div id="header" style={{width:"100%",height:"48px",backgroundColor:"#fff",position:"fixed",top:"-48px",display:"flex",justifyContent:"center",alignItems:"center",minHeight:"48px",
                                 transform:`translate(0,${header}px)`,transition:"0.3s",zIndex:"9999"}}>
             <div style={{width:"1040px",display:"flex",justifyContent:"space-between",alignItems:"center",position:"relative"}}>  
                     <Link to="/"><div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`}}></div></Link>
                     <div>
-                {sessionStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                    <div style={{marginRight:"16px",fontSize:"14px",color:"#828282",cursor:"pointer"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
+                {localStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
+                    <div className="btn_textBtn" style={{marginRight:"16px"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
                     <div className="btn_one" style={{width:"72px",height:"32px"}} onClick={()=>{setLoginWindow(true);}}>로그인</div>
                     </div>
                 }
-                {sessionStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                    <Link to="/registerproduct"><div style={{marginRight:"16px",fontSize:"14px",color:"#505050",cursor:"pointer"}}>프로젝트 등록하기</div></Link>
-                    <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:sessionStorage.getItem("userInfo")&&`url(${"http://www.proveit.co.kr/"+JSON.parse(sessionStorage.getItem("userInfo")).thumbnail})`
-                    ,backgroundColor:"#c5c5c5",backgroundSize:"contain",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
+                {localStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
+                    <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>내 서비스 등록하기</div></Link>
+                    <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
+                    ,backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
                     </div>
                 }  
             </div>
@@ -87,18 +88,22 @@ const Header=({setModal,modal,setLoginWindow,setSignUpWindow})=>{
             <div style={{width:"100%",height:"40px",cursor:"pointer",lineHeight:"40px",paddingLeft:"16px",fontSize:'14px',color:"#505050",backgroundColor:hover===2?"rgba(156, 49, 198, 0.1)":"#fff"}}
             onMouseOver={()=>{setHover(2)}}
             onMouseLeave={()=>{setHover(0)}}
-            onClick={()=>{sessionStorage.clear();}}>로그아웃</div>
+            onClick={()=>{
+                const alink = document.createElement("a");
+                alink.href="/";
+                localStorage.clear();
+                // alink.click();
+                }}>로그아웃</div>
             </div>}
             </div>
-        </div>
-          <div className="btn_up" style={{width:"40px",height:"40px",backgroundImage:`url(${icon_upBtn})`,position:"fixed",bottom:"84px",right:"80px",
-                      display:header!==47&&"none",cursor:"pointer",backgroundPosition:"center",backgroundRepeat:"no-repeat",
-  
-                    }}
-                      onClick={upEvt}></div>      
+        </div>}
+            <div className="btn_up" style={{width:"40px",height:"40px",backgroundImage:`url(${icon_upBtn})`,position:"fixed",bottom:"84px",right:"80px",backgroundRepeat:"no-repeat",backgroundPosition:"center",
+                display:header!==47&&"none",
+                cursor:"pointer"}}
+                onClick={upEvt}></div>   
         </>
     )
-  }
+}
 
 const Body =()=>{
     const [render,setRender] =useState(false);
@@ -112,7 +117,7 @@ const Body =()=>{
     const [likelyProducts,setLikelyProducts] =useState([]);
     const [myReply,setMyReply] =useState([]);
     const [fullListState,setFullListState]= useState("none");
-
+    const [modifyState,setModifyState]= useState(false);
     const [currentUserInfo,setCurrentUserInfo] = useState(
         {
             userId:"dkdk@gmail.com",
@@ -129,10 +134,10 @@ const Body =()=>{
     )
 
     const reasonList =[
-        {id:0,text:"자주 사용하지 않아요"},
-        {id:1,text:"이용이 불편하고 장애가 많아요"},
-        {id:2,text:"다른 사이트가 더 좋아요"},
-        {id:3,text:"중복 계정이 있어요"},
+        {id:1,text:"자주 사용하지 않아요"},
+        {id:2,text:"이용이 불편하고 장애가 많아요"},
+        {id:3,text:"다른 사이트가 더 좋아요"},
+        {id:4,text:"중복 계정이 있어요"},
     ]
 
     const styled={
@@ -141,7 +146,7 @@ const Body =()=>{
             width:"464px",
             height: "40px",
             padding:"13px 12px 14px 12px",
-            color:"#a5a5a5",
+            color:"#505050",
             borderRadius:"2px",
             backgroundColor:"#fff",
             fontSize:'13px',
@@ -152,7 +157,7 @@ const Body =()=>{
             width:"464px",
             height: "40px",
             padding:"0px 12px 0px 12px",
-            color:"#a5a5a5",
+            color:"#505050",
             borderRadius:"2px",
             backgroundColor:"#fff",
             textAlign:"left",
@@ -187,8 +192,14 @@ const Body =()=>{
     }
 
     useEffect(()=>{
-        setCurrentUserInfo(JSON.parse(sessionStorage.getItem("userInfo")));
-        setRender(true);
+        if(JSON.parse(localStorage.getItem("userInfo"))){
+            setCurrentUserInfo(JSON.parse(localStorage.getItem("userInfo")));
+            setRender(true);
+        }else{
+            const alink = document.createElement("a");
+            alink.href = "/";
+            alink.click();
+        }
     },[])
 
     const inputLogic = (e)=>{
@@ -230,25 +241,27 @@ const Body =()=>{
     
     const userInfoApi = async()=>{
         var data = new FormData();
-        data.append('email', sessionStorage.getItem("email"));
-        data.append('token', sessionStorage.getItem("token"));
+        data.append('email', localStorage.getItem("email"));
+        data.append('token', localStorage.getItem("token"));
         data.append('type', 'update');
         data.append('thumbnail', currentUserInfo.thumbnail);
-        data.append('nick', currentUserInfo.nick===""?sessionStorage.getItem("userName"):currentUserInfo.nick);
+        data.append('nick', currentUserInfo.nick===""?localStorage.getItem("userName"):currentUserInfo.nick);
         data.append('department', currentUserInfo.department);
         data.append('position', currentUserInfo.position);
         data.append('mailing', currentUserInfo.mailing);
         try{
             await axios({
                 method:"post",
-                url : "http://proveit.co.kr/api/user.php",
+                url : "https://www.proveit.co.kr/api/user.php",
                 data:data
       
             }).then((e)=>{
                 if(e.data.ret_code === "0000"){
-                    sessionStorage.setItem("userInfo",JSON.stringify(e.data.user));
+                    localStorage.setItem("userInfo",JSON.stringify(e.data.user));
+                    setModifyState(true);
                     setTimeout(() => {
                         setPageNum(0);
+                        setModifyState(false);
                     }, 2000);
                 }else{
       
@@ -261,13 +274,13 @@ const Body =()=>{
 
     const userInfoGetApi = async()=>{
         var data = new FormData();
-        data.append('email', sessionStorage.getItem("email"));
-        data.append('token', sessionStorage.getItem("token"));
+        data.append('email', localStorage.getItem("email"));
+        data.append('token', localStorage.getItem("token"));
         data.append('type', 'select');
         try{
             await axios({
                 method:"post",
-                url : "http://proveit.co.kr/api/user.php",
+                url : "https://www.proveit.co.kr/api/user.php",
                 data:data
       
             }).then((e)=>{
@@ -275,7 +288,8 @@ const Body =()=>{
                     setMyProducts(e.data.product);
                     setLikelyProducts(e.data.like);
                     setMyReply(e.data.reply);
-                    sessionStorage.setItem("userInfo",JSON.stringify(e.data.user));
+                    localStorage.setItem("userInfo",JSON.stringify(e.data.user));
+                    setRender(true);
                 }else{
       
                 }
@@ -287,17 +301,17 @@ const Body =()=>{
 
     const userOutApi = async()=>{
         var data = new FormData();
-        data.append('email', sessionStorage.getItem("email"));
-        data.append('hash', sessionStorage.getItem("hash"));
+        data.append('email', localStorage.getItem("email"));
+        data.append('hash', localStorage.getItem("hash"));
         try{
             await axios({
                 method:"post",
-                url : "http://proveit.co.kr/api/userOut.php",
+                url : "https://www.proveit.co.kr/api/userOut.php",
                 data:data
       
             }).then((e)=>{
                 if(e.data.ret_code === "0000"){
-                    sessionStorage.clear();
+                    localStorage.clear();
                     const alink =document.createElement("a");
                     alink.href="/";
                     alink.click();
@@ -322,7 +336,7 @@ const Body =()=>{
               style={{width:"688px",height:"120px",display:"flex",alignItems:"center",backgroundColor:"#fff",position:"relative",cursor:"pointer",borderBottom:"1px solid #e5e5e5"}}
               onClick={(e)=>{e.stopPropagation();}}
             >
-              <div style={{width:"88px",marginLeft:"16px",height:"88px",marginRight:"16px",backgroundImage:`url(${item.thumbnail})`,backgroundColor:"#000",backgroundPosition:"center",backgroundSize:"cover"}}></div>
+              <div style={{width:"88px",marginLeft:"16px",height:"88px",marginRight:"16px",backgroundImage:`url(${item.thumbnail})`,backgroundPosition:"center",backgroundSize:"cover"}}></div>
               <div style={{width:type==="myProduct"?"368px":"480px",textAlign:"left",marginRight:"32px"}}>
                 <div style={{color:"#505050",height:"16px",fontWeight:"bold",fontSize:'16px',marginBottom:"12px",lineHeight:"16px"}}>{item.title}</div>
                 <div style={{color:"#828282",height:"14px",fontSize:'13px',marginBottom:'16px',lineHeight:"14px"}}>{item.sub_title}</div>
@@ -374,10 +388,30 @@ const Body =()=>{
             </div>
         )
     }
+    window.history.pushState(null,"",window.location.href);
+
+    window.onpopstate = ()=>{
+        if(pageNum!==0){
+            window.history.go(1);
+            setPageNum(0);
+        }else{
+            const alink = document.createElement("a");
+            alink.href = "/";
+            alink.click();
+        }
+
+    }
 
     const ReplyRender =({item,index,myReply})=>{
         return(
-            <>
+            <div style={{cursor:"pointer"}} onClick={
+                ()=>{
+                    localStorage.setItem("replyId",item.reply_id);
+                    const alink = document.createElement("a");
+                    alink.href =`/product?productnum=${item.id}`;
+                    alink.click();
+                }
+                }>
             {index<3&&<div style={{width:"336px",backgroundColor:"#fff",padding:"24px 24px 32px 24px",borderBottom:"1px solid #e5e5e5"}}>
                 <div style={{fontSize:"16px",fontWeight:"bold"}}>{item.title}에 단 댓글</div>
                 <div style={{width:"288px",position:"relative",marginBottom:"24px"}}>
@@ -394,7 +428,7 @@ const Body =()=>{
                     <div style={{width:"100%",height:"100%",position:'absolute',top:0,left:0}}></div>
                 </div>
             </div>}
-            </>
+            </div>
         )
     }
 
@@ -415,15 +449,15 @@ const Body =()=>{
                         borderRadius:"50%",
                         backgroundColor:"#e5e5e5",
                         marginRight:"40px",
-                        backgroundImage:sessionStorage.getItem("userInfo")&&`url(${"http://www.proveit.co.kr/"+JSON.parse(sessionStorage.getItem("userInfo")).thumbnail})`,
-                        backgroundSize:"contain",
+                        backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`,
+                        backgroundSize:"cover",
                         backgroundRepeat:"no-repeat",
                         backgroundPosition:"center"}}></div>
                     <div>
-                        <div style={{fontSize:"20px",color:'#505050',height:"20px",lineHeight:"20px",marginBottom:"16px",fontWeight:"bold"}}>{JSON.parse(sessionStorage.getItem("userInfo")).nick}</div>
-                        <div style={{fontSize:"14px",color:'#828282',height:"14px",lineHeight:"14px",marginBottom:"16px"}}>{JSON.parse(sessionStorage.getItem("userInfo")).position},{JSON.parse(sessionStorage.getItem("userInfo")).department}</div>
+                        <div style={{fontSize:"20px",color:'#505050',height:"20px",lineHeight:"20px",marginBottom:"16px",fontWeight:"bold"}}>{JSON.parse(localStorage.getItem("userInfo")).nick}</div>
+                        <div style={{fontSize:"14px",color:'#828282',height:"14px",lineHeight:"14px",marginBottom:"16px"}}>{JSON.parse(localStorage.getItem("userInfo")).position},{JSON.parse(localStorage.getItem("userInfo")).department}</div>
                         <div style={{fontSize:"14px",color:'#828282',height:"14px",lineHeight:"14px",marginBottom:"18px"}}>
-                            {JSON.parse(sessionStorage.getItem("userInfo")).created_at.slice(0,4)}년 {JSON.parse(sessionStorage.getItem("userInfo")).created_at.slice(5,7)}월 {JSON.parse(sessionStorage.getItem("userInfo")).created_at.slice(8,10)}일에 가입함
+                            {JSON.parse(localStorage.getItem("userInfo")).created_at.slice(0,4)}년 {JSON.parse(localStorage.getItem("userInfo")).created_at.slice(5,7)}월 {JSON.parse(localStorage.getItem("userInfo")).created_at.slice(8,10)}일에 가입함
                             </div>
                         <div className="btn_three" style={{width:"120px",height:"40px"}}
                         onClick={()=>{setPageNum(1)}}>프로필 수정</div>
@@ -463,7 +497,7 @@ const Body =()=>{
                         onClick={()=>{setFullListState("likelyProduct")}}>모두 보기</div>}
                     </div>
                 </div>
-                <div style={{width:"336px"}}>
+                <div style={{width:"336px",marginBottom:"32px"}}>
                     <div style={{fontWeight:"bold",marginBottom:"16px"}}>코멘트</div>
                     {myReply.map((item,index)=>(<ReplyRender key={index} myReply={myReply} index={index} item={item}></ReplyRender>))}
                     {myReply.length>4&&<div style={{
@@ -500,16 +534,16 @@ const Body =()=>{
                     <div>
                         <div style={{width:"512px",marginRight:"16px",backgroundColor:"#fff",padding:"24px 24px 32px 24px",marginBottom:"24px"}}>
                             <div style={{fontSize:"14px",fontWeight:"bold",color:'#505050',marginBottom:"16px"}}>이름</div>
-                            <div style={{fontSize:"13px",color:'#a5a5a5',marginBottom:"24px"}}>{sessionStorage.getItem("userName")}</div>
+                            <div style={{fontSize:"13px",color:'#a5a5a5',marginBottom:"24px"}}>{localStorage.getItem("userName")}</div>
                             <div style={{fontSize:"14px",fontWeight:"bold",color:'#505050',marginBottom:"16px"}}>이메일 주소</div>
-                            <div style={{fontSize:"13px",color:'#a5a5a5'}}>{sessionStorage.getItem("email")}</div>
+                            <div style={{fontSize:"13px",color:'#a5a5a5'}}>{localStorage.getItem("email")}</div>
                         </div>
                         <div style={{width:"512px",marginRight:"16px",backgroundColor:"#fff",padding:"24px 24px 16px 24px",marginBottom:"24px"}}>
                             <div style={{height:"14px",fontSize:"14px",lineHeight:'14px',fontWeight:'bold',color:"#505050",marginBottom:"18px",width:"380px",textAlign:"left"}}>프로필 이미지 변경</div>
                                 <div style={{display:"flex"}}>
                                     <div style={{width:"80px",height:"80px",borderRadius:"50%",backgroundColor:"#c4c4c4",marginRight:"20px",
-                                    backgroundImage:currentImg===""?(sessionStorage.getItem("userInfo")&&`url(${"http://www.proveit.co.kr"+currentUserInfo.thumbnail})`):`url(${currentImg})`,
-                                    backgroundSize:"contain",backgroundPosition:"center",backgroundRepeat:"no-repeat"}}></div>
+                                    backgroundImage:currentImg===""?(localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr"+currentUserInfo.thumbnail})`):`url(${currentImg})`,
+                                    backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:"no-repeat"}}></div>
                                     <div style={{width:"364px",textAlign:"left",fontSize:"13px",marginBottom:'24px'}}>
                                     <form style={{display:"block"}}>
                                         <input type='file' id="thumbnailImg" style={{display:"none"}}  accept=".jpg,.jpeg,.png,.bmp" onChange={FileUploder}></input>
@@ -521,7 +555,7 @@ const Body =()=>{
                             </div>
                             <div style={{fontSize:"14px",fontWeight:"bold",color:'#505050',marginBottom:"10px"}}>닉네임</div>
                             <input name="nick" style={styled.input} value={currentUserInfo.nick} placeholder="닉네임을 입력해주세요" onChange={inputLogic}></input>
-                            <div style={{fontSize:"14px",fontWeight:"bold",color:'#505050',marginBottom:"10px"}}>직책/직군 - 필수</div>
+                            <div style={{fontSize:"14px",fontWeight:"bold",color:'#505050',marginBottom:"10px"}}>직책/직군 - 필수  <span style={{color:"#f00"}}>*</span></div>
                             <input name="position" style={styled.input} placeholder="직책 및 직군을 입력해주세요" value={currentUserInfo.position} onChange={inputLogic}></input>
                             <div style={{fontSize:"14px",fontWeight:"bold",color:'#505050',marginBottom:"10px"}}>소속</div>
                             <input name="department" style={styled.input} placeholder="소속을 입력해주세요" value={currentUserInfo.department} onChange={inputLogic}></input>
@@ -539,11 +573,12 @@ const Body =()=>{
                             </div>
                         </div> 
                             
-                        <div style={{width:"512px",display:"flex",flexDirection:"row-reverse",marginBottom:"133px"}}>
+                        <div style={{width:"512px",display:"flex",flexDirection:"row-reverse",marginBottom:"133px",alignItems:"center"}}>
                             <div className="btn_one" style={{width:"72px",height:"32px"}}
                             onClick={()=>{if(currentUserInfo.position!==""){
                                 userInfoApi();
                             }}}>저장</div>
+                            {modifyState&&<div style={{width:"67px",height:"19px",backgroundImage:`url(${icon_profileModify})`,backgroundRepeat:"no-repeat",marginRight:"16px"}}></div>}
                         </div>
                     </div>
                     <div style={{width:"512px"}}>
@@ -563,9 +598,9 @@ const Body =()=>{
                 </div>
                 <div style={{width:"512px",marginRight:"16px",backgroundColor:"#fff",padding:"24px 24px 32px 24px",marginBottom:"24px",textAlign:"left"}}>
                     <div style={{fontSize:"14px",fontWeight:"bold",color:'#505050',marginBottom:"16px"}}>이름</div>
-                    <div style={{fontSize:"13px",color:'#a5a5a5',marginBottom:"24px"}}>{JSON.parse(sessionStorage.getItem("userInfo")).user_name}</div>
+                    <div style={{fontSize:"13px",color:'#a5a5a5',marginBottom:"24px"}}>{localStorage.getItem("userName")}</div>
                     <div style={{fontSize:"14px",fontWeight:"bold",color:'#505050',marginBottom:"16px"}}>이메일 주소</div>
-                    <div style={{fontSize:"13px",color:'#a5a5a5'}}>{JSON.parse(sessionStorage.getItem("userInfo")).email}</div>
+                    <div style={{fontSize:"13px",color:'#a5a5a5'}}>{JSON.parse(localStorage.getItem("userInfo")).email}</div>
                 </div>
                 <div style={{marginBottom:"24px",color:"#505050",fontSize:"13px",lineHeight:"23.4px",textAlign:"left"}}>
                     <li>회원 탈퇴를 하면 계정 정보는 삭제되지만 등록한 댓글이나 프로젝트 등은 삭제되지 않습니다.</li>
@@ -576,10 +611,10 @@ const Body =()=>{
                     <div style={{marginBottom:"24px",position:"relative"}}>
                         <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>왜..탈퇴하시려는 건가요?</div>
                         <div name="category" style={styled.dropBox} onClick={(e)=>{setReasonWindow(!reasonWindow);e.stopPropagation();}}>
-                            {reasonNum===0?"이유를 알려주세요":reasonList[reasonNum].text}
+                            {reasonNum===0?"이유를 알려주세요":reasonList[reasonNum-1].text}
                             <div style={{position:"absolute",width:"24px",height:'24px',right:"16px",top:"8px",backgroundImage:`url(${icon_dropBox})`}}></div>
                         </div>
-                        {reasonWindow&&<div style={{padding:"8px 0px 8px 0px",backgroundColor:"#fff",height:"176px",overflow:"auto",overflowX:"hidden",position:"absolute",width:"100%",top:"24px"}}>
+                        {reasonWindow&&<div style={{padding:"8px 0px 8px 0px",backgroundColor:"#fff",height:"176px",overflow:"auto",overflowX:"hidden",position:"absolute",width:"100%",top:"24px",zIndex:"9999"}}>
                             {reasonList.map((item)=>(<ReasonRender key={item.id} item={item} setReasonWindow={setReasonWindow} reasonNum={reasonNum} setReasonNum={setReasonNum}></ReasonRender>))}
                         </div>}
                     </div>
