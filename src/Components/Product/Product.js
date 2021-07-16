@@ -17,6 +17,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 /*global Kakao*/
 import GoogleLogin from 'react-google-login';
+import ReactPlayer from 'react-player';
 
 
 
@@ -60,7 +61,7 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
                       </div>
                   }
                   {localStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                      <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>내 서비스 등록하기</div></Link>
+                      <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>서비스 등록하기</div></Link>
                       <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
                       ,backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
                       </div>
@@ -80,7 +81,7 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
                     </div>
                 }
                 {localStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                    <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>내 서비스 등록하기</div></Link>
+                    <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>서비스 등록하기</div></Link>
                     <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
                     ,backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
                     </div>
@@ -147,14 +148,52 @@ const Body = ({setModal,modal,setLoginWindow})=>{
     const [imgNum,setImgNum] =useState(0);
     const [replyState,setReplyState] = useState(true);
 
-    const ImageArray =({item,imgNum,setImgNum})=>{
+    const ImageArray =({item,imgNum,setImgNum,product})=>{
+        const url = item.imageUrl;
+        let subNum =0;
+        
+        if(item.type==="video"){
+            for(let i=0 ;i<url.length;i++){
+                if(url[i]==="w"){
+                    if(url[i+1]==="a"){
+                        if(url[i+2]==="t"){
+                            if(url[i+3]==="c"){
+                                if(url[i+4]==="h"){
+                                    subNum = i+8;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        const videoThumbnail = url.substring(subNum);
         return(
-            <div style={{width:"40px",height:"40px",marginRight:"8px",backgroundImage:`url(${item.imageUrl})`,cursor:"pointer",
-            backgroundSize:"cover",backgroundRepeat:"no-repeat",backgroundPosition:"center",
-            border:imgNum===item.id ? "1px solid #e5e5e5": "1px solid transparent"}}
-            onMouseOver={()=>{setImgNum(item.id)}}
-            >      
-            </div>
+            <>
+            {product.youtube!=="undefined"&&<div>
+                {item.type==="video"&&<div style={{width:"40px",height:"40px",marginRight:"8px",backgroundImage:`url(https://img.youtube.com/vi/${videoThumbnail}/default.jpg)`,cursor:"pointer",
+                    backgroundSize:"cover",backgroundRepeat:"no-repeat",backgroundPosition:"center",
+                    border:imgNum===item.id ? "1px solid #e5e5e5": "1px solid transparent"}}
+                    onMouseOver={()=>{setImgNum(item.id)}}
+                    >      
+                </div>}
+                {item.type!=="video"&&<div style={{width:"40px",height:"40px",marginRight:"8px",backgroundImage:`url(${item.imageUrl})`,cursor:"pointer",
+                    backgroundSize:"cover",backgroundRepeat:"no-repeat",backgroundPosition:"center",
+                    border:imgNum===item.id ? "1px solid #e5e5e5": "1px solid transparent"}}
+                    onMouseOver={()=>{setImgNum(item.id)}}
+                    >      
+                </div>}
+            </div>}
+            {product.youtube==="undefined"&&
+                <div style={{width:"40px",height:"40px",marginRight:"8px",backgroundImage:`url(${item.imageUrl})`,cursor:"pointer",
+                    backgroundSize:"cover",backgroundRepeat:"no-repeat",backgroundPosition:"center",
+                    border:imgNum===item.id-1 ? "1px solid #e5e5e5": "1px solid transparent"}}
+                    onMouseOver={()=>{setImgNum(item.id-1)}}
+                    >      
+                </div>
+            }
+            </>
         )
     }
 
@@ -254,14 +293,13 @@ const Body = ({setModal,modal,setLoginWindow})=>{
         //     setModifyText(item.reply);
         // },[])
 
-
         return(
             <div id={item.id} style={{
                 width:item.depth==="0"?"616px":"520px",
                 display:"flex",
                 position:"relative",
                 height: "100%",
-                marginBottom:"28px",
+                marginBottom:"16px",
                 marginLeft:item.depth==="1"&&"56px"
                 }}>
                 <Link to={item.user_email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${item.user_email}`}><div style={{
@@ -285,12 +323,12 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                     <Link to={item.user_email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${item.user_email}`}><div style={{fontWeight:"bold",marginBottom:'8px',height:"14px",lineHeight:"14px",marginRight:"4px",fontSize:'14px',color:"#505050"}}>{item.nick}</div></Link>
                         {item.user_email ===product.produce_info.email&&<div style={{color:'#9c31c6',lineHeight:"16px",height:"16px",fontSize:'10px',textAlign:"center",width:"48px",borderRadius:"8px",backgroundColor:"#f1f1f1"}}>제작자</div>}
                     </div>
-                    <div style={{color:"#a5a5a5",marginBottom:'16px',height:"14px",lineHeight:"14px",fontSize:'14px'}}>{item.position}</div>
-                    {!modifyState&&<div style={{width:"100%",position:"relative",marginBottom:"16px"}}>
-                       <ReactQuill theme=""
+                    <div style={{color:"#a5a5a5",marginBottom:'7px',height:"13px",lineHeight:"13px",fontSize:'13px'}}>{item.position}</div>
+                    {!modifyState&&<div style={{width:"100%",position:"relative",marginBottom:"8px"}}>
+                       {/* <textarea value={item.reply} readOnly></textarea> */}
+                       <ReactQuill theme="" readOnly
                         value={item.reply} style={{textAlign:"left",color:"#505050",fontSize:'14px',width:"100%"}}
                         ></ReactQuill>
-                        <div style={{width:"100%",height:"100%",position:'absolute',top:0,left:0}}></div>
                     </div>}
                     {modifyState&&<div style={{width:"100%",display:"flex",marginBottom:"16px"}}>
                        <ReactQuill className="quillInput" theme=""
@@ -383,6 +421,7 @@ const Body = ({setModal,modal,setLoginWindow})=>{
             data:data
 
         }).then((e)=>{
+            console.log(e);
             if(e.data.ret_code === "0000"){
                 const data = e.data.product;
                 setProduct({
@@ -394,10 +433,11 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                     main_text:data.main_text,
                     payment_type:data.payment_type,
                     category:data.category,
-                    image:JSON.parse(data.image),
+                    image:data.youtube!=="undefined"?[{id:0,type:"video",imageUrl:data.youtube},...JSON.parse(data.image)]:JSON.parse(data.image),
                     link:data.link,
                     thumbnail:data.thumbnail,
                     like_m:data.like_m,
+                    youtube:data.youtube
                 });
                 setRenderState(true);
             }
@@ -555,7 +595,6 @@ const Body = ({setModal,modal,setLoginWindow})=>{
         let sendText = product.title; // 전달할 텍스트
         let opstion = "width=800, height=700, toolbar=no, menubar=no, scrollbars=no";
         let sendUrl = `proveit.co.kr${window.document.location.pathname}${window.document.location.search}`; // 전달할 URL
-        console.log(window)
         window.open("https://twitter.com/intent/tweet?text=" + sendText + "&url=" + sendUrl,product.title,opstion );
     }
 
@@ -568,8 +607,6 @@ const Body = ({setModal,modal,setLoginWindow})=>{
             replyNavi();
         }, 100);
     },[localStorage.getItem("replyId")])
-
-
     return(
     <>
         {renderState&&<div style={{width:'100%',backgroundColor:"#f9f9f9",display:"flex",alignItems:"center",flexDirection:"column"}}
@@ -591,12 +628,15 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                 </div>
                 <div style={{display:"flex"}}>
                     <div>
-                        <div style={{width:"688px",backgroundColor:"#fff",padding:"24px",boxSizing:"border-box",marginRight:"16px",marginBottom:"40px"}}>
+                        <div style={{width:"688px",backgroundColor:"#fff",padding:"24px",boxSizing:"border-box",marginRight:"16px",marginBottom:"40px"}}>      
                             <div style={{width:"640px",height:"360px",marginBottom:"16px",backgroundImage:`url(${product.image[imgNum].imageUrl})`,cursor:"pointer",
                             backgroundSize:"cover",backgroundRepeat:"no-repeat",backgroundPosition:"center",transition:"0.3s",position:"relative"}}
                             onMouseOver={()=>{setBtnOnOff(true);}}
                             onMouseLeave={()=>{setBtnOnOff(false)}}
                             onClick={(e)=>{e.stopPropagation();setBigImgWindow(true);}}>
+                                {(product.youtube!=="undefined"&&imgNum===0)&&<div style={{width:"100%",height:"100%",position:"absolute"}}>
+                                    <ReactPlayer playing muted url={product.youtube}></ReactPlayer>
+                                </div>}
                                 {btnOnOff&&<div>
                                     {imgNum!==0&&<div style={{width:"40px",height:"100%",position:"absolute",display:"flex",alignItems:"center",cursor:"pointer",justifyContent:"center"}}
                                     onClick={(e)=>{setImgNum(imgNum-1);e.stopPropagation();}}
@@ -605,7 +645,8 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                                         <div style={{backgroundImage:`url(${icon_upBtn_black})`,backgroundRepeat:"no-repeat",backgroundPosition:"center",width:"20px",height:'13px',transform:"rotate(270deg)"}}>
                                         </div>
                                     </div>}
-                                    {imgNum+1!==product.image.length&&<div style={{width:"40px",height:"100%",position:"absolute",right:"0px",display:"flex",alignItems:"center",cursor:"pointer",justifyContent:"center"}}
+                                    {imgNum+1!==product.image.length&&
+                                    <div style={{width:"40px",height:"100%",position:"absolute",right:"0px",display:"flex",alignItems:"center",cursor:"pointer",justifyContent:"center"}}
                                     onClick={(e)=>{setImgNum(imgNum+1);e.stopPropagation();}}
                                     onMouseOver={(e)=>{e.stopPropagation();e.target.style.backgroundColor="rgba(255,255,255,0.3)"}}
                                     onMouseLeave={(e)=>{e.stopPropagation();e.target.style.backgroundColor="transparent"}}>
@@ -614,15 +655,15 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                                     </div>}
                                 </div>}
                             </div>
-                                <div style={{display:"flex",marginBottom:"24px"}}>
-                                    {product.image.map((item)=>(<ImageArray item={item} imgNum={imgNum} key={item.id} setImgNum={setImgNum}></ImageArray>))}
-                                </div>
-                                <div style={{width:"640px",position:"relative",marginBottom:"24px"}}>
-                                    <ReactQuill theme=""
-                                    value={product.main_text} style={{textAlign:"left",color:"#505050",fontSize:'14px',width:"100%"}}></ReactQuill>
-                                    <div style={{width:"100%",height:"100%",position:'absolute',top:0,left:0}}></div>
-                                </div>
-                                <div style={{display:"flex"}}>
+                            
+                            <div style={{display:"flex",marginBottom:"24px"}}>
+                                {product.image.map((item)=>(<ImageArray item={item} product={product} imgNum={imgNum} key={item.id} setImgNum={setImgNum}></ImageArray>))}
+                            </div>
+                            <div style={{width:"640px",position:"relative",marginBottom:"24px"}}>
+                                <ReactQuill theme="" readOnly
+                                value={product.main_text} style={{textAlign:"left",color:"#505050",fontSize:'14px',width:"100%"}}></ReactQuill>
+                            </div>
+                            <div style={{display:"flex"}}>
                                     <div id="btnKakao" style={{width:"96px",height:"40px",marginRight:"8px",backgroundImage:`url(${icon_kakao})`,cursor:"pointer"}}
                                     onClick={kakaoApi}></div>
                                     <div style={{width:"96px",height:"40px",marginRight:"8px",backgroundImage:`url(${icon_facebook})`,cursor:"pointer"}}
@@ -650,7 +691,9 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                             }}
                                 >
                             </div>
-                                <div><ReactQuill className="quillInput" theme="" placeholder="서비스에 관한 의견이나 궁금한 점을 남겨보세요"
+                                <div>
+                                    {/* <textarea onChange={(e)=>{setCurrentComment(e.target.value);}}></textarea> */}
+                                    <ReactQuill className="quillInput" theme="" placeholder="서비스에 관한 의견이나 궁금한 점을 남겨보세요"
                                     value={currentComment} style={{textAlign:"left",color:"#505050",fontSize:'14px',width:"474px",marginTop:"19px",borderRadius:"2px",
                                 padding:"6px 6px 6px 6px",boxSizing:"border-box",display:"flex",flexDirection:"column",justifyContent:"center",minHeight:"48px"}}
                                     onChange={(e)=>{setCurrentComment(e)}}></ReactQuill>
@@ -737,7 +780,7 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                             </div>}
                     </div>
                     <div style={{width:"336px",height:"108px",backgroundColor:"#fff",borderRadius:"2px",fontSize:"14px",padding:"16px 24px 24px 24px",textAlign:"left"}}>
-                        <div style={{color:"#a5a5a5",marginBottom:"16px"}}>제작자</div>
+                        <div style={{color:"#a5a5a5",marginBottom:"16px"}}>소개한 사람</div>
                         <div style={{display:"flex"}}>
                             <div style={{width:"32px",height:'32px',borderRadius:"50%",backgroundImage:`url(${"https://www.proveit.co.kr/"+product.produce_info.thumbnail})`,backgroundColor:"#c4c4c4",marginRight:"24px",
                         backgroundPosition:"center",backgroundSize:"cover",backgroundRepeat:"no-repeat"}}></div>
@@ -756,6 +799,9 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                     onMouseOver={()=>{setBtnOnOff(true);}}
                     onMouseLeave={()=>{setBtnOnOff(false)}}
                     onClick={(e)=>{e.stopPropagation();}}>
+                        {(product.youtube!=="undefined"&&imgNum===0)&&<div style={{width:"100%",height:"100%",position:"absolute"}}>
+                            <ReactPlayer width="100%" height="100%" playing muted url={product.youtube}></ReactPlayer>
+                        </div>}
                         {btnOnOff&&<div>
                             {imgNum!==0&&<div style={{width:"40px",height:"100%",position:"absolute",display:"flex",alignItems:"center",cursor:"pointer",justifyContent:"center"}}
                             onClick={(e)=>{setImgNum(imgNum-1);e.stopPropagation();}}

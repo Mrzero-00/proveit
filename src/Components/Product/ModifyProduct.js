@@ -55,7 +55,7 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
                       </div>
                   }
                   {localStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                      <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>내 서비스 등록하기</div></Link>
+                      <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>서비스 등록하기</div></Link>
                       <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
                       ,backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
                       </div>
@@ -75,7 +75,7 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
                     </div>
                 }
                 {localStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                    <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>내 서비스 등록하기</div></Link>
+                    <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>서비스 등록하기</div></Link>
                     <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
                     ,backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
                     </div>
@@ -338,6 +338,7 @@ const Body=()=>{
                         link:data.link,
                         thumbnail:data.thumbnail,
                         like_m:data.like_m,
+                        youtube:data.youtube
                     });
                 }
             })
@@ -409,7 +410,7 @@ const Body=()=>{
                                     image:[
                                         ...productInfo.image,
                                         {
-                                            id:productInfo.image.length,
+                                            id:productInfo.image.length+1,
                                             imageUrl:"https://www.proveit.co.kr"+e.data.img
                                         }
     
@@ -498,19 +499,19 @@ const Body=()=>{
                       <div style={{color:"#505050",fontSize:"14px",marginBottom:'16px',textAlign:"left"}}>프로젝트 기본정보 등록 ({pageNum}/2)</div>
                       {pageNum===1&&<div style={{width:"100%",padding:"24px 24px 32px 24px",backgroundColor:"#fff"}}>
                                         <div style={{marginBottom:"16px"}}>
-                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>사이트 주소 및 다운로드 링크<span style={{color:"#f00"}}>*</span></div>
+                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>사이트 주소 및 다운로드 링크<span style={{color:"#ED5C2E"}}>*</span></div>
                                             <input name="link" value={productInfo.link} style={styled.input} placeholder="https://" onChange={inputLogic}></input>
                                         </div>
                                         <div style={{marginBottom:"16px"}}>
-                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>서비스 이름<span style={{color:"#f00"}}>*</span></div>
+                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>서비스 이름<span style={{color:"#ED5C2E"}}>*</span></div>
                                             <input name="title" value={productInfo.title} style={styled.input} placeholder="서비스 이름" onChange={inputLogic}></input>
                                         </div>
                                         <div style={{marginBottom:"16px"}}>
-                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>한 줄 소개<span style={{color:"#f00"}}>*</span></div>
+                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>한 줄 소개<span style={{color:"#ED5C2E"}}>*</span></div>
                                             <input name="sub_title" value={productInfo.sub_title} style={styled.input} placeholder="서비스를 한 줄로 요약해서 설명해주세요." onChange={inputLogic}></input>
                                         </div>
                                         <div style={{marginBottom:"24px",position:"relative"}}>
-                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>카테고리<span style={{color:"#f00"}}>*</span></div>
+                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>카테고리<span style={{color:"#ED5C2E"}}>*</span></div>
                                             <div name="category" style={styled.dropBox} onClick={(e)=>{setCategoryWindowState(!categoryWindowState);e.stopPropagation();}}>
                                                 {productInfo.category}
                                                 <div style={{position:"absolute",width:"24px",height:'24px',right:"16px",top:"8px",backgroundImage:`url(${icon_dropBox})`}}></div>
@@ -534,7 +535,7 @@ const Body=()=>{
                                             </div>
                                         </div>
                                         <div style={{marginBottom:"16px"}}>
-                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>썸네일<span style={{color:"#505005"}}>*</span></div>
+                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>썸네일<span style={{color:"#ED5C2E"}}>*</span></div>
                                             <div style={{display:"flex",alignItems:"center"}}>
                                                 <div style={{width:"88px",height:"88px",borderRadius:"2px",backgroundImage:productInfo.thumbnail===""?`url(${icon_noneimg})`:`url(${productInfo.thumbnail})`,border:"1px dashed #c4c4c4",marginRight:"12px",
                                                             backgroundPosition:"center",backgroundRepeat:"no-repeat",backgroundSize:"cover"}}></div>
@@ -551,7 +552,7 @@ const Body=()=>{
                                     </div>}
                       {pageNum===2&&<div style={{width:"100%",padding:"24px 24px 32px 24px",backgroundColor:"#fff"}}>
                             <div style={{marginBottom:"16px"}}>
-                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>대표 이미지<span style={{color:"#f00"}}>*</span></div>
+                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>대표 이미지<span style={{color:"#ED5C2E"}}>*</span></div>
                                             <div style={{display:"flex",alignItems:"center"}}>
                                                 <form style={{display:"block"}}>
                                                             <input type='file' id="productImg" style={{display:"none"}}  accept=".jpg,.jpeg,.png,.bmp" onChange={FileUploder}></input>
@@ -587,7 +588,7 @@ const Body=()=>{
                                         </div>
                                         <div style={{marginBottom:"33px",fontSize:"13px",lineHeight:"13px",height:'13px',color:"#a5a5a5"}}>추천 사이즈 : 1280*720 (16:9) jpg, png, gif, 최대 파일크기 각 2MB, 최소 1장 필수</div>
                                         <div style={{marginBottom:"16px"}}>
-                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>서비스 설명<span style={{color:"#f00"}}>*</span></div>
+                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>서비스 설명<span style={{color:"#ED5C2E"}}>*</span></div>
                                             <ReactQuill className="quillInput" value={productInfo.main_text}  placeholder="내용을 입력해주세요. 공백 포함 280자까지 입력할 수 있습니다."
                                              onFocus={(e)=>{console.log(e)}}
                                              theme="" onChange={(e)=>{setProductInfo({...productInfo,main_text:e})}} style={{width:"464px",position:"relative",height:"168px",textAlign:"left",padding:"16px",overflow:"auto"}}></ReactQuill>

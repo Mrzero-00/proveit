@@ -55,7 +55,7 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
                       </div>
                   }
                   {localStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                      <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>내 서비스 등록하기</div></Link>
+                      <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>서비스 등록하기</div></Link>
                       <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
                       ,backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
                       </div>
@@ -75,7 +75,7 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
                     </div>
                 }
                 {localStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                    <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>내 서비스 등록하기</div></Link>
+                    <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>서비스 등록하기</div></Link>
                     <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
                     ,backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
                     </div>
@@ -555,7 +555,7 @@ const Body =()=>{
                             </div>
                             <div style={{fontSize:"14px",fontWeight:"bold",color:'#505050',marginBottom:"10px"}}>닉네임</div>
                             <input name="nick" style={styled.input} value={currentUserInfo.nick} placeholder="닉네임을 입력해주세요" onChange={inputLogic}></input>
-                            <div style={{fontSize:"14px",fontWeight:"bold",color:'#505050',marginBottom:"10px"}}>직책/직군 - 필수  <span style={{color:"#f00"}}>*</span></div>
+                            <div style={{fontSize:"14px",fontWeight:"bold",color:'#505050',marginBottom:"10px"}}>직책/직군 - 필수  <span style={{color:"#ED5C2E"}}>*</span></div>
                             <input name="position" style={styled.input} placeholder="직책 및 직군을 입력해주세요" value={currentUserInfo.position} onChange={inputLogic}></input>
                             <div style={{fontSize:"14px",fontWeight:"bold",color:'#505050',marginBottom:"10px"}}>소속</div>
                             <input name="department" style={styled.input} placeholder="소속을 입력해주세요" value={currentUserInfo.department} onChange={inputLogic}></input>

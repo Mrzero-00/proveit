@@ -455,7 +455,7 @@ const SignUp = ()=>{
                         style={{width:"464px",height:"40px",lineHeight:'40px',color:"#505050",border:'1px solid #e5e5e5',borderRadius:"2px",paddingLeft:"12px"}}></input>
                     </div> 
                     <div style={{textAlign:"left",marginTop:'16px'}}>
-                        <div style={{fontWeight:"bold",fontSize:'14px',height:'14px',lineHeight:"14px",marginBottom:"10px",textAlign:"left"}}>직책/직군 - 필수 <span style={{color:"#f00"}}>*</span></div>
+                        <div style={{fontWeight:"bold",fontSize:'14px',height:'14px',lineHeight:"14px",marginBottom:"10px",textAlign:"left"}}>직책/직군 - 필수 <span style={{color:"#ED5C2E"}}>*</span></div>
                         <input name="position" placeholder="CEO, 대표이사, 예비창업자, 디자이너, 개발자, 투자자등" value={currentUserInfo.position} onChange={inputLogic}
                         style={{width:"464px",height:"40px",lineHeight:'40px',color:"#505050",border:'1px solid #e5e5e5',borderRadius:"2px",paddingLeft:"12px"}}></input>
                     </div>  

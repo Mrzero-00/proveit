@@ -100,6 +100,7 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
   }
 
 const Body = ()=>{
+    const [text,setText] =useState("") 
     return(
         <div>
             {window.location.pathname ==="/tos"&&<div style={{display:"flex",justifyContent:"center"}}>
