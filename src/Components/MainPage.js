@@ -42,7 +42,7 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
   return(
       <>
         <div id="header" style={{width:"100%",height:"48px",backgroundColor:"#fff",display:"flex",justifyContent:"center",alignItems:"center",minHeight:"48px"}}>
-            <div style={{width:"1040px",display:"flex",justifyContent:"space-between",alignItems:"center",position:"relative"}}>  
+            <div className="header_bar">  
                     <Link to="/"><div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`}}></div></Link>
                     <div>
                 {localStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
@@ -62,7 +62,7 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
         </div>
         {(!loginWindow&&!signupWindow)&&<div id="header" style={{width:"100%",height:"48px",backgroundColor:"#fff",position:"fixed",top:"-48px",display:"flex",justifyContent:"center",alignItems:"center",minHeight:"48px",
                               transform:`translate(0,${header}px)`,transition:"0.3s",zIndex:"9999"}}>
-          <div style={{width:"1040px",display:"flex",justifyContent:"space-between",alignItems:"center",position:"relative"}}>  
+          <div className="header_bar">
                   <Link to="/"><div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`}}></div></Link>
                   <div>
               {localStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
@@ -274,13 +274,13 @@ const Body=({productOrderState,setProductOrderState})=>{
       return(
         <>
         <Link to={`/product?productnum=${item.id}`}><div id={item.id} 
-          style={{width:"688px",height:"120px",display:"flex",alignItems:"center",backgroundColor:"#fff",position:"relative",cursor:"pointer",borderBottom:"1px solid #e5e5e5"}}
           onClick={(e)=>{e.stopPropagation();}}
+          className="main_body_product_item"
         >
-          <div style={{width:"88px",marginLeft:"16px",height:"88px",marginRight:"16px",backgroundImage:`url(${item.thumbnail})`,backgroundPosition:"center",backgroundSize:"cover",backgroundRepeat:"no-repeat"}}></div>
-          <div style={{width:"480px",textAlign:"left",marginRight:"24px"}}>
-            <div style={{color:"#505050",height:"16px",fontWeight:"bold",fontSize:'16px',marginBottom:"12px",lineHeight:"16px"}}>{item.title}</div>
-            <div style={{color:"#828282",height:"14px",fontSize:'13px',marginBottom:'16px',lineHeight:"14px"}}>{item.sub_title}</div>
+          <div className="main_body_product_thumbnail" style={{backgroundImage:`url(${item.thumbnail})`}}></div>
+          <div style={{width:"100%",textAlign:"left",marginRight:"24px"}}>
+            <div className="main_body_product_title">{item.title}</div>
+            <div className="main_body_product_subtitle">{item.sub_title}</div>
             <div style={{display:"flex",height:"24px",alignItems:"center"}}>
               <div style={{padding:"3.5px 5px 3.5px 5px",maxHeight:"24px",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px",backgroundColor:"#F1F1F1"}}>
                 <div style={{width:"14px",height:"14px",backgroundImage:`url(${icon_comment})`,marginRight:"8px"}}></div>
@@ -291,9 +291,9 @@ const Body=({productOrderState,setProductOrderState})=>{
               <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>{item.category}</div>
             </div>
           </div>
-          <div style={{position:"absolute",width:"48px",height:"52px",right:"28px"}}>
-            <div style={{height:"50%",width:"100%",backgroundImage:`url(${icon_like})`,backgroundRepeat:"no-repeat",backgroundPosition:"center"}}></div>
-            <div style={{height:"50%",width:"100%",fontSize:"18px",fontWeight:"bold",color:"#505050",textAlign:"center"}}>{item.like_count}</div>
+          <div style={{width:"32px",height:"100%",marginRight:"12px",display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center"}}>
+            <div style={{height:"100%",width:"100%",backgroundImage:`url(${icon_like})`,backgroundRepeat:"no-repeat",backgroundPosition:"center"}}></div>
+            <div style={{height:"100%",width:"100%",fontSize:"18px",fontWeight:"bold",color:"#505050",textAlign:"center"}}>{item.like_count}</div>
           </div>
         </div>
         </Link>
@@ -415,8 +415,8 @@ const Body=({productOrderState,setProductOrderState})=>{
   },[])
   return(
     <div style={{width:"100%",height:"100%",paddingTop:"48px",backgroundColor:"#f9f9f9",display:"flex",justifyContent:"center"}}> 
-      {renderState&&<div style={{display:"flex",width:"1040px",height:"100%"}}>
-        <div style={{width:"688px",height:"100%",marginRight:"16px"}}>
+      {renderState&&<div className="main_body">
+        <div className="main_body_product_list">
           {project.map((item,index)=>(<ProjectRender key={index} index={index} productOrderState={productOrderState} setProductOrderState={setProductOrderState} setRenderState={setRenderState} item={item}></ProjectRender>))}
           <div style={{width:"100%",height:"19px",fontSize:'13px',color:"#828282",textAlign:"center"}}>여기가 끝이에요</div>
         </div>
@@ -515,11 +515,8 @@ const MainPage = ()=>{
   return(
   <div style={{
     width:"100%",
-    height:window.innerHeight,
     display:"flex",
-    flexDirection:"column",
-    //overflow:"hidden"
-    overflow:(loginWindow||signupWindow)&&"hidden"
+    flexDirection:"column"
   }}
   onClick={()=>{setModal(false)}}>
     <Header 
@@ -535,33 +532,13 @@ const MainPage = ()=>{
       setProductOrderState={setProductOrderState}></Body>
 
     {loginWindow&&<div 
-      style={{
-        position:"absolute",
-        width:'100%',
-        height:'100%',
-        backgroundColor:"rgba(80,80,80,0.9)",
-        display:"flex",
-        justifyContent:"center"
-        }}
-    onClick={()=>{setLoginWindow(false)}}>
-      <div style={{
-        width:"688px",
-        height:"384px",
-        backgroundColor:"#fff",
-        borderRadius:'4px',
-        marginTop:"179px",
-        display:"flex",
-        alignItems:"center",
-        flexDirection:"column",
-        position:"fixed",
-        top:"50%",
-        left:"50%",
-        transform: "translate(-50%,-100%)",
-        color:"#505050"}}
+      className="modal_background"
+      onClick={()=>{setLoginWindow(false)}}>
+      <div className="modal_login"
         onClick={(e)=>{setLoginWindow(true);e.stopPropagation();}}>
-          <div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`,marginTop:"56px",marginBottom:"32px"}}></div>
+          <div style={{width:"90px",height:"16px",minHeight:"16px",minWidth:"90px",backgroundImage:`url(${icon_logo})`,marginBottom:"32px"}}></div>
           <div style={{height:'23px',lineHeight:"23px",fontSize:"20px",fontWeight:'bold',marginBottom:"40px"}}>로그인</div>
-          <div style={{fontSize:"16px",lineHeight:"28.8px",textAlign:"left",marginBottom:"49px"}}>
+          <div style={{lineHeight:"28.8px",textAlign:"left",marginBottom:"40px"}}>
             <li>서비스를 프루브잇에 소개하고 커뮤니티 피드백을 받아보세요.</li>
             <li>랜딩페이지만 있으면 아이디어만으로도 충분히 검증해 볼 수 있어요.</li>
             <li>지금 어떤 서비스들이 만들어지고 있는지 확인하세요</li>
@@ -581,33 +558,13 @@ const MainPage = ()=>{
     </div>}
 
     {signupWindow&&<div 
-      style={{
-        position:"absolute",
-        width:'100%',
-        height:'100%',
-        backgroundColor:"rgba(80,80,80,0.9)",
-        display:"flex",
-        justifyContent:"center"
-        }}
+      className="modal_background"
     onClick={()=>{setSignUpWindow(false)}}>
-      <div style={{
-        width:"688px",
-        height:"384px",
-        backgroundColor:"#fff",
-        borderRadius:'4px',
-        marginTop:"179px",
-        display:"flex",
-        alignItems:"center",
-        flexDirection:"column",
-        position:"fixed",
-        top:"50%",
-        left:"50%",
-        transform: "translate(-50%,-100%)",
-        color:"#505050"}}
+      <div className="modal_login"
         onClick={(e)=>{setSignUpWindow(true);e.stopPropagation();}}>
-          <div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`,marginTop:"56px",marginBottom:"32px"}}></div>
+          <div style={{width:"90px",height:"16px",minHeight:"16px",minWidth:"90px",backgroundImage:`url(${icon_logo})`,marginBottom:"32px"}}></div>
           <div style={{height:'23px',lineHeight:"23px",fontSize:"20px",fontWeight:'bold',marginBottom:"40px"}}>회원가입</div>
-          <div style={{fontSize:"16px",lineHeight:"28.8px",textAlign:"left",marginBottom:"49px"}}>
+          <div style={{lineHeight:"28.8px",textAlign:"left",marginBottom:"40px"}}>
             <li>서비스를 프루브잇에 소개하고 커뮤니티 피드백을 받아보세요.</li>
             <li>랜딩페이지만 있으면 아이디어만으로도 충분히 검증해 볼 수 있어요.</li>
             <li>지금 어떤 서비스들이 만들어지고 있는지 확인하세요</li>

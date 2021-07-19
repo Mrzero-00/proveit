@@ -92,7 +92,7 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
                 const alink = document.createElement("a");
                 alink.href="/";
                 localStorage.clear();
-                // alink.click();
+                alink.click();
                 }}>로그아웃</div>
             </div>}
             </div>
@@ -123,7 +123,7 @@ const Body=()=>{
             u_id: "",
             updated_at: "2021-07-06 11:21:12",
             user_name: "상일",
-            youtube: null,
+            youtube: "",
           },
           title:"",
           subTitle:"",
@@ -405,12 +405,19 @@ const Body=()=>{
                 data:data
     
             }).then((e)=>{
+                console.log(e);
                 if(e.data.ret_code === "0000"){
                     const alink = document.createElement("a");
                     alink.href="/profile";
                     alink.click();
-                }else{
-                    
+                }else if(e.data.ret_code ==="500"){
+                    alert("로그인 해쉬가 만료되었습니다. 다시 로그인해주세요");
+                    const alink = document.createElement("a");
+                    alink.href="/";
+                    setTimeout(() => {
+                        localStorage.clear();
+                        alink.click();
+                    }, 1000);
                 }
             })
         }catch{

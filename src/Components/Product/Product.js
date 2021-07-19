@@ -171,7 +171,7 @@ const Body = ({setModal,modal,setLoginWindow})=>{
         const videoThumbnail = url.substring(subNum);
         return(
             <>
-            {product.youtube!=="undefined"&&<div>
+            {(product.youtube!=="undefined"&&product.youtube!=="")&&<div>
                 {item.type==="video"&&<div style={{width:"40px",height:"40px",marginRight:"8px",backgroundImage:`url(https://img.youtube.com/vi/${videoThumbnail}/default.jpg)`,cursor:"pointer",
                     backgroundSize:"cover",backgroundRepeat:"no-repeat",backgroundPosition:"center",
                     border:imgNum===item.id ? "1px solid #e5e5e5": "1px solid transparent"}}
@@ -185,7 +185,7 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                     >      
                 </div>}
             </div>}
-            {product.youtube==="undefined"&&
+            {(product.youtube==="undefined"||product.youtube==="")&&
                 <div style={{width:"40px",height:"40px",marginRight:"8px",backgroundImage:`url(${item.imageUrl})`,cursor:"pointer",
                     backgroundSize:"cover",backgroundRepeat:"no-repeat",backgroundPosition:"center",
                     border:imgNum===item.id-1 ? "1px solid #e5e5e5": "1px solid transparent"}}
@@ -421,7 +421,6 @@ const Body = ({setModal,modal,setLoginWindow})=>{
             data:data
 
         }).then((e)=>{
-            console.log(e);
             if(e.data.ret_code === "0000"){
                 const data = e.data.product;
                 setProduct({
@@ -433,7 +432,7 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                     main_text:data.main_text,
                     payment_type:data.payment_type,
                     category:data.category,
-                    image:data.youtube!=="undefined"?[{id:0,type:"video",imageUrl:data.youtube},...JSON.parse(data.image)]:JSON.parse(data.image),
+                    image:(data.youtube!==""&&data.youtube!=="undefined")?[{id:0,type:"video",imageUrl:data.youtube},...JSON.parse(data.image)]:JSON.parse(data.image),
                     link:data.link,
                     thumbnail:data.thumbnail,
                     like_m:data.like_m,
@@ -613,11 +612,11 @@ const Body = ({setModal,modal,setLoginWindow})=>{
         onClick={()=>{setBigImgWindow(false)}}>
                 <a id="replyNavi" style={{display:"none"}} href={`#${localStorage.getItem("replyId")}`}></a>
                 <div style={{textAlign:"left",marginTop:"48px",marginBottom:"32px"}}>
-                <div style={{width:"1040px",height:"88px",display:"flex",alignItems:"center"}}>
-                    <div style={{width:"88px",height:"88px",marginRight:"16px",backgroundImage:`url(${product.thumbnail})`,backgroundSize:"cover",backgroundRepeat:"no-repeat",backgroundPosition:"center"}}></div>
-                    <div style={{width:"480px",textAlign:"left",marginRight:"24px"}}>
+                <div className="product_item">
+                    <div className="product_thumbnail" style={{backgroundImage:`url(${product.thumbnail})`}}></div>
+                    <div style={{width:"100%",textAlign:"left"}}>
                         <div style={{color:"#505050",height:"16px",fontWeight:"bold",fontSize:'16px',marginBottom:"12px",lineHeight:"16px"}}>{product.title}</div>
-                        <div style={{color:"#828282",height:"14px",fontSize:'13px',marginBottom:'16px',lineHeight:"14px"}}>{product.sub_title}</div>
+                        <div style={{color:"#828282",height:"13px",fontSize:'13px',marginBottom:'16px',lineHeight:"13px"}}>{product.sub_title}</div>
                         <div style={{display:"flex",height:"24px",alignItems:"center"}}>
                         <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>{product.payment_type}</div>
                         <div style={{height:"14px",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px",width:"1px",backgroundColor:"#e5e5e5"}}></div>
@@ -626,15 +625,14 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                     </div>
                 </div>
                 </div>
-                <div style={{display:"flex"}}>
+                <div className="product_item_sort">
                     <div>
-                        <div style={{width:"688px",backgroundColor:"#fff",padding:"24px",boxSizing:"border-box",marginRight:"16px",marginBottom:"40px"}}>      
-                            <div style={{width:"640px",height:"360px",marginBottom:"16px",backgroundImage:`url(${product.image[imgNum].imageUrl})`,cursor:"pointer",
-                            backgroundSize:"cover",backgroundRepeat:"no-repeat",backgroundPosition:"center",transition:"0.3s",position:"relative"}}
+                        <div className="product_item_group">      
+                            <div className="product_item_img" style={{backgroundImage:`url(${product.image[imgNum].imageUrl})`}}
                             onMouseOver={()=>{setBtnOnOff(true);}}
                             onMouseLeave={()=>{setBtnOnOff(false)}}
                             onClick={(e)=>{e.stopPropagation();setBigImgWindow(true);}}>
-                                {(product.youtube!=="undefined"&&imgNum===0)&&<div style={{width:"100%",height:"100%",position:"absolute"}}>
+                                {(product.youtube!==""&&product.youtube!=="undefined"&&imgNum===0)&&<div style={{width:"100%",height:"100%",position:"absolute"}}>
                                     <ReactPlayer playing muted url={product.youtube}></ReactPlayer>
                                 </div>}
                                 {btnOnOff&&<div>
@@ -654,12 +652,11 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                                         </div>    
                                     </div>}
                                 </div>}
-                            </div>
-                            
+                            </div>                        
                             <div style={{display:"flex",marginBottom:"24px"}}>
                                 {product.image.map((item)=>(<ImageArray item={item} product={product} imgNum={imgNum} key={item.id} setImgNum={setImgNum}></ImageArray>))}
                             </div>
-                            <div style={{width:"640px",position:"relative",marginBottom:"24px"}}>
+                            <div style={{width:"100%",position:"relative",marginBottom:"24px"}}>
                                 <ReactQuill theme="" readOnly
                                 value={product.main_text} style={{textAlign:"left",color:"#505050",fontSize:'14px',width:"100%"}}></ReactQuill>
                             </div>
@@ -674,46 +671,44 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                                 </div>
                         </div>
                         <div style={{textAlign:"left",fontWeight:"bold",fontSize:"14px",marginBottom:"21px"}}>댓글({replyList.length})</div>
-                        <div style={{width:"688px",backgroundColor:"#fff",boxSizing:"border-box",marginRight:"16px",marginBottom:"67px"}}>
-                        <div style={{display:"flex",borderBottom:"1px solid #f1f1f1"}}>
-                            <div style={{
-                                width:"40px",
-                                height:"40px",
-                                marginTop:"19px",
-                                marginLeft:"24px",
-                                marginRight:"16px",
-                                borderRadius:"50%",
-                                backgroundColor:"#c4c4c4",
-                                backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`,
-                                backgroundSize:"cover",
-                                backgroundRepeat:"no-repeat",
-                                backgroundPosition:"center"
-                            }}
-                                >
+                        <div className="product_item_comment">
+                        <div className="product_item_comment_sort">
+                            <div className="product_item_comment_submit">
+                                <div style={{
+                                    width:"40px",
+                                    height:"40px",
+                                    marginRight:"16px",
+                                    borderRadius:"50%",
+                                    backgroundColor:"#c4c4c4",
+                                    backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`,
+                                    backgroundSize:"cover",
+                                    backgroundRepeat:"no-repeat",
+                                    backgroundPosition:"center"
+                                }}
+                                    >
+                                </div>
+                                    <div>
+                                        {/* <textarea onChange={(e)=>{setCurrentComment(e.target.value);}}></textarea> */}
+                                        <ReactQuill className="quillInput product_item_comment_input" theme="" placeholder="서비스에 관한 의견이나 궁금한 점을 남겨보세요"
+                                        value={currentComment}
+                                        onChange={(e)=>{setCurrentComment(e)}}></ReactQuill>
+                                        {replyState&&<div style={{marginBottom:"24px"}}></div>}
+                                        {!replyState&&<div style={{color:"#ea4335",fontSize:'14px',marginTop:"8px",marginBottom:'16px',height:'14px',lineHeight:"14px"}}>내용을 입력해 주세요.</div>}
+                                </div>
+                                <div className="btn_one product_item_comment_submitbtn"
+                                onClick={()=>{
+                                    if(localStorage.getItem("hash")){
+                                        replyAddApi();
+                                        setCurrentComment("");
+                                    }else{
+                                        setLoginWindow(true);
+                                    }
+                                }}>남기기</div>
                             </div>
-                                <div>
-                                    {/* <textarea onChange={(e)=>{setCurrentComment(e.target.value);}}></textarea> */}
-                                    <ReactQuill className="quillInput" theme="" placeholder="서비스에 관한 의견이나 궁금한 점을 남겨보세요"
-                                    value={currentComment} style={{textAlign:"left",color:"#505050",fontSize:'14px',width:"474px",marginTop:"19px",borderRadius:"2px",
-                                padding:"6px 6px 6px 6px",boxSizing:"border-box",display:"flex",flexDirection:"column",justifyContent:"center",minHeight:"48px"}}
-                                    onChange={(e)=>{setCurrentComment(e)}}></ReactQuill>
-                                    {replyState&&<div style={{marginBottom:"24px"}}></div>}
-                                    {!replyState&&<div style={{color:"#ea4335",fontSize:'14px',marginTop:"8px",marginBottom:'16px',height:'14px',lineHeight:"14px"}}>내용을 입력해 주세요.</div>}
+                            <div style={{width:"100%",backgroundColor:"#fff",padding:"32px 48px 31px 24px",boxSizing:"border-box"}}>
+                                {replyList.map((item)=>(<CommentRender key={item.id} product={product} modal={modal} setModal={setModal} item={item}></CommentRender>))}
                             </div>
-                            <div className="btn_one" style={{width:"78px",height:"48px",marginLeft:"8px",marginTop:"19px"}}
-                            onClick={()=>{
-                                if(localStorage.getItem("hash")){
-                                    replyAddApi();
-                                    setCurrentComment("");
-                                }else{
-                                    setLoginWindow(true);
-                                }
-                            }}>남기기</div>
-                        </div>
-                        <div style={{width:"100%",backgroundColor:"#fff",padding:"32px 48px 31px 24px",boxSizing:"border-box"}}>
-                            {replyList.map((item)=>(<CommentRender key={item.id} product={product} modal={modal} setModal={setModal} item={item}></CommentRender>))}
-                        </div>
-                        {replyList.length>=10&&<div style={{display:"flex",borderTop:"1px solid #f1f1f1",paddingBottom:"16px"}}>
+                            {replyList.length>=10&&<div className="product_item_comment_submit_under">
                             <div style={{
                                 width:"40px",
                                 height:"40px",
@@ -735,13 +730,14 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                                 {replyState&&<div style={{marginBottom:"24px"}}></div>}
                                 {!replyState&&<div style={{color:"#ea4335",fontSize:'14px',marginTop:"8px",marginBottom:'16px',height:'14px',lineHeight:"14px"}}>내용을 입력해 주세요.</div>}
                             </div>
-                            <div className="btn_one" style={{width:"78px",height:"48px",marginLeft:"8px",marginTop:"32px"}}
+                            <div className="btn_one product_item_comment_submitbtn"
                             onClick={()=>{
                             if(localStorage.getItem("hash")){
                                 replyAddApi();
                                 setCurrentComment("");
                             }}}>남기기</div>
                         </div>}
+                        </div>
                     </div>
                     </div>
                     <div>
@@ -943,11 +939,12 @@ const Product = ()=>{
     setModal={setModal}
     setLoginWindow={setLoginWindow}
     ></Body>
+
     {loginWindow&&<div 
       style={{
-        position:"absolute",
-        width:'100%',
-        height:'100%',
+        position:"fixed",
+        width:'100vw',
+        height:'100vh',
         backgroundColor:"rgba(80,80,80,0.9)",
         display:"flex",
         justifyContent:"center"
@@ -991,9 +988,9 @@ const Product = ()=>{
 
     {signupWindow&&<div 
       style={{
-        position:"absolute",
-        width:'100%',
-        height:'100%',
+        position:"fixed",
+        width:'100vw',
+        height:'100vh',
         backgroundColor:"rgba(80,80,80,0.9)",
         display:"flex",
         justifyContent:"center"

@@ -71,7 +71,6 @@
     cursor: pointer;
 }
 
-
 .btn_three{
     background-color: #fff;
     border-radius: 2px;
@@ -110,14 +109,14 @@
     line-height: 13px;
     height:13px;
 }
+
 .btn_textBtn13:hover{
     color: #9C31C6;
 }
 
-
 .btn_textBtn:hover{
     color: #9C31C6;
-  }
+}
 
 *{
     box-sizing: border-box;
@@ -148,6 +147,7 @@ input:hover{
 .quillInput{
     border:1px solid #e5e5e5;
 }
+
 .quillInput:hover{
     border: 1px solid rgba(156,49,198,0.3);
 }
@@ -169,14 +169,454 @@ input:hover{
       display: none;
   }
 
-  strong{
-    color:#9C31C6;
-  }
-
   .btn_up{
       background-color: #9C31C6;
   }
+
   .btn_up:hover{
     background-color: #9120BD;
   }
 
+@media screen and (max-width:767px){
+
+    .modal_background{
+        position:fixed;
+        width:100vw;
+        height:100vh;
+        background-color:rgba(80,80,80,0.9);
+        display:flex;
+        justify-content:center;
+      }
+    
+      .modal_login{
+        /* 폰화면 */
+        width:90%;
+        padding:56px 44px 40px 44px;
+        font-size: 13px;
+    
+        margin-top:179px;
+        background-color:#fff;
+        border-radius:4px;
+        display:flex;
+        align-items:center;
+        flex-direction:column;
+        position:fixed;
+        top:50%;
+        left:50%;
+        transform:translate(-50%,-100%);
+        color:#505050;
+      }
+    
+      .header_bar{
+        /* 폰화면 */
+        padding: 0px 23px 0px 23px;
+    
+        width:1040px;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        position:relative;
+      }
+    
+      .signup{
+        width:100%;
+        justify-content:center;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+      }
+
+    .main_body{
+       /* 폰화면 */
+      width:100vw;
+      height:100%;
+    }
+  
+    .main_body_product_thumbnail{
+      /* 폰화면 */
+      width:44px;
+      min-width:44px;
+      min-height:44px;
+      height:44px;
+      margin-right:8px;
+  
+      background-position:center;
+      background-size:cover;
+      background-repeat:no-repeat;
+    }
+  
+    .main_body_product_list{
+      width:100%;
+      height:100%;
+      margin-right:16px;
+    }
+  
+    .main_body_product_item{
+      width:100%;
+      height:120px;
+      display:flex;
+      padding:16px;
+      justify-content:space-between;
+      background-color:#fff;
+      position:relative;
+      cursor:pointer;
+      border-bottom:1px solid #e5e5e5;
+    }
+  
+    .main_body_product_title{
+      color:#505050;
+      font-weight:bold;
+      font-size:16px;
+      margin-bottom:12px;
+      line-height:16px;
+    }
+  
+    .main_body_product_subtitle{
+      color:#828282;
+      font-size:13px;
+      margin-bottom:16px;
+      line-height:14px;
+    }
+  
+    .signup_input{
+      width:100%;
+      height:40px;
+      line-height:40px;
+      font-size: 13px;
+      color:#505050;
+      border:1px solid #e5e5e5;
+      border-radius:2px;
+      padding-left:12px;
+    }
+  
+    .signup_group_title{
+      font-size:20px;
+      font-weight:bold;
+      height:20px;
+      line-height:20px;
+      text-align:left;
+      width:100%;
+      margin-bottom:24px;
+    }
+  
+    .signup_group{
+        padding:24px 19px 24px 19px;
+        background-color:#fff;
+        border-radius:2px;
+        width:100%;
+        display:flex;
+        flex-direction:column;
+    }
+
+    .product_item{
+        width:100%;
+        height:88px;
+        display:flex;
+        align-items:center;
+     }
+     .product_item_sort{
+         display:flex;
+         width:100vw;
+         flex-direction: column-reverse;
+     }
+     .product_thumbnail{
+         width:88px;
+         min-width:88px;
+         min-height:88px;
+         height:88px;
+         margin-right:16px;
+   
+         background-position:center;
+         background-size:cover;
+         background-repeat:no-repeat;
+     }
+ 
+     .product_item_group{
+         width:100%;
+         background-color:#fff;
+         padding:24px;
+         box-sizing:border-box;
+         margin-right:16px;
+         margin-bottom:40px;
+     }
+ 
+     .product_item_img{
+         width:100%;
+         height:360px;
+         margin-bottom:16px;
+         cursor:pointer;
+         background-size:cover;
+         background-repeat:no-repeat;
+         background-position:center;
+         transition:0.3s;
+         position:relative;
+     }
+
+     .product_item_comment{
+        width:100%;
+        background-color:#fff;
+        box-sizing:border-box;
+        margin-right:16px;
+        margin-bottom:67px;
+     }
+
+     .product_item_comment_input{
+        text-align:left;
+        color:#505050;
+        font-size:14px;
+        width:200px;
+        border-radius:2px;
+        padding:6px 6px 6px 6px;
+        box-sizing:border-box;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        min-height:48px;
+     }
+
+     .product_item_comment_submit{
+        display:flex;
+        width: 100vw;
+        border-top:1px solid #f1f1f1;
+        padding:12px 19px 13px 16px;
+     }
+
+     .product_item_comment_submit_under{
+        display:none;
+        padding-bottom:16px;
+     }
+
+     .product_item_comment_sort{
+        display: flex;
+        width: 100vw;
+        flex-direction: column-reverse;
+     }
+     .product_item_comment_submitbtn{
+         width:78px;
+         height:48px;
+         margin-left:8px;
+     }
+}
+
+
+@media screen and (min-width:1080px){
+
+    .modal_background{
+        position:fixed;
+        width:100vw;
+        height:100vh;
+        background-color:rgba(80,80,80,0.9);
+        display:flex;
+        justify-content:center;
+      }
+    
+      .modal_login{
+        /* 웹화면 */
+        width:688px;
+        padding:56px 24px 40px 24px;
+        font-size: 16px;
+    
+        margin-top:179px;
+        background-color:#fff;
+        border-radius:4px;
+        display:flex;
+        align-items:center;
+        flex-direction:column;
+        position:fixed;
+        top:50%;
+        left:50%;
+        transform:translate(-50%,-100%);
+        color:#505050;
+      }
+    
+      .header_bar{    
+        width:1040px;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        position:relative;
+      }
+    
+      .signup{
+        width:100%;
+        justify-content:center;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+      }
+
+    .main_body{
+      /* 웹화면 */
+      display:flex;
+      width:1040px;
+
+  
+      height:100%;
+    }
+  
+    .main_body_product_thumbnail{
+      /* 웹화면 */
+      width:88px;
+      min-width:88px;
+      min-height:88px;
+      height:88px;
+      margin-right:16px;
+
+      background-position:center;
+      background-size:cover;
+      background-repeat:no-repeat;
+    }
+  
+    .main_body_product_list{
+      width:100%;
+      height:100%;
+      margin-right:16px;
+    }
+  
+    .main_body_product_item{
+      width:100%;
+      height:120px;
+      display:flex;
+      padding:16px;
+      justify-content:space-between;
+      background-color:#fff;
+      position:relative;
+      cursor:pointer;
+      border-bottom:1px solid #e5e5e5;
+    }
+  
+    .main_body_product_title{
+      color:#505050;
+      font-weight:bold;
+      font-size:16px;
+      margin-bottom:12px;
+      line-height:16px;
+    }
+  
+    .main_body_product_subtitle{
+      color:#828282;
+      font-size:13px;
+      margin-bottom:16px;
+      line-height:14px;
+    }
+  
+    .signup_input{
+      width:100%;
+      height:40px;
+      line-height:40px;
+      font-size: 13px;
+      color:#505050;
+      border:1px solid #e5e5e5;
+      border-radius:2px;
+      padding-left:12px;
+    }
+  
+    .signup_group_title{
+      font-size:20px;
+      font-weight:bold;
+      height:20px;
+      line-height:20px;
+      text-align:left;
+      width:100%;
+      margin-bottom:24px;
+    }
+  
+    .signup_group{
+        padding:24px 19px 24px 19px;
+        background-color:#fff;
+        border-radius:2px;
+        width:100%;
+        display:flex;
+        flex-direction:column;
+    }
+
+    /* 추가 */
+
+    .product_item{
+       width:1040px;
+       height:88px;
+       display:flex;
+       align-items:center;
+    }
+    .product_item_sort{
+        display:flex;
+        /* flex-direction: column-reverse; */
+    }
+    .product_thumbnail{
+        width:88px;
+        min-width:88px;
+        min-height:88px;
+        height:88px;
+        margin-right:16px;
+  
+        background-position:center;
+        background-size:cover;
+        background-repeat:no-repeat;
+    }
+
+    .product_item_group{
+        width:688px;
+        background-color:#fff;
+        padding:24px;
+        box-sizing:border-box;
+        margin-right:16px;
+        margin-bottom:40px;
+    }
+
+    .product_item_img{
+        width:100%;
+        height:360px;
+        margin-bottom:16px;
+        cursor:pointer;
+        background-size:cover;
+        background-repeat:no-repeat;
+        background-position:center;
+        transition:0.3s;
+        position:relative;
+    }
+    .product_item_comment{
+        width:688px;
+        background-color:#fff;
+        box-sizing:border-box;
+        margin-right:16px;
+        margin-bottom:67px;
+     }
+
+     .product_item_comment_input{
+        text-align:left;
+        color:#505050;
+        font-size:14px;
+        width:474px;
+        border-radius:2px;
+        padding:6px 6px 6px 6px;
+        box-sizing:border-box;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        min-height:48px;
+     }
+
+     .product_item_comment_submit{
+        display:flex;
+        width: 100%;
+        border-bottom:1px solid #f1f1f1;
+        padding:35px 48px 24px 24px;
+     }
+
+     .product_item_comment_submit_under{
+        display:flex;
+        border-top:1px solid #f1f1f1;
+        padding-bottom:16px;
+     }
+
+     .product_item_comment_sort{
+        display: flex;
+        flex-direction: column;
+     }
+
+     .product_item_comment_submitbtn{
+        width:78px;
+        height:48px;
+        margin-left:8px;
+    }
+}

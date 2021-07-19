@@ -92,7 +92,7 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
                 const alink = document.createElement("a");
                 alink.href="/";
                 localStorage.clear();
-                // alink.click();
+                alink.click();
                 }}>로그아웃</div>
             </div>}
             </div>
@@ -290,8 +290,14 @@ const Body =()=>{
                     setMyReply(e.data.reply);
                     localStorage.setItem("userInfo",JSON.stringify(e.data.user));
                     setRender(true);
-                }else{
-      
+                }else if(e.data.ret_code ==="500"){
+                    alert("로그인 해쉬가 만료되었습니다. 다시 로그인해주세요");
+                    const alink = document.createElement("a");
+                    alink.href="/";
+                    setTimeout(() => {
+                        localStorage.clear();
+                        alink.click();
+                    }, 1000);
                 }
             })
         }catch{
@@ -323,7 +329,6 @@ const Body =()=>{
       
         }
     }
-
 
     useEffect(()=>{
         userInfoGetApi();
@@ -383,13 +388,13 @@ const Body =()=>{
             
             {(index<4&&type==="myProduct")&&<Link to={`/modifyproduct?productnum=${item.id}`}><div className="btn_one" style={{width:"64px",height:"32px",zIndex:"9999",top:"50%",left:"520px",transform:"translate(0,-50%)",position:"absolute"}}
               onClick={(e)=>{e.stopPropagation();}}>수정</div></Link>}
-            {index===undefined&&<Link to={`/modifyproduct?productnum=${item.id}`}><div className="btn_one" style={{width:"64px",height:"32px",zIndex:"9999",top:"50%",left:"520px",transform:"translate(0,-50%)",position:"absolute"}}
+            {(index===undefined&&type==="myProduct")&&<Link to={`/modifyproduct?productnum=${item.id}`}><div className="btn_one" style={{width:"64px",height:"32px",zIndex:"9999",top:"50%",left:"520px",transform:"translate(0,-50%)",position:"absolute"}}
               onClick={(e)=>{e.stopPropagation();}}>수정</div></Link>}
             </div>
         )
     }
-    window.history.pushState(null,"",window.location.href);
 
+    window.history.pushState(null,"",window.location.href);
     window.onpopstate = ()=>{
         if(pageNum!==0){
             window.history.go(1);
@@ -402,7 +407,8 @@ const Body =()=>{
 
     }
 
-    const ReplyRender =({item,index,myReply})=>{
+    const ReplyRender =({item,index})=>{
+        console.log(index);
         return(
             <div style={{cursor:"pointer"}} onClick={
                 ()=>{
@@ -464,7 +470,7 @@ const Body =()=>{
                     </div>
                 </div>
             </div>
-            {fullListState==="none"&&<div style={{width:"1040px",display:"flex",marginTop:"32px"}}>
+            {fullListState==="none"&&<div style={{width:"1040px",display:"flex",marginTop:"32px",marginBottom:"32px"}}>
                 <div style={{width:"688px",marginRight:"16px"}}>
                     <div style={{marginBottom:"40px"}}>
                         <div style={{fontWeight:"bold",marginBottom:"16px"}}>등록한 서비스</div>
@@ -477,6 +483,7 @@ const Body =()=>{
                         display:"flex",
                         justifyContent:"center",
                         alignItems:"center",
+                        fontSize:'14px',
                         color:"#828282",
                         cursor:"pointer"}}
                         onClick={()=>{setFullListState("myProducts")}}>모두 보기</div>}
@@ -491,6 +498,7 @@ const Body =()=>{
                         backgroundColor:"#fff",
                         display:"flex",
                         justifyContent:"center",
+                        fontSize:'14px',
                         alignItems:"center",
                         color:"#828282",
                         cursor:"pointer"}}
@@ -508,20 +516,24 @@ const Body =()=>{
                         display:"flex",
                         justifyContent:"center",
                         alignItems:"center",
+                        fontSize:'14px',
                         color:"#828282",
                         cursor:"pointer"}}
                         onClick={()=>{setFullListState("myReply")}}>모두 보기</div>}
                 </div>
             </div>}
-            {fullListState!=="none"&&<div style={{width:"1040px",display:"flex",marginTop:"32px",flexDirection:"column"}}>
+            {fullListState!=="none"&&<div style={{width:"1040px",display:"flex",marginTop:"32px",flexDirection:"column",marginBottom:"32px"}}>
                 {fullListState==="myProducts"&&<div>
-                {myProducts.map((item,index)=>(<ProductRender key={index} item={item} type="myProduct"/>))}
+                    <div style={{fontWeight:"bold",fontSize:"14px",marginBottom:"16px"}}>등록한 서비스</div>
+                    {myProducts.map((item,index)=>(<ProductRender key={index} item={item} type="myProduct"/>))}
                 </div>}
                 {fullListState==="likelyProduct"&&<div>
-                {myProducts.map((item,index)=>(<ProductRender key={index} item={item} type="myProduct"/>))}
+                    <div style={{fontWeight:"bold",fontSize:"14px",marginBottom:"16px"}}>추천했어요</div>
+                    {likelyProducts.map((item,index)=>(<ProductRender key={index} item={item} type="likely"/>))}
                 </div>}
                 {fullListState==="myReply"&&<div>
-                {myReply.map((item,index)=>(<ReplyRender key={index} myReply={myReply} item={item}></ReplyRender>))}
+                    <div style={{fontWeight:"bold",fontSize:"14px",marginBottom:"16px"}}>코멘트</div>
+                    {myReply.map((item,index)=>(<ReplyRender key={index} myReply={myReply} item={item}></ReplyRender>))}
                 </div>}
                 <div style={{width:"687px",height:"19px",fontSize:'13px',color:"#828282",textAlign:"center",marginTop:"24px",marginBottom:"39px"}}>여기가 끝이에요</div>
             </div>}
