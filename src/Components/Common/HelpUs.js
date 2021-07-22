@@ -1,106 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState } from 'react';
 
-import icon_logo from '../../image/logo.svg';
-import icon_upBtn from '../../image/icon_upBtn.svg';
-import googleLogin from '../../image/googleLogin.svg';
-import googleSign from '../../image/googleSign.svg';
+
 import icon_guide from '../../image/icon_guide.svg';
-import { Link } from 'react-router-dom';
-import GoogleLogin from 'react-google-login';
 import axios from 'axios';
-
-const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpWindow})=>{
-    const [hover,setHover] = useState(0);
-    const [header,setHeader] = useState(0);
-  
-    const upBtnMount = ()=>{
-        window.addEventListener("scroll",()=>{    
-            const scrollPosition = window.scrollY;
-            if(scrollPosition>=48&&scrollPosition<=96){
-                setHeader(scrollPosition-48);
-            }else if(scrollPosition>96){
-                setHeader(47);
-            }else{
-                setHeader(0);
-            }
-        })
-    }
-  
-    useEffect(()=>{
-        upBtnMount();
-    },[])
-  
-    const upEvt = ()=>{
-        window.scroll({
-          behavior:"smooth",
-          left:0,
-          top:0
-        });
-    }
-    return(
-        <>
-          <div id="header" style={{width:"100%",height:"48px",backgroundColor:"#fff",display:"flex",justifyContent:"center",alignItems:"center",minHeight:"48px"}}>
-              <div style={{width:"1040px",display:"flex",justifyContent:"space-between",alignItems:"center",position:"relative"}}>  
-                      <Link to="/"><div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`}}></div></Link>
-                      <div>
-                  {localStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                      <div className="btn_textBtn" style={{marginRight:"16px"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
-                      <div className="btn_one" style={{width:"72px",height:"32px"}} onClick={()=>{setLoginWindow(true);}}>로그인</div>
-                      </div>
-                  }
-                  {localStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                      <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>내 서비스 등록하기</div></Link>
-                      <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
-                      ,backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
-                      </div>
-                  }  
-              </div>
-  
-              </div>
-          </div>
-          {(!loginWindow&&!signupWindow)&&<div id="header" style={{width:"100%",height:"48px",backgroundColor:"#fff",position:"fixed",top:"-48px",display:"flex",justifyContent:"center",alignItems:"center",minHeight:"48px",
-                                transform:`translate(0,${header}px)`,transition:"0.3s",zIndex:"9999"}}>
-            <div style={{width:"1040px",display:"flex",justifyContent:"space-between",alignItems:"center",position:"relative"}}>  
-                    <Link to="/"><div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`}}></div></Link>
-                    <div>
-                {localStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                    <div className="btn_textBtn" style={{marginRight:"16px"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
-                    <div className="btn_one" style={{width:"72px",height:"32px"}} onClick={()=>{setLoginWindow(true);}}>로그인</div>
-                    </div>
-                }
-                {localStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                    <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>내 서비스 등록하기</div></Link>
-                    <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
-                    ,backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
-                    </div>
-                }  
-            </div>
-            {modal&&<div style={{width:"192px",height:"80px",position:'absolute',backgroundColor:"#fff",right:"0px",top:`${96-header}px`,zIndex:"999"}}>
-            <Link to="/profile"><div style={{width:"100%",height:"40px",lineHeight:"40px",paddingLeft:"16px",fontSize:'14px',color:"#505050",backgroundColor:hover===1?"rgba(156, 49, 198, 0.1)":"#fff"}}
-            onMouseOver={()=>{setHover(1)}}
-            onMouseLeave={()=>{setHover(0)}}>내 프로필</div></Link>
-            <div style={{width:"100%",height:"40px",cursor:"pointer",lineHeight:"40px",paddingLeft:"16px",fontSize:'14px',color:"#505050",backgroundColor:hover===2?"rgba(156, 49, 198, 0.1)":"#fff"}}
-            onMouseOver={()=>{setHover(2)}}
-            onMouseLeave={()=>{setHover(0)}}
-            onClick={()=>{
-                const alink = document.createElement("a");
-                alink.href="/";
-                localStorage.clear();
-                // alink.click();
-                }}>로그아웃</div>
-            </div>}
-            </div>
-        </div>}
-            <div className="btn_up" style={{width:"40px",height:"40px",backgroundImage:`url(${icon_upBtn})`,position:"fixed",bottom:"84px",right:"80px",backgroundRepeat:"no-repeat",backgroundPosition:"center",
-                display:header!==47&&"none",
-                cursor:"pointer"}}
-                onClick={upEvt}></div>   
-        </>
-    )
-  }
+import Header from './Header';
+import LoginWindow from './LoginWindow';
+import SignupWindow from './SignupWindow';
 
 const Body = ()=>{
-    const [text,setText] =useState("") 
     return(
         <div>
             {window.location.pathname ==="/tos"&&<div style={{display:"flex",justifyContent:"center"}}>
@@ -515,98 +422,15 @@ const HelpUs = ()=>{
     setModal={setModal}
     ></Header>
     <Body></Body>
-    {loginWindow&&<div 
-      style={{
-        position:"absolute",
-        width:'100%',
-        height:'100%',
-        backgroundColor:"rgba(80,80,80,0.9)",
-        display:"flex",
-        justifyContent:"center"
-        }}
-    onClick={()=>{setLoginWindow(false)}}>
-      <div style={{
-        width:"688px",
-        height:"384px",
-        backgroundColor:"#fff",
-        borderRadius:'4px',
-        marginTop:"179px",
-        display:"flex",
-        alignItems:"center",
-        flexDirection:"column",
-        position:"fixed",
-        top:"50%",
-        left:"50%",
-        transform: "translate(-50%,-100%)",
-        color:"#505050"}}
-        onClick={(e)=>{setLoginWindow(true);e.stopPropagation();}}>
-          <div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`,marginTop:"56px",marginBottom:"32px"}}></div>
-          <div style={{height:'23px',lineHeight:"23px",fontSize:"20px",fontWeight:'bold',marginBottom:"40px"}}>로그인</div>
-          <div style={{fontSize:"16px",lineHeight:"28.8px",textAlign:"left",marginBottom:"49px"}}>
-            <li>서비스를 프루브잇에 소개하고 커뮤니티 피드백을 받아보세요.</li>
-            <li>랜딩페이지만 있으면 아이디어만으로도 충분히 검증해 볼 수 있어요.</li>
-            <li>지금 어떤 서비스들이 만들어지고 있는지 확인하세요</li>
-          </div>
-          <div style={{position:"relative",width:"256px",height:"56px",display:"flex",justifyContent:"center",alignItems:"center"}}>
-                    <GoogleLogin
-                        clientId='148840721751-8otnv8h8pcuabmilq8mdv9ungtmohatc.apps.googleusercontent.com'
-                        buttonText=""
-                        onSuccess={responseGoogle}
-                        onFailure={responseGoogle}
-                        cookiePolicy={'single_host_origin'}
-                    />
-                    <div style={{position:"absolute",width:"100%",height:"100%",left:0,top:0,backgroundImage:`url(${googleLogin})`,cursor:"pointer"}}
-                    onClick={(e)=>{e.target.parentNode.childNodes[0].click();}}></div>
-          </div>
-      </div>
-    </div>}
+    {loginWindow&&<LoginWindow 
+    responseGoogle={responseGoogle}
+    setLoginWindow={setLoginWindow}
+    ></LoginWindow >}
 
-    {signupWindow&&<div 
-      style={{
-        position:"absolute",
-        width:'100%',
-        height:'100%',
-        backgroundColor:"rgba(80,80,80,0.9)",
-        display:"flex",
-        justifyContent:"center"
-        }}
-    onClick={()=>{setSignUpWindow(false)}}>
-      <div style={{
-        width:"688px",
-        height:"384px",
-        backgroundColor:"#fff",
-        borderRadius:'4px',
-        marginTop:"179px",
-        display:"flex",
-        alignItems:"center",
-        flexDirection:"column",
-        position:"fixed",
-        top:"50%",
-        left:"50%",
-        transform: "translate(-50%,-100%)",
-        color:"#505050"}}
-        onClick={(e)=>{setSignUpWindow(true);e.stopPropagation();}}>
-          <div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`,marginTop:"56px",marginBottom:"32px"}}></div>
-          <div style={{height:'23px',lineHeight:"23px",fontSize:"20px",fontWeight:'bold',marginBottom:"40px"}}>회원가입</div>
-          <div style={{fontSize:"16px",lineHeight:"28.8px",textAlign:"left",marginBottom:"49px"}}>
-            <li>서비스를 프루브잇에 소개하고 커뮤니티 피드백을 받아보세요.</li>
-            <li>랜딩페이지만 있으면 아이디어만으로도 충분히 검증해 볼 수 있어요.</li>
-            <li>지금 어떤 서비스들이 만들어지고 있는지 확인하세요</li>
-          </div>
-          <div style={{position:"relative",width:"256px",height:"56px",display:"flex",justifyContent:"center",alignItems:"center"}}>
-                    <GoogleLogin
-                        clientId='148840721751-8otnv8h8pcuabmilq8mdv9ungtmohatc.apps.googleusercontent.com'
-                        buttonText=""
-                        onSuccess={responseGoogle}
-                        onFailure={responseGoogle}
-                        cookiePolicy={'single_host_origin'}
-                    />
-                    <div style={{position:"absolute",width:"100%",height:"100%",left:0,top:0,backgroundImage:`url(${googleSign})`,cursor:"pointer"}}
-                    onClick={(e)=>{e.target.parentNode.childNodes[0].click();}}></div>
-          </div>
-      </div>
-    </div>}
- 
+    {signupWindow&&<SignupWindow 
+    responseGoogle={responseGoogle}
+    setSignUpWindow={setSignUpWindow}
+    ></SignupWindow>}
  
   </div>  
   )

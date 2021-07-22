@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import icon_logo from '../../image/logo.svg';
 import icon_like from '../../image/likeIcon.svg';
-import icon_upBtn from '../../image/icon_upBtn.svg';
 import icon_comment from '../../image/commentIcon.svg';
 import icon_profileModify from '../../image/icon_profileModify.svg';
 import icon_radioChecked from '../../image/icon_radioChecked.svg';
@@ -14,96 +12,8 @@ import icon_leaveChecked from '../../image/icon_leaveChecked.svg';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import ReactQuill from 'react-quill';
+import Header from '../Common/Header';
 
-const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpWindow})=>{
-    const [hover,setHover] = useState(0);
-    const [header,setHeader] = useState(0);
-  
-    const upBtnMount = ()=>{
-        window.addEventListener("scroll",()=>{    
-            const scrollPosition = window.scrollY;
-            if(scrollPosition>=48&&scrollPosition<=96){
-                setHeader(scrollPosition-48);
-            }else if(scrollPosition>96){
-                setHeader(47);
-            }else{
-                setHeader(0);
-            }
-        })
-    }
-  
-    useEffect(()=>{
-        upBtnMount();
-    },[])
-  
-    const upEvt = ()=>{
-        window.scroll({
-          behavior:"smooth",
-          left:0,
-          top:0
-        });
-    }
-    return(
-        <>
-          <div id="header" style={{width:"100%",height:"48px",backgroundColor:"#fff",display:"flex",justifyContent:"center",alignItems:"center",minHeight:"48px"}}>
-              <div style={{width:"1040px",display:"flex",justifyContent:"space-between",alignItems:"center",position:"relative"}}>  
-                      <Link to="/"><div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`}}></div></Link>
-                      <div>
-                  {localStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                      <div className="btn_textBtn" style={{marginRight:"16px"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
-                      <div className="btn_one" style={{width:"72px",height:"32px"}} onClick={()=>{setLoginWindow(true);}}>로그인</div>
-                      </div>
-                  }
-                  {localStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                      <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>서비스 등록하기</div></Link>
-                      <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
-                      ,backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
-                      </div>
-                  }  
-              </div>
-  
-              </div>
-          </div>
-          {(!loginWindow&&!signupWindow)&&<div id="header" style={{width:"100%",height:"48px",backgroundColor:"#fff",position:"fixed",top:"-48px",display:"flex",justifyContent:"center",alignItems:"center",minHeight:"48px",
-                                transform:`translate(0,${header}px)`,transition:"0.3s",zIndex:"9999"}}>
-            <div style={{width:"1040px",display:"flex",justifyContent:"space-between",alignItems:"center",position:"relative"}}>  
-                    <Link to="/"><div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`}}></div></Link>
-                    <div>
-                {localStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                    <div className="btn_textBtn" style={{marginRight:"16px"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
-                    <div className="btn_one" style={{width:"72px",height:"32px"}} onClick={()=>{setLoginWindow(true);}}>로그인</div>
-                    </div>
-                }
-                {localStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                    <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>서비스 등록하기</div></Link>
-                    <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
-                    ,backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
-                    </div>
-                }  
-            </div>
-            {modal&&<div style={{width:"192px",height:"80px",position:'absolute',backgroundColor:"#fff",right:"0px",top:`${96-header}px`,zIndex:"999"}}>
-            <Link to="/profile"><div style={{width:"100%",height:"40px",lineHeight:"40px",paddingLeft:"16px",fontSize:'14px',color:"#505050",backgroundColor:hover===1?"rgba(156, 49, 198, 0.1)":"#fff"}}
-            onMouseOver={()=>{setHover(1)}}
-            onMouseLeave={()=>{setHover(0)}}>내 프로필</div></Link>
-            <div style={{width:"100%",height:"40px",cursor:"pointer",lineHeight:"40px",paddingLeft:"16px",fontSize:'14px',color:"#505050",backgroundColor:hover===2?"rgba(156, 49, 198, 0.1)":"#fff"}}
-            onMouseOver={()=>{setHover(2)}}
-            onMouseLeave={()=>{setHover(0)}}
-            onClick={()=>{
-                const alink = document.createElement("a");
-                alink.href="/";
-                localStorage.clear();
-                alink.click();
-                }}>로그아웃</div>
-            </div>}
-            </div>
-        </div>}
-            <div className="btn_up" style={{width:"40px",height:"40px",backgroundImage:`url(${icon_upBtn})`,position:"fixed",bottom:"84px",right:"80px",backgroundRepeat:"no-repeat",backgroundPosition:"center",
-                display:header!==47&&"none",
-                cursor:"pointer"}}
-                onClick={upEvt}></div>   
-        </>
-    )
-}
 
 const Body =()=>{
     const [render,setRender] =useState(false);
@@ -337,54 +247,59 @@ const Body =()=>{
     const ProductRender =({item,type,index})=>{
         return(
             <div style={{position:"relative"}}>
-            {index<4&&<Link to={`/product?productnum=${item.id}`}><div id={item.id} 
-              style={{width:"688px",height:"120px",display:"flex",alignItems:"center",backgroundColor:"#fff",position:"relative",cursor:"pointer",borderBottom:"1px solid #e5e5e5"}}
-              onClick={(e)=>{e.stopPropagation();}}
-            >
-              <div style={{width:"88px",marginLeft:"16px",height:"88px",marginRight:"16px",backgroundImage:`url(${item.thumbnail})`,backgroundPosition:"center",backgroundSize:"cover"}}></div>
-              <div style={{width:type==="myProduct"?"368px":"480px",textAlign:"left",marginRight:"32px"}}>
-                <div style={{color:"#505050",height:"16px",fontWeight:"bold",fontSize:'16px',marginBottom:"12px",lineHeight:"16px"}}>{item.title}</div>
-                <div style={{color:"#828282",height:"14px",fontSize:'13px',marginBottom:'16px',lineHeight:"14px"}}>{item.sub_title}</div>
-                <div style={{display:"flex",height:"24px",alignItems:"center"}}>
-                  <div style={{padding:"3.5px 5px 3.5px 5px",maxHeight:"24px",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px",backgroundColor:"#F1F1F1"}}>
-                    <div style={{width:"14px",height:"14px",backgroundImage:`url(${icon_comment})`,marginRight:"8px"}}></div>
-                    <div>{item.review_count}</div>
+            {index<4&&
+                <Link to={`/product?productnum=${item.id}`}><div id={item.id} 
+                onClick={(e)=>{e.stopPropagation();}}
+                className="main_body_product_item"
+              >
+                <div className="main_body_product_thumbnail" style={{backgroundImage:`url(${item.thumbnail})`}}></div>
+                <div style={{width:"100%",textAlign:"left",marginRight:"24px"}}>
+                  <div className="main_body_product_title">{item.title}</div>
+                  <div className="main_body_product_subtitle">{item.sub_title}</div>
+                  <div style={{display:"flex",height:"24px",alignItems:"center"}}>
+                    <div style={{padding:"3.5px 5px 3.5px 5px",maxHeight:"24px",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px",backgroundColor:"#F1F1F1"}}>
+                      <div style={{width:"14px",height:"14px",backgroundImage:`url(${icon_comment})`,marginRight:"8px"}}></div>
+                      <div>{item.review_count}</div>
+                    </div>
+                    <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>{item.payment_type}</div>
+                    <div style={{height:"14px",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px",width:"1px",backgroundColor:"#e5e5e5"}}></div>
+                    <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>{item.category}</div>
                   </div>
-                  <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>{item.payment_type}</div>
-                  <div style={{height:"14px",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px",width:"1px",backgroundColor:"#e5e5e5"}}></div>
-                  <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>{item.category}</div>
+                </div>
+                <div style={{width:"32px",height:"100%",marginRight:"12px",display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center"}}>
+                  <div style={{height:"100%",width:"100%",backgroundImage:`url(${icon_like})`,backgroundRepeat:"no-repeat",backgroundPosition:"center"}}></div>
+                  <div style={{height:"100%",width:"100%",fontSize:"18px",fontWeight:"bold",color:"#505050",textAlign:"center"}}>{item.like_count}</div>
                 </div>
               </div>
-              <div style={{position:"absolute",width:"48px",height:"52px",right:"28px"}}>
-                <div style={{height:"50%",width:"100%",backgroundImage:`url(${icon_like})`,backgroundRepeat:"no-repeat",backgroundPosition:"center"}}></div>
-                <div style={{height:"50%",width:"100%",fontSize:"18px",fontWeight:"bold",color:"#505050",textAlign:"center"}}>{item.like_count}</div>
-              </div>
-            </div>
-            </Link>}
-            {index===undefined&&<Link to={`/product?productnum=${item.id}`}><div id={item.id} 
-              style={{width:"688px",height:"120px",display:"flex",alignItems:"center",backgroundColor:"#fff",position:"relative",cursor:"pointer",borderBottom:"1px solid #e5e5e5"}}
-              onClick={(e)=>{e.stopPropagation();}}
-            >
-              <div style={{width:"88px",marginLeft:"16px",height:"88px",marginRight:"16px",backgroundImage:`url(${item.thumbnail})`,backgroundColor:"#000",backgroundPosition:"center",backgroundSize:"cover"}}></div>
-              <div style={{width:"480px",textAlign:"left",marginRight:"24px"}}>
-                <div style={{color:"#505050",height:"16px",fontWeight:"bold",fontSize:'16px',marginBottom:"12px",lineHeight:"16px"}}>{item.title}</div>
-                <div style={{color:"#828282",height:"14px",fontSize:'13px',marginBottom:'16px',lineHeight:"14px"}}>{item.sub_title}</div>
-                <div style={{display:"flex",height:"24px",alignItems:"center"}}>
-                  <div style={{padding:"3.5px 5px 3.5px 5px",maxHeight:"24px",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px",backgroundColor:"#F1F1F1"}}>
-                    <div style={{width:"14px",height:"14px",backgroundImage:`url(${icon_comment})`,marginRight:"8px"}}></div>
-                    <div>{item.review_count}</div>
-                  </div>
-                  <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>{item.payment_type}</div>
-                  <div style={{height:"14px",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px",width:"1px",backgroundColor:"#e5e5e5"}}></div>
-                  <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>{item.category}</div>
+              </Link>
+            }
+            
+            {index===undefined&&
+            <Link to={`/product?productnum=${item.id}`}><div id={item.id} 
+            onClick={(e)=>{e.stopPropagation();}}
+            className="main_body_product_item"
+          >
+            <div className="main_body_product_thumbnail" style={{backgroundImage:`url(${item.thumbnail})`}}></div>
+            <div style={{width:"100%",textAlign:"left",marginRight:"24px"}}>
+              <div className="main_body_product_title">{item.title}</div>
+              <div className="main_body_product_subtitle">{item.sub_title}</div>
+              <div style={{display:"flex",height:"24px",alignItems:"center"}}>
+                <div style={{padding:"3.5px 5px 3.5px 5px",maxHeight:"24px",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px",backgroundColor:"#F1F1F1"}}>
+                  <div style={{width:"14px",height:"14px",backgroundImage:`url(${icon_comment})`,marginRight:"8px"}}></div>
+                  <div>{item.review_count}</div>
                 </div>
-              </div>
-              <div style={{position:"absolute",width:"48px",height:"52px",right:"28px"}}>
-                <div style={{height:"50%",width:"100%",backgroundImage:`url(${icon_like})`,backgroundRepeat:"no-repeat",backgroundPosition:"center"}}></div>
-                <div style={{height:"50%",width:"100%",fontSize:"18px",fontWeight:"bold",color:"#505050",textAlign:"center"}}>{item.like_count}</div>
+                <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>{item.payment_type}</div>
+                <div style={{height:"14px",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px",width:"1px",backgroundColor:"#e5e5e5"}}></div>
+                <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>{item.category}</div>
               </div>
             </div>
-            </Link>}
+            <div style={{width:"32px",height:"100%",marginRight:"12px",display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center"}}>
+              <div style={{height:"100%",width:"100%",backgroundImage:`url(${icon_like})`,backgroundRepeat:"no-repeat",backgroundPosition:"center"}}></div>
+              <div style={{height:"100%",width:"100%",fontSize:"18px",fontWeight:"bold",color:"#505050",textAlign:"center"}}>{item.like_count}</div>
+            </div>
+          </div>
+          </Link>
+            }
             
             {(index<4&&type==="myProduct")&&<Link to={`/modifyproduct?productnum=${item.id}`}><div className="btn_one" style={{width:"64px",height:"32px",zIndex:"9999",top:"50%",left:"520px",transform:"translate(0,-50%)",position:"absolute"}}
               onClick={(e)=>{e.stopPropagation();}}>수정</div></Link>}
@@ -448,21 +363,14 @@ const Body =()=>{
                 display:"flex",
                 justifyContent:"center",
                 }}>
-                <div style={{width:"1040px",height:"100%",display:"flex",alignItems:"center"}}>
-                    <div style={{
-                        width:'160px',
-                        height:"160px",
-                        borderRadius:"50%",
-                        backgroundColor:"#e5e5e5",
-                        marginRight:"40px",
-                        backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`,
-                        backgroundSize:"cover",
-                        backgroundRepeat:"no-repeat",
-                        backgroundPosition:"center"}}></div>
+                <div className="profile_main">
+                    <div className="profile_main_thumbnail" style={{
+                        backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
+                        }}></div>
                     <div>
-                        <div style={{fontSize:"20px",color:'#505050',height:"20px",lineHeight:"20px",marginBottom:"16px",fontWeight:"bold"}}>{JSON.parse(localStorage.getItem("userInfo")).nick}</div>
-                        <div style={{fontSize:"14px",color:'#828282',height:"14px",lineHeight:"14px",marginBottom:"16px"}}>{JSON.parse(localStorage.getItem("userInfo")).position},{JSON.parse(localStorage.getItem("userInfo")).department}</div>
-                        <div style={{fontSize:"14px",color:'#828282',height:"14px",lineHeight:"14px",marginBottom:"18px"}}>
+                        <div className="profile_main_nick" style={{fontSize:"20px",color:'#505050',height:"20px",lineHeight:"20px",marginBottom:"16px",fontWeight:"bold"}}>{JSON.parse(localStorage.getItem("userInfo")).nick}</div>
+                        <div className="profile_main_position" style={{fontSize:"14px",color:'#828282',height:"14px",lineHeight:"14px",marginBottom:"16px"}}>{JSON.parse(localStorage.getItem("userInfo")).position},{JSON.parse(localStorage.getItem("userInfo")).department}</div>
+                        <div className="profile_main_" style={{fontSize:"14px",color:'#828282',height:"14px",lineHeight:"14px",marginBottom:"18px"}}>
                             {JSON.parse(localStorage.getItem("userInfo")).created_at.slice(0,4)}년 {JSON.parse(localStorage.getItem("userInfo")).created_at.slice(5,7)}월 {JSON.parse(localStorage.getItem("userInfo")).created_at.slice(8,10)}일에 가입함
                             </div>
                         <div className="btn_three" style={{width:"120px",height:"40px"}}
@@ -470,8 +378,8 @@ const Body =()=>{
                     </div>
                 </div>
             </div>
-            {fullListState==="none"&&<div style={{width:"1040px",display:"flex",marginTop:"32px",marginBottom:"32px"}}>
-                <div style={{width:"688px",marginRight:"16px"}}>
+            {fullListState==="none"&&<div className="profile_main_body">
+                <div className="profile_main_productList">
                     <div style={{marginBottom:"40px"}}>
                         <div style={{fontWeight:"bold",marginBottom:"16px"}}>등록한 서비스</div>
                         {myProducts.map((item,index)=>(<ProductRender key={index} index={index} item={item} type="myProduct"/>))}
@@ -522,7 +430,7 @@ const Body =()=>{
                         onClick={()=>{setFullListState("myReply")}}>모두 보기</div>}
                 </div>
             </div>}
-            {fullListState!=="none"&&<div style={{width:"1040px",display:"flex",marginTop:"32px",flexDirection:"column",marginBottom:"32px"}}>
+            {fullListState!=="none"&&<div className="profile_main_full">
                 {fullListState==="myProducts"&&<div>
                     <div style={{fontWeight:"bold",fontSize:"14px",marginBottom:"16px"}}>등록한 서비스</div>
                     {myProducts.map((item,index)=>(<ProductRender key={index} item={item} type="myProduct"/>))}
@@ -535,7 +443,7 @@ const Body =()=>{
                     <div style={{fontWeight:"bold",fontSize:"14px",marginBottom:"16px"}}>코멘트</div>
                     {myReply.map((item,index)=>(<ReplyRender key={index} myReply={myReply} item={item}></ReplyRender>))}
                 </div>}
-                <div style={{width:"687px",height:"19px",fontSize:'13px',color:"#828282",textAlign:"center",marginTop:"24px",marginBottom:"39px"}}>여기가 끝이에요</div>
+                <div style={{width:"100%",height:"19px",fontSize:'13px',color:"#828282",textAlign:"center",marginTop:"24px",marginBottom:"39px"}}>여기가 끝이에요</div>
             </div>}
         
         </div>}

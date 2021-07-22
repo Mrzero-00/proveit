@@ -514,7 +514,7 @@ const SignUp = ()=>{
                     </div>
                     <div style={{width:"1040px",textAlign:"right",color:"#fff",cursor:"pointer",fontSize:"14px"}}>닫기</div>
                 </div>}
-                {historyBack&&<div style={{width:"100%",height:"100%",position:"absolute",display:"flex",justifyContent:"center",alignItems:"center",backgroundColor:"rgba(80,80,80,0.8)"}}
+                {historyBack&&<div style={{width:"100vw",height:"100vh",position:"fixed",top:"0",display:"flex",justifyContent:"center",alignItems:"center",backgroundColor:"rgba(80,80,80,0.8)"}}
             onClick={()=>{setHistoryBack(false);}}>
                     <div style={{width:"336px",height:"184px",backgroundColor:"#fff",display:"flex",justifyContent:"center",alignItems:"center",flexDirection:"column"}}>
                         <div style={{fontWeight:"bold",fontSize:"16px",marginBottom:"16px"}}>회원 가입 취소</div>

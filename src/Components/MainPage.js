@@ -4,103 +4,12 @@ import icon_logo from '../image/logo.svg';
 import icon_upBtn from '../image/icon_upBtn.svg';
 import icon_like from '../image/likeIcon.svg';
 import icon_comment from '../image/commentIcon.svg';
-import googleLogin from '../image/googleLogin.svg';
-import googleSign from '../image/googleSign.svg';
 import intro from '../image/intro.pdf';
 import { Link } from 'react-router-dom';
-import GoogleLogin from 'react-google-login';
 import axios from 'axios';
-
-const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpWindow})=>{
-  const [hover,setHover] = useState(0);
-  const [header,setHeader] = useState(0);
-
-  const upBtnMount = ()=>{
-      window.addEventListener("scroll",()=>{    
-          const scrollPosition = window.scrollY;
-          if(scrollPosition>=48&&scrollPosition<=96){
-              setHeader(scrollPosition-48);
-          }else if(scrollPosition>96){
-              setHeader(47);
-          }else{
-              setHeader(0);
-          }
-      })
-  }
-
-  useEffect(()=>{
-      upBtnMount();
-  },[])
-
-  const upEvt = ()=>{
-      window.scroll({
-        behavior:"smooth",
-        left:0,
-        top:0
-      });
-  }
-  return(
-      <>
-        <div id="header" style={{width:"100%",height:"48px",backgroundColor:"#fff",display:"flex",justifyContent:"center",alignItems:"center",minHeight:"48px"}}>
-            <div className="header_bar">  
-                    <Link to="/"><div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`}}></div></Link>
-                    <div>
-                {localStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                    <div className="btn_textBtn" style={{marginRight:"16px"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
-                    <div className="btn_one" style={{width:"72px",height:"32px"}} onClick={()=>{setLoginWindow(true);}}>로그인</div>
-                    </div>
-                }
-                {localStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                    <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>서비스 등록하기</div></Link>
-                    <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
-                    ,backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
-                    </div>
-                }  
-            </div>
-
-            </div>
-        </div>
-        {(!loginWindow&&!signupWindow)&&<div id="header" style={{width:"100%",height:"48px",backgroundColor:"#fff",position:"fixed",top:"-48px",display:"flex",justifyContent:"center",alignItems:"center",minHeight:"48px",
-                              transform:`translate(0,${header}px)`,transition:"0.3s",zIndex:"9999"}}>
-          <div className="header_bar">
-                  <Link to="/"><div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`}}></div></Link>
-                  <div>
-              {localStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                  <div className="btn_textBtn" style={{marginRight:"16px"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
-                  <div className="btn_one" style={{width:"72px",height:"32px"}} onClick={()=>{setLoginWindow(true);}}>로그인</div>
-                  </div>
-              }
-              {localStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                  <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>서비스 등록하기</div></Link>
-                  <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
-                  ,backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
-                  </div>
-              }  
-          </div>
-          {modal&&<div style={{width:"192px",height:"80px",position:'absolute',backgroundColor:"#fff",right:"0px",top:`${96-header}px`,zIndex:"999"}}>
-          <Link to="/profile"><div style={{width:"100%",height:"40px",lineHeight:"40px",paddingLeft:"16px",fontSize:'14px',color:"#505050",backgroundColor:hover===1?"rgba(156, 49, 198, 0.1)":"#fff"}}
-          onMouseOver={()=>{setHover(1)}}
-          onMouseLeave={()=>{setHover(0)}}>내 프로필</div></Link>
-          <div style={{width:"100%",height:"40px",cursor:"pointer",lineHeight:"40px",paddingLeft:"16px",fontSize:'14px',color:"#505050",backgroundColor:hover===2?"rgba(156, 49, 198, 0.1)":"#fff"}}
-          onMouseOver={()=>{setHover(2)}}
-          onMouseLeave={()=>{setHover(0)}}
-          onClick={()=>{
-              const alink = document.createElement("a");
-              alink.href="/";
-              localStorage.clear();
-              // alink.click();
-              }}>로그아웃</div>
-          </div>}
-          </div>
-      </div>}
-          <div className="btn_up" style={{width:"40px",height:"40px",backgroundImage:`url(${icon_upBtn})`,position:"fixed",bottom:"84px",right:"80px",backgroundRepeat:"no-repeat",backgroundPosition:"center",
-              display:header!==47&&"none",
-              cursor:"pointer"}}
-              onClick={upEvt}></div>   
-      </>
-  )
-}
-
+import Header from './Common/Header';
+import SignupWindow from './Common/SignupWindow';
+import LoginWindow from './Common/LoginWindow';
 
 const Body=({productOrderState,setProductOrderState})=>{
   const [renderState,setRenderState] = useState(true);
@@ -267,7 +176,6 @@ const Body=({productOrderState,setProductOrderState})=>{
     const [popularArray,setPopularArray] =useState(item.product);
     const [fastestArray,setFastestArray] =useState(item.product);
     const [renderDate,setRenderDate] = useState("");
-    
     const RenderList =({item,index,length})=>{
       const currentNum = index;
       const maxNum = length;
@@ -278,10 +186,10 @@ const Body=({productOrderState,setProductOrderState})=>{
           className="main_body_product_item"
         >
           <div className="main_body_product_thumbnail" style={{backgroundImage:`url(${item.thumbnail})`}}></div>
-          <div style={{width:"100%",textAlign:"left",marginRight:"24px"}}>
+          <div style={{width:"100%",textAlign:"left"}}>
             <div className="main_body_product_title">{item.title}</div>
             <div className="main_body_product_subtitle">{item.sub_title}</div>
-            <div style={{display:"flex",height:"24px",alignItems:"center"}}>
+            <div className="iphone" style={{display:"flex",height:"24px",alignItems:"center"}}>
               <div style={{padding:"3.5px 5px 3.5px 5px",maxHeight:"24px",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px",backgroundColor:"#F1F1F1"}}>
                 <div style={{width:"14px",height:"14px",backgroundImage:`url(${icon_comment})`,marginRight:"8px"}}></div>
                 <div>{item.review_count}</div>
@@ -291,9 +199,9 @@ const Body=({productOrderState,setProductOrderState})=>{
               <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>{item.category}</div>
             </div>
           </div>
-          <div style={{width:"32px",height:"100%",marginRight:"12px",display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center"}}>
-            <div style={{height:"100%",width:"100%",backgroundImage:`url(${icon_like})`,backgroundRepeat:"no-repeat",backgroundPosition:"center"}}></div>
-            <div style={{height:"100%",width:"100%",fontSize:"18px",fontWeight:"bold",color:"#505050",textAlign:"center"}}>{item.like_count}</div>
+          <div className="main_body_product_likecount">
+            <div style={{height:"24px",width:"24px",backgroundImage:`url(${icon_like})`,backgroundRepeat:"no-repeat",backgroundPosition:"center",marginTop:'16px',marginBottom:"4px"}}></div>
+            <div style={{height:"16px",lineHeight:"16px",width:"100%",fontSize:"14px",fontWeight:"bold",color:"#505050",textAlign:"center"}}>{item.like_count*1/1000>=1?`${item.like_count*1/1000}k`:item.like_count}</div>
           </div>
         </div>
         </Link>
@@ -368,8 +276,8 @@ const Body=({productOrderState,setProductOrderState})=>{
     },[productOrderState])
     return(
       <div style={{marginBottom:"40px"}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",width:"100%",marginBottom:"16px"}}>
-          <div style={{fontWeight:"bold",fontSize:"20px"}}>{renderDate}</div>
+        <div className="main_body_product_date">
+          <div style={{fontWeight:"bold"}}>{renderDate}</div>
           {index ===0&&<div style={{display:"flex"}}>
             <div style={{
               fontSize:"14px",
@@ -420,7 +328,7 @@ const Body=({productOrderState,setProductOrderState})=>{
           {project.map((item,index)=>(<ProjectRender key={index} index={index} productOrderState={productOrderState} setProductOrderState={setProductOrderState} setRenderState={setRenderState} item={item}></ProjectRender>))}
           <div style={{width:"100%",height:"19px",fontSize:'13px',color:"#828282",textAlign:"center"}}>여기가 끝이에요</div>
         </div>
-        <div style={{width:"336px",height:"115px",color:"#505050",fontSize:"13px",lineHeight:"23.4px",textAlign:"left",marginTop:"45px"}}>
+        <div className="main_proveit">
           <div><a href={intro} target="_blank">소개</a></div>
           <div><Link to="/guideline">커뮤니티 가이드라인</Link></div>
           <div><Link to="/tos">이용약관</Link></div>
@@ -439,8 +347,6 @@ const MainPage = ()=>{
   const [modal,setModal] = useState(false);
   const [productOrderState,setProductOrderState] = useState("fastest");
 
-  
-  
   const submitGoogleData= async(name,id,token)=>{
     //유효성 검사
     //let crt = document.getElementById('crt');
@@ -527,61 +433,19 @@ const MainPage = ()=>{
     modal={modal}
     setModal={setModal}
     ></Header>
-      <Body 
+    <Body 
       productOrderState={productOrderState}
       setProductOrderState={setProductOrderState}></Body>
 
-    {loginWindow&&<div 
-      className="modal_background"
-      onClick={()=>{setLoginWindow(false)}}>
-      <div className="modal_login"
-        onClick={(e)=>{setLoginWindow(true);e.stopPropagation();}}>
-          <div style={{width:"90px",height:"16px",minHeight:"16px",minWidth:"90px",backgroundImage:`url(${icon_logo})`,marginBottom:"32px"}}></div>
-          <div style={{height:'23px',lineHeight:"23px",fontSize:"20px",fontWeight:'bold',marginBottom:"40px"}}>로그인</div>
-          <div style={{lineHeight:"28.8px",textAlign:"left",marginBottom:"40px"}}>
-            <li>서비스를 프루브잇에 소개하고 커뮤니티 피드백을 받아보세요.</li>
-            <li>랜딩페이지만 있으면 아이디어만으로도 충분히 검증해 볼 수 있어요.</li>
-            <li>지금 어떤 서비스들이 만들어지고 있는지 확인하세요</li>
-          </div>
-          <div style={{position:"relative",width:"256px",height:"56px",display:"flex",justifyContent:"center",alignItems:"center"}}>
-                    <GoogleLogin
-                        clientId='148840721751-8otnv8h8pcuabmilq8mdv9ungtmohatc.apps.googleusercontent.com'
-                        buttonText=""
-                        onSuccess={responseGoogle}
-                        onFailure={responseGoogle}
-                        cookiePolicy={'single_host_origin'}
-                    />
-                    <div style={{position:"absolute",width:"100%",height:"100%",left:0,top:0,backgroundImage:`url(${googleLogin})`,cursor:"pointer"}}
-                    onClick={(e)=>{e.target.parentNode.childNodes[0].click();}}></div>
-          </div>
-      </div>
-    </div>}
+    {loginWindow&&<LoginWindow 
+    responseGoogle={responseGoogle}
+    setLoginWindow={setLoginWindow}
+    ></LoginWindow >}
 
-    {signupWindow&&<div 
-      className="modal_background"
-    onClick={()=>{setSignUpWindow(false)}}>
-      <div className="modal_login"
-        onClick={(e)=>{setSignUpWindow(true);e.stopPropagation();}}>
-          <div style={{width:"90px",height:"16px",minHeight:"16px",minWidth:"90px",backgroundImage:`url(${icon_logo})`,marginBottom:"32px"}}></div>
-          <div style={{height:'23px',lineHeight:"23px",fontSize:"20px",fontWeight:'bold',marginBottom:"40px"}}>회원가입</div>
-          <div style={{lineHeight:"28.8px",textAlign:"left",marginBottom:"40px"}}>
-            <li>서비스를 프루브잇에 소개하고 커뮤니티 피드백을 받아보세요.</li>
-            <li>랜딩페이지만 있으면 아이디어만으로도 충분히 검증해 볼 수 있어요.</li>
-            <li>지금 어떤 서비스들이 만들어지고 있는지 확인하세요</li>
-          </div>
-          <div style={{position:"relative",width:"256px",height:"56px",display:"flex",justifyContent:"center",alignItems:"center"}}>
-                    <GoogleLogin
-                        clientId='148840721751-8otnv8h8pcuabmilq8mdv9ungtmohatc.apps.googleusercontent.com'
-                        buttonText=""
-                        onSuccess={responseGoogle}
-                        onFailure={responseGoogle}
-                        cookiePolicy={'single_host_origin'}
-                    />
-                    <div style={{position:"absolute",width:"100%",height:"100%",left:0,top:0,backgroundImage:`url(${googleSign})`,cursor:"pointer"}}
-                    onClick={(e)=>{e.target.parentNode.childNodes[0].click();}}></div>
-          </div>
-      </div>
-    </div>}
+    {signupWindow&&<SignupWindow 
+    responseGoogle={responseGoogle}
+    setSignUpWindow={setSignUpWindow}
+    ></SignupWindow>}
  
   </div>  
   )

@@ -1,115 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import icon_logo from '../../image/logo.svg';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import icon_commentModify from '../../image/icon_commentModify.png';
 import icon_like_off from '../../image/icon_like_off.svg';
 import icon_like_on from '../../image/icon_like_on.svg';
-import icon_upBtn from '../../image/icon_upBtn.svg';
 import icon_upBtn_black from '../../image/icon_upBtn_black.svg';
 import icon_facebook from '../../image/icon_facebook.svg';
 import icon_kakao from '../../image/icon_kakao.svg';
 import icon_link from '../../image/icon_link.svg';
 import icon_twitter from '../../image/icon_twitter.svg';
 import icon_bigImg_off from '../../image/icon_bigImg_off.svg';
-import googleLogin from '../../image/googleLogin.svg';
-import googleSign from '../../image/googleSign.svg';
 import ReactQuill from 'react-quill';
-import { Link } from 'react-router-dom';
+import { BrowserRouter, Link } from 'react-router-dom';
 import axios from 'axios';
 /*global Kakao*/
-import GoogleLogin from 'react-google-login';
 import ReactPlayer from 'react-player';
-
-
-
-const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpWindow})=>{
-    const [hover,setHover] = useState(0);
-    const [header,setHeader] = useState(0);
-  
-    const upBtnMount = ()=>{
-        window.addEventListener("scroll",()=>{    
-            const scrollPosition = window.scrollY;
-            if(scrollPosition>=48&&scrollPosition<=96){
-                setHeader(scrollPosition-48);
-            }else if(scrollPosition>96){
-                setHeader(47);
-            }else{
-                setHeader(0);
-            }
-        })
-    }
-  
-    useEffect(()=>{
-        upBtnMount();
-    },[])
-  
-    const upEvt = ()=>{
-        window.scroll({
-          behavior:"smooth",
-          left:0,
-          top:0
-        });
-    }
-    return(
-        <>
-          <div id="header" style={{width:"100%",height:"48px",backgroundColor:"#fff",display:"flex",justifyContent:"center",alignItems:"center",minHeight:"48px"}}>
-              <div style={{width:"1040px",display:"flex",justifyContent:"space-between",alignItems:"center",position:"relative"}}>  
-                      <Link to="/"><div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`}}></div></Link>
-                      <div>
-                  {localStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                      <div className="btn_textBtn" style={{marginRight:"16px"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
-                      <div className="btn_one" style={{width:"72px",height:"32px"}} onClick={()=>{setLoginWindow(true);}}>로그인</div>
-                      </div>
-                  }
-                  {localStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                      <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>서비스 등록하기</div></Link>
-                      <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
-                      ,backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
-                      </div>
-                  }  
-              </div>
-  
-              </div>
-          </div>
-          {(!loginWindow&&!signupWindow)&&<div id="header" style={{width:"100%",height:"48px",backgroundColor:"#fff",position:"fixed",top:"-48px",display:"flex",justifyContent:"center",alignItems:"center",minHeight:"48px",
-                                transform:`translate(0,${header}px)`,transition:"0.3s",zIndex:"9999"}}>
-            <div style={{width:"1040px",display:"flex",justifyContent:"space-between",alignItems:"center",position:"relative"}}>  
-                    <Link to="/"><div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`}}></div></Link>
-                    <div>
-                {localStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                    <div className="btn_textBtn" style={{marginRight:"16px"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
-                    <div className="btn_one" style={{width:"72px",height:"32px"}} onClick={()=>{setLoginWindow(true);}}>로그인</div>
-                    </div>
-                }
-                {localStorage.getItem("hash")!==null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                    <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>서비스 등록하기</div></Link>
-                    <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
-                    ,backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
-                    </div>
-                }  
-            </div>
-            {modal&&<div style={{width:"192px",height:"80px",position:'absolute',backgroundColor:"#fff",right:"0px",top:`${96-header}px`,zIndex:"999"}}>
-            <Link to="/profile"><div style={{width:"100%",height:"40px",lineHeight:"40px",paddingLeft:"16px",fontSize:'14px',color:"#505050",backgroundColor:hover===1?"rgba(156, 49, 198, 0.1)":"#fff"}}
-            onMouseOver={()=>{setHover(1)}}
-            onMouseLeave={()=>{setHover(0)}}>내 프로필</div></Link>
-            <div style={{width:"100%",height:"40px",cursor:"pointer",lineHeight:"40px",paddingLeft:"16px",fontSize:'14px',color:"#505050",backgroundColor:hover===2?"rgba(156, 49, 198, 0.1)":"#fff"}}
-            onMouseOver={()=>{setHover(2)}}
-            onMouseLeave={()=>{setHover(0)}}
-            onClick={()=>{
-                const alink = document.createElement("a");
-                alink.href="/";
-                localStorage.clear();
-                // alink.click();
-                }}>로그아웃</div>
-            </div>}
-            </div>
-        </div>}
-            <div className="btn_up" style={{width:"40px",height:"40px",backgroundImage:`url(${icon_upBtn})`,position:"fixed",bottom:"84px",right:"80px",backgroundRepeat:"no-repeat",backgroundPosition:"center",
-                display:header!==47&&"none",
-                cursor:"pointer"}}
-                onClick={upEvt}></div>   
-        </>
-    )
-  }
+import Header from '../Common/Header';
+import LoginWindow from '../Common/LoginWindow';
+import SignupWindow from '../Common/SignupWindow';
 
 const Body = ({setModal,modal,setLoginWindow})=>{
 
@@ -118,6 +24,8 @@ const Body = ({setModal,modal,setLoginWindow})=>{
     const [currentComment,setCurrentComment] = useState("");
     const [rerender,setRerender] =useState(false);
     const [copyState,setCopyState] =useState(false);
+    const [touchState,setTouchState] = useState(false);
+    const [deviceWidth,setDeviceWidth] = useState(0);
     const [product,setProduct] =useState({
         id:0,
         producerInfo:{
@@ -147,6 +55,7 @@ const Body = ({setModal,modal,setLoginWindow})=>{
     const [bigImgWindow,setBigImgWindow] = useState(false);
     const [imgNum,setImgNum] =useState(0);
     const [replyState,setReplyState] = useState(true);
+    const [phoneState,setPhoneState] =useState(false);
 
     const ImageArray =({item,imgNum,setImgNum,product})=>{
         const url = item.imageUrl;
@@ -197,9 +106,26 @@ const Body = ({setModal,modal,setLoginWindow})=>{
         )
     }
 
+    const ImageMainArray =({item,product,imgNum,phoneState,deviceWidth})=>{
+        const url = item.imageUrl;
+        let subNum =0;
+        const height = (deviceWidth/1280)*720;
+        return(
+            <div>
+            {(product.youtube!=="undefined"&&product.youtube!=="")&&
+            item.type==="video"?
+            <div className="product_item_img" style={{height:phoneState&&`${height}px`}}>
+                <ReactPlayer width="100%" height={`${height}px`} playing muted url={product.youtube}></ReactPlayer>
+            </div>
+            :<div className="product_item_img" style={{backgroundImage:`url(${item.imageUrl})`,height:phoneState&&`${height}px`}}>      
+            </div>}
+            </div>
+        )
+    }
+
     const CommentRender =({item,product})=>{
 
-        const [hover,setHover] =useState(0);
+        const [hover,setHover] =useState(0);    
         const [modal,setModal] = useState(false);
         const [replyText,setReplyText] =useState(`<p><div style="display:inline-block;">@${item.nick}</div></br></p>`);
         const [modifyText,setModifyText] = useState(item.reply);
@@ -292,16 +218,9 @@ const Body = ({setModal,modal,setLoginWindow})=>{
         // useEffect(()=>{
         //     setModifyText(item.reply);
         // },[])
-
         return(
-            <div id={item.id} style={{
-                width:item.depth==="0"?"616px":"520px",
-                display:"flex",
-                position:"relative",
-                height: "100%",
-                marginBottom:"16px",
-                marginLeft:item.depth==="1"&&"56px"
-                }}>
+            <div id={item.id} 
+             className={item.depth==="0"?"product_item_reply":"product_item_reply_depth"}>
                 <Link to={item.user_email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${item.user_email}`}><div style={{
                     width:"40px",
                     height:"40px",
@@ -323,7 +242,7 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                     <Link to={item.user_email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${item.user_email}`}><div style={{fontWeight:"bold",marginBottom:'8px',height:"14px",lineHeight:"14px",marginRight:"4px",fontSize:'14px',color:"#505050"}}>{item.nick}</div></Link>
                         {item.user_email ===product.produce_info.email&&<div style={{color:'#9c31c6',lineHeight:"16px",height:"16px",fontSize:'10px',textAlign:"center",width:"48px",borderRadius:"8px",backgroundColor:"#f1f1f1"}}>제작자</div>}
                     </div>
-                    <div style={{color:"#a5a5a5",marginBottom:'7px',height:"13px",lineHeight:"13px",fontSize:'13px'}}>{item.position}</div>
+                    <div style={{color:"#a5a5a5",marginBottom:'7px',height:"13px",lineHeight:"13px",fontSize:'13px'}}>{item.position}{item.department!==""&&`,${item.department}`}</div>
                     {!modifyState&&<div style={{width:"100%",position:"relative",marginBottom:"8px"}}>
                        {/* <textarea value={item.reply} readOnly></textarea> */}
                        <ReactQuill theme="" readOnly
@@ -380,7 +299,7 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                         </div>}
                     </div>}
                     {replyWindow&&<div style={{display:"flex",paddingBottom:"16px"}}>
-                        <ReactQuill className="quillInput" theme="" placeholder="서비스에 관한 의견이나 궁금한 점을 남겨보세요"
+                        <ReactQuill className="quillInput product_item_comment_submitbtn" theme="" placeholder="의견이나 궁금한 점을 남겨보세요"
                             value={replyText} style={{
                                 textAlign:"left",
                                 color:"#505050",
@@ -600,12 +519,80 @@ const Body = ({setModal,modal,setLoginWindow})=>{
     useEffect(()=>{
         productListApi();
         replayListApi();
+        setDeviceWidth(window.innerWidth);
+        if(window.innerWidth<767){
+            setPhoneState(true);
+        }
     },[])
+
     useEffect(()=>{
         setTimeout(() => {
             replyNavi();
         }, 100);
     },[localStorage.getItem("replyId")])
+    
+    const start=useRef(0);
+    const currentX=useRef(0);
+    
+    const scrollEvent =(e)=>{
+        e.target.body.style.overflow ="hidden";
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    const touchStartEvent=(e)=>{
+        window.addEventListener("scroll",scrollEvent)
+        start.current = e.touches[0].clientX;
+    }
+    const touchMoveEvent =(e)=>{
+        const imgArray = document.querySelector(".mainImgArray");
+        currentX.current=e.touches[0].clientX;  
+        imgArray.style.left=`${((currentX.current-start.current)/(deviceWidth/2))*100-(imgNum*100)}%`;
+    }
+
+
+    const touchEndEvent = (e)=>{
+        setTouchState(false);
+        const imgArray = document.querySelector(".mainImgArray");
+        if(((currentX.current-start.current)/(deviceWidth/2))*100>55){
+           if(product.youtube!=="undefined"&&product.youtube!==""){
+                if(imgNum!==1){
+                    setImgNum(imgNum-1);
+                }else{
+                    setImgNum(imgNum);
+                    imgArray.style.left=`-${imgNum*100}%`;
+                }
+           }else{
+                if(imgNum!==0){
+                    setImgNum(imgNum-1);
+                }else{
+                    setImgNum(imgNum);
+                    imgArray.style.left=`-${imgNum*100}%`;
+                }
+        }
+        }else if(((currentX.current-start.current)/(deviceWidth/2))*100<-55){
+          
+                if(imgNum+1!==product.image.length){
+                    setImgNum(imgNum+1);
+                    imgArray.style.left=`-${imgNum*100}%`;
+                }else{
+                    setImgNum(imgNum);
+                    imgArray.style.left=`-${imgNum*100}%`;
+                } 
+
+        }else{
+            setImgNum(imgNum);
+            imgArray.style.left=`-${imgNum*100}%`;
+        }
+        window.removeEventListener("scroll",scrollEvent);
+        const body = document.querySelector("body");
+        setTimeout(() => {
+            body.style.overflow ="auto";
+        }, 100);
+        start.current=0;
+        currentX.current=0;
+    }
+   
     return(
     <>
         {renderState&&<div style={{width:'100%',backgroundColor:"#f9f9f9",display:"flex",alignItems:"center",flexDirection:"column"}}
@@ -614,29 +601,75 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                 <div style={{textAlign:"left",marginTop:"48px",marginBottom:"32px"}}>
                 <div className="product_item">
                     <div className="product_thumbnail" style={{backgroundImage:`url(${product.thumbnail})`}}></div>
+                    
                     <div style={{width:"100%",textAlign:"left"}}>
-                        <div style={{color:"#505050",height:"16px",fontWeight:"bold",fontSize:'16px',marginBottom:"12px",lineHeight:"16px"}}>{product.title}</div>
-                        <div style={{color:"#828282",height:"13px",fontSize:'13px',marginBottom:'16px',lineHeight:"13px"}}>{product.sub_title}</div>
+                        <div className="product_item_title">{product.title}</div>
+                        <div className="product_item_subtitle" >{product.sub_title}</div>
                         <div style={{display:"flex",height:"24px",alignItems:"center"}}>
                         <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>{product.payment_type}</div>
                         <div style={{height:"14px",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px",width:"1px",backgroundColor:"#e5e5e5"}}></div>
                         <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>{product.category}</div>
                         </div>
                     </div>
+                    
                 </div>
                 </div>
+                <div className="product_btn_phone">
+                        <div className="btn_two" style={{width:"100%",maxWidth:"144px",height:"100%",marginRight:"8px"}} onClick={()=>{
+                            const alink = document.createElement("a");
+                            alink.target="blink";
+                            alink.href = product.link;
+                            alink.click();
+                        }}>써보러 가기</div>
+                        {product.like_m==="0"&&<div className="btn_one_big" style={{width:"100%",height:"56px"}}
+                        onClick={()=>{
+                            if(localStorage.getItem("hash")){
+                                likeApi();
+                            }else{
+                                setLoginWindow(true);
+                            }
+                            }}
+                            >
+                            <div style={{width:'16px',height:"16px",backgroundImage:`url(${icon_like_off})`,marginRight:"8px"}}></div>
+                            <div  style={{marginRight:"4px"}}>추천해요</div>
+                            {product.like_count}
+                            </div>}
+                        {product.like_m==="1"&&<div className="btn_one_big2" style={{width:"100%",height:"56px"}}
+                        onClick={()=>{
+                            if(localStorage.getItem("hash")){
+                                likeApi();
+                            }else{
+                                setLoginWindow(true);
+                            }
+                            }}
+                        >
+                            <div style={{width:'16px',height:"16px",backgroundImage:`url(${icon_like_on})`,marginRight:"8px"}}></div>
+                            <div  style={{marginRight:"4px"}}>추천했음</div>
+                            {product.like_count}
+                            </div>}
+                    </div>
                 <div className="product_item_sort">
                     <div>
                         <div className="product_item_group">      
-                            <div className="product_item_img" style={{backgroundImage:`url(${product.image[imgNum].imageUrl})`}}
+                            <div className="product_item_img" 
+                            style={{
+                                display:"flex",
+                                overflow:"hidden",
+                                height:phoneState&&`${(deviceWidth/1280)*720}px`
+                            }}
+                            onTouchStart={touchStartEvent}
+                            
+                            onTouchMove={touchMoveEvent}
+                            onTouchEnd={touchEndEvent}
                             onMouseOver={()=>{setBtnOnOff(true);}}
                             onMouseLeave={()=>{setBtnOnOff(false)}}
+
                             onClick={(e)=>{e.stopPropagation();setBigImgWindow(true);}}>
                                 {(product.youtube!==""&&product.youtube!=="undefined"&&imgNum===0)&&<div style={{width:"100%",height:"100%",position:"absolute"}}>
                                     <ReactPlayer playing muted url={product.youtube}></ReactPlayer>
                                 </div>}
-                                {btnOnOff&&<div>
-                                    {imgNum!==0&&<div style={{width:"40px",height:"100%",position:"absolute",display:"flex",alignItems:"center",cursor:"pointer",justifyContent:"center"}}
+                                {(btnOnOff||phoneState)&&<div>
+                                    {imgNum!==0&&<div style={{width:phoneState?"80px":"40px",height:"100%",position:"absolute",display:"flex",alignItems:"center",cursor:"pointer",justifyContent:"center",zIndex:"999"}}
                                     onClick={(e)=>{setImgNum(imgNum-1);e.stopPropagation();}}
                                     onMouseOver={(e)=>{e.stopPropagation();e.target.style.backgroundColor="rgba(255,255,255,0.3)"}}
                                     onMouseLeave={(e)=>{e.stopPropagation();e.target.style.backgroundColor="transparent"}}>
@@ -644,7 +677,7 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                                         </div>
                                     </div>}
                                     {imgNum+1!==product.image.length&&
-                                    <div style={{width:"40px",height:"100%",position:"absolute",right:"0px",display:"flex",alignItems:"center",cursor:"pointer",justifyContent:"center"}}
+                                    <div style={{width:phoneState?"80px":"40px",height:"100%",position:"absolute",right:"0px",display:"flex",alignItems:"center",cursor:"pointer",justifyContent:"center",zIndex:"999"}}
                                     onClick={(e)=>{setImgNum(imgNum+1);e.stopPropagation();}}
                                     onMouseOver={(e)=>{e.stopPropagation();e.target.style.backgroundColor="rgba(255,255,255,0.3)"}}
                                     onMouseLeave={(e)=>{e.stopPropagation();e.target.style.backgroundColor="transparent"}}>
@@ -652,25 +685,41 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                                         </div>    
                                     </div>}
                                 </div>}
-                            </div>                        
-                            <div style={{display:"flex",marginBottom:"24px"}}>
+                                <div className="mainImgArray" style={{position:"absolute",display:"flex",left:`${(imgNum*-100)}%`,transition:"0.3s"}}>
+                                    {product.image.map((item)=>(<ImageMainArray deviceWidth={deviceWidth} phoneState={phoneState} key={item.id} imgNum={imgNum} item={item} product={product}></ImageMainArray>))}
+                                </div>
+                            </div>
+                           
+                            <div className="product_img_previewArray">
                                 {product.image.map((item)=>(<ImageArray item={item} product={product} imgNum={imgNum} key={item.id} setImgNum={setImgNum}></ImageArray>))}
                             </div>
-                            <div style={{width:"100%",position:"relative",marginBottom:"24px"}}>
+                            <div className="product_main_text" style={{width:"100%",position:"relative",marginBottom:"24px"}}>
                                 <ReactQuill theme="" readOnly
                                 value={product.main_text} style={{textAlign:"left",color:"#505050",fontSize:'14px',width:"100%"}}></ReactQuill>
                             </div>
-                            <div style={{display:"flex"}}>
-                                    <div id="btnKakao" style={{width:"96px",height:"40px",marginRight:"8px",backgroundImage:`url(${icon_kakao})`,cursor:"pointer"}}
+                            <div className="product_sharebar" style={{display:"flex"}}>
+                                    <div className="kakao_share" id="btnKakao"
                                     onClick={kakaoApi}></div>
-                                    <div style={{width:"96px",height:"40px",marginRight:"8px",backgroundImage:`url(${icon_facebook})`,cursor:"pointer"}}
+                                    <div className="facebook_share"
                                     onClick={sharefacebook}></div>
-                                    <div style={{width:"96px",height:"40px",marginRight:"8px",backgroundImage:`url(${icon_twitter})`,cursor:"pointer"}}
+                                    <div className="twitter_share"
                                     onClick={shareTwitter}></div>
-                                    <div style={{width:"96px",height:"40px",backgroundImage:`url(${icon_link})`,cursor:"pointer"}} onClick={clip}></div>
+                                    <div className="link_share"
+                                    onClick={clip}></div>
                                 </div>
                         </div>
-                        <div style={{textAlign:"left",fontWeight:"bold",fontSize:"14px",marginBottom:"21px"}}>댓글({replyList.length})</div>
+                        <div className="product_item_producer">
+                        <div style={{color:"#a5a5a5",marginBottom:"16px"}}>소개한 사람</div>
+                        <div style={{display:"flex"}}>
+                            <div style={{width:"32px",height:'32px',borderRadius:"50%",backgroundImage:`url(${"https://www.proveit.co.kr/"+product.produce_info.thumbnail})`,backgroundColor:"#c4c4c4",marginRight:"24px",
+                        backgroundPosition:"center",backgroundSize:"cover",backgroundRepeat:"no-repeat"}}></div>
+                            <div style={{textAlign:"left"}}>
+                                <div style={{fontWeight:'bold',color:'#505050',marginBottom:"8px",height:"14px",lineHeight:"14px"}}>{product.produce_info.nick}</div>
+                                <div style={{color:"#a5a5a5",height:"14px",lineHeight:"14px"}}>{product.produce_info.position},{product.produce_info.department}</div>
+                            </div>
+                        </div>
+                    </div>
+                        <div className="product_item_reply_length">댓글({replyList.length})</div>
                         <div className="product_item_comment">
                         <div className="product_item_comment_sort">
                             <div className="product_item_comment_submit">
@@ -689,7 +738,7 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                                 </div>
                                     <div>
                                         {/* <textarea onChange={(e)=>{setCurrentComment(e.target.value);}}></textarea> */}
-                                        <ReactQuill className="quillInput product_item_comment_input" theme="" placeholder="서비스에 관한 의견이나 궁금한 점을 남겨보세요"
+                                        <ReactQuill className="quillInput product_item_comment_input" theme="" placeholder="의견이나 궁금한 점을 남겨보세요"
                                         value={currentComment}
                                         onChange={(e)=>{setCurrentComment(e)}}></ReactQuill>
                                         {replyState&&<div style={{marginBottom:"24px"}}></div>}
@@ -705,7 +754,7 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                                     }
                                 }}>남기기</div>
                             </div>
-                            <div style={{width:"100%",backgroundColor:"#fff",padding:"32px 48px 31px 24px",boxSizing:"border-box"}}>
+                            <div className="product_item_reply_list">
                                 {replyList.map((item)=>(<CommentRender key={item.id} product={product} modal={modal} setModal={setModal} item={item}></CommentRender>))}
                             </div>
                             {replyList.length>=10&&<div className="product_item_comment_submit_under">
@@ -723,7 +772,7 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                                 backgroundPosition:"center"
                                 }}>
                             </div>
-                            <div><ReactQuill className="quillInput" theme="" placeholder="서비스에 관한 의견이나 궁금한 점을 남겨보세요"
+                            <div><ReactQuill className="quillInput" theme="" placeholder="의견이나 궁금한 점을 남겨보세요"
                                 value={currentComment} style={{textAlign:"left",color:"#505050",fontSize:'14px',width:"474px",marginTop:"32px",borderRadius:"2px",
                             padding:"6px 6px 6px 6px",boxSizing:"border-box",display:"flex",flexDirection:"column",justifyContent:"center",minHeight:"48px"}}
                                 onChange={(e)=>{setCurrentComment(e)}}></ReactQuill>
@@ -740,56 +789,56 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                         </div>
                     </div>
                     </div>
-                    <div>
-                    <div style={{display:"flex",marginBottom:"24px"}}>
-                        <div className="btn_two" style={{width:"112px",height:"56px",marginRight:"8px"}} onClick={()=>{
-                            const alink = document.createElement("a");
-                            alink.target="blink";
-                            alink.href = product.link;
-                            alink.click();
-                        }}>써보러 가기</div>
-                        {product.like_m==="0"&&<div className="btn_one_big" style={{width:"216px",height:"56px"}}
-                        onClick={()=>{
-                            if(localStorage.getItem("hash")){
-                                likeApi();
-                            }else{
-                                setLoginWindow(true);
-                            }
-                            }}
+                    <div className="product_item_web">
+                        <div style={{display:"flex",marginBottom:"24px"}}>
+                            <div className="btn_two" style={{width:"112px",height:"56px",marginRight:"8px"}} onClick={()=>{
+                                const alink = document.createElement("a");
+                                alink.target="blink";
+                                alink.href = product.link;
+                                alink.click();
+                            }}>써보러 가기</div>
+                            {product.like_m==="0"&&<div className="btn_one_big" style={{width:"216px",height:"56px"}}
+                            onClick={()=>{
+                                if(localStorage.getItem("hash")){
+                                    likeApi();
+                                }else{
+                                    setLoginWindow(true);
+                                }
+                                }}
+                                >
+                                <div style={{width:'16px',height:"16px",backgroundImage:`url(${icon_like_off})`,marginRight:"8px"}}></div>
+                                <div  style={{marginRight:"4px"}}>추천해요</div>
+                                {product.like_count}
+                                </div>}
+                            {product.like_m==="1"&&<div className="btn_one_big2" style={{width:"216px",height:"56px"}}
+                            onClick={()=>{
+                                if(localStorage.getItem("hash")){
+                                    likeApi();
+                                }else{
+                                    setLoginWindow(true);
+                                }
+                                }}
                             >
-                            <div style={{width:'16px',height:"16px",backgroundImage:`url(${icon_like_off})`,marginRight:"8px"}}></div>
-                            <div  style={{marginRight:"4px"}}>추천해요</div>
-                            {product.like_count}
-                            </div>}
-                        {product.like_m==="1"&&<div className="btn_one_big2" style={{width:"216px",height:"56px"}}
-                        onClick={()=>{
-                            if(localStorage.getItem("hash")){
-                                likeApi();
-                            }else{
-                                setLoginWindow(true);
-                            }
-                            }}
-                        >
-                            <div style={{width:'16px',height:"16px",backgroundImage:`url(${icon_like_on})`,marginRight:"8px"}}></div>
-                            <div  style={{marginRight:"4px"}}>추천했음</div>
-                            {product.like_count}
-                            </div>}
-                    </div>
-                    <div style={{width:"336px",height:"108px",backgroundColor:"#fff",borderRadius:"2px",fontSize:"14px",padding:"16px 24px 24px 24px",textAlign:"left"}}>
-                        <div style={{color:"#a5a5a5",marginBottom:"16px"}}>소개한 사람</div>
-                        <div style={{display:"flex"}}>
-                            <div style={{width:"32px",height:'32px',borderRadius:"50%",backgroundImage:`url(${"https://www.proveit.co.kr/"+product.produce_info.thumbnail})`,backgroundColor:"#c4c4c4",marginRight:"24px",
-                        backgroundPosition:"center",backgroundSize:"cover",backgroundRepeat:"no-repeat"}}></div>
-                            <div style={{textAlign:"left"}}>
-                                <div style={{fontWeight:'bold',color:'#505050',marginBottom:"8px",height:"14px",lineHeight:"14px"}}>{product.produce_info.nick}</div>
-                                <div style={{color:"#a5a5a5",height:"14px",lineHeight:"14px"}}>{product.produce_info.position},{product.produce_info.department}</div>
+                                <div style={{width:'16px',height:"16px",backgroundImage:`url(${icon_like_on})`,marginRight:"8px"}}></div>
+                                <div  style={{marginRight:"4px"}}>추천했음</div>
+                                {product.like_count}
+                                </div>}
+                        </div>
+                        <div style={{width:"336px",height:"108px",backgroundColor:"#fff",borderRadius:"2px",fontSize:"14px",padding:"16px 24px 24px 24px",textAlign:"left"}}>
+                            <div style={{color:"#a5a5a5",marginBottom:"16px"}}>소개한 사람</div>
+                            <div style={{display:"flex"}}>
+                                <div style={{width:"32px",height:'32px',borderRadius:"50%",backgroundImage:`url(${"https://www.proveit.co.kr/"+product.produce_info.thumbnail})`,backgroundColor:"#c4c4c4",marginRight:"24px",
+                            backgroundPosition:"center",backgroundSize:"cover",backgroundRepeat:"no-repeat"}}></div>
+                                <div style={{textAlign:"left"}}>
+                                    <div style={{fontWeight:'bold',color:'#505050',marginBottom:"8px",height:"14px",lineHeight:"14px"}}>{product.produce_info.nick}</div>
+                                    <div style={{color:"#a5a5a5",height:"14px",lineHeight:"14px"}}>{product.produce_info.position},{product.produce_info.department}</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                </div>
                 {bigImgWindow&&
-                <div style={{position:"fixed",width:"100vw",height:"100vh",display:"flex",backgroundColor:"rgba(80,80,80,0.4)",justifyContent:"center",alignItems:"center",zIndex:999}}>
+                <div className="bigImgWindow">
                     <div style={{width:"1040px",backgroundColor:"#fff",height:"586px",backgroundImage:`url(${product.image[imgNum].imageUrl})`,zIndex:999,
                     backgroundSize:"cover",backgroundRepeat:"no-repeat",backgroundPosition:"center",transition:"0.3s",top:"50%",transform:"translate(0,-50%)",position:"fixed",display:"flex"}}
                     onMouseOver={()=>{setBtnOnOff(true);}}
@@ -940,98 +989,15 @@ const Product = ()=>{
     setLoginWindow={setLoginWindow}
     ></Body>
 
-    {loginWindow&&<div 
-      style={{
-        position:"fixed",
-        width:'100vw',
-        height:'100vh',
-        backgroundColor:"rgba(80,80,80,0.9)",
-        display:"flex",
-        justifyContent:"center"
-        }}
-    onClick={()=>{setLoginWindow(false)}}>
-      <div style={{
-        width:"688px",
-        height:"384px",
-        backgroundColor:"#fff",
-        borderRadius:'4px',
-        marginTop:"179px",
-        display:"flex",
-        alignItems:"center",
-        flexDirection:"column",
-        position:"fixed",
-        top:"50%",
-        left:"50%",
-        transform: "translate(-50%,-100%)",
-        color:"#505050"}}
-        onClick={(e)=>{setLoginWindow(true);e.stopPropagation();}}>
-          <div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`,marginTop:"56px",marginBottom:"32px"}}></div>
-          <div style={{height:'23px',lineHeight:"23px",fontSize:"20px",fontWeight:'bold',marginBottom:"40px"}}>로그인</div>
-          <div style={{fontSize:"16px",lineHeight:"28.8px",textAlign:"left",marginBottom:"49px"}}>
-            <li>서비스를 프루브잇에 소개하고 커뮤니티 피드백을 받아보세요.</li>
-            <li>랜딩페이지만 있으면 아이디어만으로도 충분히 검증해 볼 수 있어요.</li>
-            <li>지금 어떤 서비스들이 만들어지고 있는지 확인하세요</li>
-          </div>
-          <div style={{position:"relative",width:"256px",height:"56px",display:"flex",justifyContent:"center",alignItems:"center"}}>
-                    <GoogleLogin
-                        clientId='148840721751-8otnv8h8pcuabmilq8mdv9ungtmohatc.apps.googleusercontent.com'
-                        buttonText=""
-                        onSuccess={responseGoogle}
-                        onFailure={responseGoogle}
-                        cookiePolicy={'single_host_origin'}
-                    />
-                    <div style={{position:"absolute",width:"100%",height:"100%",left:0,top:0,backgroundImage:`url(${googleLogin})`,cursor:"pointer"}}
-                    onClick={(e)=>{e.target.parentNode.childNodes[0].click();}}></div>
-          </div>
-      </div>
-    </div>}
+    {loginWindow&&<LoginWindow 
+    responseGoogle={responseGoogle}
+    setLoginWindow={setLoginWindow}
+    ></LoginWindow >}
 
-    {signupWindow&&<div 
-      style={{
-        position:"fixed",
-        width:'100vw',
-        height:'100vh',
-        backgroundColor:"rgba(80,80,80,0.9)",
-        display:"flex",
-        justifyContent:"center"
-        }}
-    onClick={()=>{setSignUpWindow(false)}}>
-      <div style={{
-        width:"688px",
-        height:"384px",
-        backgroundColor:"#fff",
-        borderRadius:'4px',
-        marginTop:"179px",
-        display:"flex",
-        alignItems:"center",
-        flexDirection:"column",
-        position:"fixed",
-        top:"50%",
-        left:"50%",
-        transform: "translate(-50%,-100%)",
-        color:"#505050"}}
-        onClick={(e)=>{setSignUpWindow(true);e.stopPropagation();}}>
-          <div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`,marginTop:"56px",marginBottom:"32px"}}></div>
-          <div style={{height:'23px',lineHeight:"23px",fontSize:"20px",fontWeight:'bold',marginBottom:"40px"}}>회원가입</div>
-          <div style={{fontSize:"16px",lineHeight:"28.8px",textAlign:"left",marginBottom:"49px"}}>
-            <li>서비스를 프루브잇에 소개하고 커뮤니티 피드백을 받아보세요.</li>
-            <li>랜딩페이지만 있으면 아이디어만으로도 충분히 검증해 볼 수 있어요.</li>
-            <li>지금 어떤 서비스들이 만들어지고 있는지 확인하세요</li>
-          </div>
-          <div style={{position:"relative",width:"256px",height:"56px",display:"flex",justifyContent:"center",alignItems:"center"}}>
-                    <GoogleLogin
-                        clientId='148840721751-8otnv8h8pcuabmilq8mdv9ungtmohatc.apps.googleusercontent.com'
-                        buttonText=""
-                        onSuccess={responseGoogle}
-                        onFailure={responseGoogle}
-                        cookiePolicy={'single_host_origin'}
-                    />
-                    <div style={{position:"absolute",width:"100%",height:"100%",left:0,top:0,backgroundImage:`url(${googleSign})`,cursor:"pointer"}}
-                    onClick={(e)=>{e.target.parentNode.childNodes[0].click();}}></div>
-          </div>
-      </div>
-    </div>}
- 
+    {signupWindow&&<SignupWindow 
+    responseGoogle={responseGoogle}
+    setSignUpWindow={setSignUpWindow}
+    ></SignupWindow>}
     </div>  
   )
 }
