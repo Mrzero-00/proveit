@@ -10,11 +10,10 @@ import axios from 'axios';
 import Header from './Common/Header';
 import SignupWindow from './Common/SignupWindow';
 import LoginWindow from './Common/LoginWindow';
+import RightBar from './Common/RightBar';
 
 const Body=({productOrderState,setProductOrderState})=>{
   const [renderState,setRenderState] = useState(true);
-  const [numPages, setNumPages] = useState(null);
-  const [pageNumber, setPageNumber] = useState(1);
   const [project,setProject] = useState(
     [
     {
@@ -176,6 +175,7 @@ const Body=({productOrderState,setProductOrderState})=>{
     const [popularArray,setPopularArray] =useState(item.product);
     const [fastestArray,setFastestArray] =useState(item.product);
     const [renderDate,setRenderDate] = useState("");
+
     const RenderList =({item,index,length})=>{
       const currentNum = index;
       const maxNum = length;
@@ -316,26 +316,23 @@ const Body=({productOrderState,setProductOrderState})=>{
     }catch{
 
     }
-}
+  }
 
   useEffect(()=>{
     productListApi();
   },[])
   return(
-    <div style={{width:"100%",height:"100%",paddingTop:"48px",backgroundColor:"#f9f9f9",display:"flex",justifyContent:"center"}}> 
+    <div style={{width:"100%",height:"100%",paddingTop:"48px",backgroundColor:"#f9f9f9",display:"flex",alignItems:"center",flexDirection:"column"}}> 
+        <div className="homepage_title">
+          <div className="hompage_title_main">가능성을 확인하는 곳,<br/>프루브잇</div>
+          <div className="hompage_title_sub">내가 만든 서비스를 소개해보세요</div>
+        </div>
       {renderState&&<div className="main_body">
         <div className="main_body_product_list">
           {project.map((item,index)=>(<ProjectRender key={index} index={index} productOrderState={productOrderState} setProductOrderState={setProductOrderState} setRenderState={setRenderState} item={item}></ProjectRender>))}
           <div style={{width:"100%",height:"19px",fontSize:'13px',color:"#828282",textAlign:"center"}}>여기가 끝이에요</div>
         </div>
-        <div className="main_proveit">
-          <div><a href={intro} target="_blank">소개</a></div>
-          <div><Link to="/guideline">커뮤니티 가이드라인</Link></div>
-          <div><Link to="/tos">이용약관</Link></div>
-          <div><Link to="/privacy_policy">개인정보 처리방침</Link></div>
-          이메일 문의 : hello@110corp.com<br/>
-          © 2021 oneonezero Inc.<br/>
-        </div>
+        <RightBar></RightBar>
       </div>}
     </div>
   )

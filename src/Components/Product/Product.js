@@ -108,7 +108,6 @@ const Body = ({setModal,modal,setLoginWindow})=>{
 
     const ImageMainArray =({item,product,imgNum,phoneState,deviceWidth})=>{
         const url = item.imageUrl;
-        let subNum =0;
         const height = (deviceWidth/1280)*720;
         return(
             <div>
@@ -541,10 +540,13 @@ const Body = ({setModal,modal,setLoginWindow})=>{
     }
 
     const touchStartEvent=(e)=>{
-        window.addEventListener("scroll",scrollEvent)
+        e.stopPropagation();
+        window.addEventListener("scroll",scrollEvent);
         start.current = e.touches[0].clientX;
+        currentX.current=e.touches[0].clientX;
     }
     const touchMoveEvent =(e)=>{
+        e.stopPropagation();
         const imgArray = document.querySelector(".mainImgArray");
         currentX.current=e.touches[0].clientX;  
         imgArray.style.left=`${((currentX.current-start.current)/(deviceWidth/2))*100-(imgNum*100)}%`;
@@ -552,6 +554,7 @@ const Body = ({setModal,modal,setLoginWindow})=>{
 
 
     const touchEndEvent = (e)=>{
+        e.stopPropagation();
         setTouchState(false);
         const imgArray = document.querySelector(".mainImgArray");
         if(((currentX.current-start.current)/(deviceWidth/2))*100>55){
@@ -592,11 +595,10 @@ const Body = ({setModal,modal,setLoginWindow})=>{
         start.current=0;
         currentX.current=0;
     }
-   
     return(
     <>
         {renderState&&<div style={{width:'100%',backgroundColor:"#f9f9f9",display:"flex",alignItems:"center",flexDirection:"column"}}
-        onClick={()=>{setBigImgWindow(false)}}>
+        onClick={(e)=>{setBigImgWindow(false);e.stopPropagation();}}>
                 <a id="replyNavi" style={{display:"none"}} href={`#${localStorage.getItem("replyId")}`}></a>
                 <div style={{textAlign:"left",marginTop:"48px",marginBottom:"32px"}}>
                 <div className="product_item">
@@ -664,7 +666,7 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                             onMouseOver={()=>{setBtnOnOff(true);}}
                             onMouseLeave={()=>{setBtnOnOff(false)}}
 
-                            onClick={(e)=>{e.stopPropagation();setBigImgWindow(true);}}>
+                            onClick={(e)=>{e.stopPropagation();if(!phoneState){setBigImgWindow(true)}}}>
                                 {(product.youtube!==""&&product.youtube!=="undefined"&&imgNum===0)&&<div style={{width:"100%",height:"100%",position:"absolute"}}>
                                     <ReactPlayer playing muted url={product.youtube}></ReactPlayer>
                                 </div>}
@@ -678,7 +680,7 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                                     </div>}
                                     {imgNum+1!==product.image.length&&
                                     <div style={{width:phoneState?"80px":"40px",height:"100%",position:"absolute",right:"0px",display:"flex",alignItems:"center",cursor:"pointer",justifyContent:"center",zIndex:"999"}}
-                                    onClick={(e)=>{setImgNum(imgNum+1);e.stopPropagation();}}
+                                    onClick={(e)=>{e.stopPropagation();setImgNum(imgNum+1);}}
                                     onMouseOver={(e)=>{e.stopPropagation();e.target.style.backgroundColor="rgba(255,255,255,0.3)"}}
                                     onMouseLeave={(e)=>{e.stopPropagation();e.target.style.backgroundColor="transparent"}}>
                                         <div style={{backgroundImage:`url(${icon_upBtn_black})`,backgroundRepeat:"no-repeat",backgroundPosition:"center",width:"20px",height:'13px',transform:"rotate(90deg)"}}>

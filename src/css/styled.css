@@ -2,6 +2,10 @@
 @font-face { font-family: 'Noto_Sans'; src: url(./Noto_Sans/NotoSansKR-Medium.otf); font-weight: 500 format('opentype'); }
 @font-face { font-family: 'Noto_Sans'; src: url(./Noto_Sans/NotoSansKR-Regular.otf); font-weight:normal format('opentype'); }
 
+.ql-editor>p>img{
+  width:100%;
+}
+
 .btn_one{
     background-color: #9c31c6;
     border-radius: 2px;
@@ -132,6 +136,10 @@ a{
     color:#505050;
 }
 
+a:hover{
+  color:#9C31C6;
+}
+
 input::placeholder{
     color:#a5a5a5;
 }
@@ -184,6 +192,30 @@ input:hover{
   }
 @media screen and (max-width:767px){
 
+  .homepage_title{
+    display: none;
+  }
+
+  #header{
+    position: relative;
+  }
+
+  .review_btn{
+    display: none;
+  }
+
+  .header_logo{
+    top:0px;
+    left:0px;
+    margin-left: 20px;
+    position: absolute;
+    width:90px;
+    height:48px;
+    z-index:9999;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
   .main_proveit{
     display: none;
   }
@@ -219,8 +251,8 @@ input:hover{
       .header_bar{
         /* 폰화면 */
         padding: 0px 20px 0px 20px;
-    
-        width:1040px;
+        height: 100%;
+        width:100%;
         display:flex;
         justify-content:space-between;
         align-items:center;
@@ -640,6 +672,66 @@ input:hover{
 
 @media screen and (min-width:1080px){
 
+  .header_logo{
+    top:0px;
+    left:0px;
+    margin-left: 32px;
+    position: absolute;
+    width:90px;
+    height:48px;
+    z-index:9999;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  .review_btn{
+    width: 100vw;
+    height: 100%;
+    min-height: 48px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+  }
+
+  .review_btn:hover{
+    color:#fff;
+  }
+
+  .header_usermenu{
+    width:232px;
+    display:flex;
+    flex-direction:row-reverse;
+    margin-right: 32px;
+  }
+
+  .homepage_title{
+    width: 1040px;
+    margin-top: 56px;
+    margin-bottom: 70px;
+  }
+
+  .hompage_title_main{
+    color: #505050;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 51px;
+    letter-spacing: 0em;
+    text-align: left;
+    margin-bottom: 16px;
+  }
+
+  .hompage_title_sub{
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 28px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #828282;
+  }
+
+  
+
   .main_proveit{
     width:336px;
     height:115px;
@@ -647,7 +739,6 @@ input:hover{
     font-size:13px;
     line-height:23.4px;
     text-align:left;
-    margin-top:45px;
   }
 
     .btn_up{
@@ -689,13 +780,30 @@ input:hover{
         transform:translate(-50%,-100%);
         color:#505050;
       }
+
+      #header{
+        width: 100vw;
+        position: relative;
+        z-index: 99999;
+      }
     
       .header_bar{    
-        width:1040px;
+        width:100%;
+        height: 100%;
         display:flex;
         justify-content:space-between;
         align-items:center;
         position:relative;
+      }
+
+      .header_bar_menu{
+        width: 1040px;
+        font-size: 15px;
+        
+      }
+
+      .header_bar_menu:hover{
+        color:#f00;
       }
     
       .signup{
@@ -738,7 +846,7 @@ input:hover{
     }
   
     .main_body_product_list{
-      width:100%;
+      width:688px;
       height:100%;
       margin-right:16px;
     }
@@ -1057,4 +1165,212 @@ input:hover{
       width:688px;
       margin-right:16px;
     }
+
+
+    /* 블로그페이지 */
+
+    .blogMain_body{
+      width:100%;
+      display: flex;
+      flex-direction:column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .blogMain_header{
+      width: 1040px;
+      margin-top: 72px;
+      margin-bottom: 72px;
+    }
+
+    .blogMain_title{
+      font-size: 32px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 46px;
+      letter-spacing: 0em;
+      text-align: left;
+      margin-bottom: 32px;
+    }
+
+    .blogMain_subtitle{
+      color:#828282;
+      width: 688px;
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 36px;
+      letter-spacing: 0em;
+      text-align: left;
+    }
+
+    .blogMain_contents{
+      width:1040px;
+    }
+
+    .blogMain_item{
+      width:100%;
+      height:189px;
+      background-color:#fff;
+      display:flex;
+      justify-content:center;
+      margin-bottom: 64px;
+    }
+
+    .blogMain_item_text{
+      width:688px;
+      margin-right: 64px;
+    }
+
+    .blogMain_item_text_cate{
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 20px;
+      letter-spacing: 0em;
+      text-align: left;
+      color:#a1a1a1;
+      margin-top: 15px;
+      margin-bottom: 16px;
+    }
+
+    .blogMain_item_text_title{
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 700;
+      height: 24px;
+      overflow: hidden;
+      line-height: 24px;
+      margin-bottom: 24px;
+    }
+
+    .blogMain_item_text_summary{
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 28px;
+      letter-spacing: 0em;
+      text-align: left;
+      color: #828282;
+      margin-bottom: 16px;
+    }
+
+    .blogMain_item_text_writer{
+      color: #A1A1A1;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 20px;
+      letter-spacing: 0em;
+      text-align: left;
+    }
+
+    .blogMain_item_thumb{
+      width: 288px;
+      height: 189px;
+      border-radius: 16px;
+      background-position:center;
+      background-size:cover;
+      background-repeat: no-repeat;
+    }
+
+    /* 리뷰창 */
+
+    .review_page{
+      width:100%;
+      display: flex;
+      flex-direction:column;
+      align-items: center;
+    }
+
+    .review_header{
+      width: 100%;
+      height: 480px;
+      border-bottom: 1px solid #f1f1f1;
+      display: flex;
+      justify-content: center;
+    }
+
+    .review_header_text{
+      width: 1040px;
+      margin-top: 168px;
+      margin-bottom: 156px;
+    }
+
+    .review_header_text_title{
+      width: 688px;
+      font-size: 40px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 64px;
+      letter-spacing: 0em;
+      text-align: left;
+      color: #505050;
+      margin-bottom: 40px;
+    }
+
+    .review_header_text_subtitle{
+      width: 688px;
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 28px;
+      letter-spacing: 0em;
+      text-align: left;
+      color: #828282;
+    }
+
+    .review_body{
+      width: 1040px;
+      display: flex;
+      margin-top: 40px;
+    }
+
+    .review_mainText{
+      width: 688px;
+      margin-right: 64px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 72px;
+    }
+
+    .review_mainText_date{
+      width: 100%;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 20px;
+      letter-spacing: 0em;
+      text-align: left;
+      margin-bottom: 33px;
+    }
+
+    .main_proveit.review{
+      background-color: #000;
+    }
+
+    /* 오른쪽바 */
+
+    .reveiw_preview{
+      width:100%;
+      height:72px;
+      background-color:#fff;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:16px 0px 16px 0px;
+    }
+    .reveiw_preview.review{
+      background-color: #fafafa;
+    }
+
+    .reveiw_preview:hover{
+      color:#9C31C6;
+    }
+}
+
+.review_btn:hover{
+  color:#9C31C6;
 }

@@ -37,62 +37,83 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
     }
     return(
         <>
-          <div id="header" style={{width:"100%",height:"48px",backgroundColor:"#fff",display:"flex",justifyContent:"center",alignItems:"center",minHeight:"48px"}}>
-              <div className="header_bar">  
-                      <Link to="/"><div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`}}></div></Link>
-                      <div>
-                  {localStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                      <div className="btn_textBtn" style={{marginRight:"16px"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
-                      <div className="btn_one" style={{width:"72px",height:"32px"}} onClick={()=>{setLoginWindow(true);}}>로그인</div>
-                      </div>
-                  }
-                  {localStorage.getItem("hash")!==null&&<div className="header_icon_web">
-                      <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>서비스 등록하기</div></Link>
-                      <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
-                      ,backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
-                      </div>
-                  }  
-                  {localStorage.getItem("hash")!==null&&<div className="header_icon_phone"onClick={()=>{setHambug(true)}}></div>
-                  } 
-              </div>
-  
-              </div>
-          </div>
-          {(!loginWindow&&!signupWindow)&&<div id="header" style={{width:"100%",height:"48px",backgroundColor:"#fff",position:"fixed",top:"-48px",display:"flex",justifyContent:"center",alignItems:"center",minHeight:"48px",
-                                transform:`translate(0,${header}px)`,transition:"0.3s",zIndex:"9999"}}>
-            <div className="header_bar">
-                    <Link to="/"><div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`}}></div></Link>
-                    <div>
-                {localStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
-                    <div className="btn_textBtn" style={{marginRight:"16px"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
-                    <div className="btn_one" style={{width:"72px",height:"32px"}} onClick={()=>{setLoginWindow(true);}}>로그인</div>
+            <div id="header" style={{width:"100%",height:"48px",backgroundColor:"#fff",display:"flex",justifyContent:"center",alignItems:"center",minHeight:"48px",zIndex:"9999"}}>
+                <div className="header_bar">  
+                        <Link to="/"><div className="header_logo" style={{backgroundImage:`url(${icon_logo})`}}></div></Link>
+                        <div className="header_usermenu">
+                            {localStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"9999"}}>
+                            <div className="btn_textBtn" style={{marginRight:"16px"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
+                            <div className="btn_one" style={{width:"72px",height:"32px"}} onClick={()=>{setLoginWindow(true);}}>로그인</div>
+                            </div>
+                            }
+                            {localStorage.getItem("hash")!==null&&<div className="header_icon_web">
+                                <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>서비스 등록하기</div></Link>
+                                <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
+                                ,backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
+                                </div>
+                            }  
+                            {localStorage.getItem("hash")!==null&&<div className="header_icon_phone"onClick={()=>{setHambug(true)}}></div>
+                            } 
+                        </div>
+                </div>
+                <div className="review_btn" style={{width:"100vw",height:"100%",minHeight:"48px",position:"absolute",top:0,left:0}}>
+                    <div style={{width:"100%",height:"100%",minHeight:"48px",position:"relative",top:0,left:0}}></div>
+                    <div style={{position:"absolute",width:"100%",height:"100%",top:0,left:0,display:"flex",justifyContent:"center",alignItems:"center"}}>
+                        <div className="header_bar_menu">
+                            <Link to="/proreviewer">리뷰 중독자</Link>
+                        </div>
                     </div>
-                }
-                {localStorage.getItem("hash")!==null&&<div className="header_icon_web">
-                    <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>서비스 등록하기</div></Link>
-                    <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
-                    ,backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
-                    </div>
-                }  
-                {localStorage.getItem("hash")!==null&&<div className="header_icon_phone"onClick={()=>{setHambug(true)}}></div>
-                } 
+                </div>     
             </div>
-            {modal&&<div style={{width:"192px",height:"80px",position:'absolute',backgroundColor:"#fff",right:"0px",top:`${96-header}px`,zIndex:"999"}}>
-            <Link to="/profile"><div style={{width:"100%",height:"40px",lineHeight:"40px",paddingLeft:"16px",fontSize:'14px',color:"#505050",backgroundColor:hover===1?"rgba(156, 49, 198, 0.1)":"#fff"}}
-            onMouseOver={()=>{setHover(1)}}
-            onMouseLeave={()=>{setHover(0)}}>내 프로필</div></Link>
-            <div style={{width:"100%",height:"40px",cursor:"pointer",lineHeight:"40px",paddingLeft:"16px",fontSize:'14px',color:"#505050",backgroundColor:hover===2?"rgba(156, 49, 198, 0.1)":"#fff"}}
-            onMouseOver={()=>{setHover(2)}}
-            onMouseLeave={()=>{setHover(0)}}
-            onClick={()=>{
-                const alink = document.createElement("a");
-                alink.href="/";
-                localStorage.clear();
-                alink.click();
-                }}>로그아웃</div>
+            
+            
+            
+            {(!loginWindow&&!signupWindow)&&
+            <div id="header" style={{width:"100%",height:"48px",backgroundColor:"#fff",display:"flex",position:"fixed",transform:`translate(0,${header}px)`,top:"-48px",justifyContent:"center",alignItems:"center",minHeight:"48px",zIndex:"9999"}}>
+                <div className="header_bar">  
+                    <Link to="/"><div className="header_logo" style={{backgroundImage:`url(${icon_logo})`}}></div></Link>
+                    <div className="header_usermenu">
+                            {localStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
+                            <div className="btn_textBtn" style={{marginRight:"16px"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
+                            <div className="btn_one" style={{width:"72px",height:"32px"}} onClick={()=>{setLoginWindow(true);}}>로그인</div>
+                            </div>
+                            }
+                            {localStorage.getItem("hash")!==null&&<div className="header_icon_web">
+                                <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px"}}>서비스 등록하기</div></Link>
+                                <div className="btn_one" style={{width:"36px",height:"36px",borderRadius:"50%",backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
+                                ,backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
+                                </div>
+                            }  
+                            {localStorage.getItem("hash")!==null&&<div className="header_icon_phone"onClick={()=>{setHambug(true)}}></div>
+                            } 
+                        </div>
+                </div>  
+                <div className="review_btn" style={{width:"100vw",height:"100%",minHeight:"48px",position:"absolute",top:0,left:0}}>
+                    <div style={{width:"100%",height:"100%",minHeight:"48px",position:"relative",top:0,left:0}}></div>
+                    <div style={{position:"absolute",width:"100%",height:"100%",top:0,left:0,display:"flex",justifyContent:"center",alignItems:"center"}}>
+                        <div className="header_bar_menu">
+                            <Link to="/proreviewer">리뷰 중독자</Link>
+                        </div>
+                    </div>
+                </div>             
+                {modal&&<div style={{width:"192px",height:"80px",position:'absolute',backgroundColor:"#fff",right:"0px",top:`${96-header}px`,zIndex:"9",boxShadow:"0px 1px 4px rgba(0,0,0,0.1)"}}>
+                    <Link to="/profile"><div style={{width:"100%",height:"40px",lineHeight:"40px",paddingLeft:"16px",fontSize:'14px',color:"#505050",backgroundColor:hover===1?"rgba(156, 49, 198, 0.1)":"#fff"}}
+                    onMouseOver={()=>{setHover(1)}}
+                    onMouseLeave={()=>{setHover(0)}}>내 프로필</div></Link>
+                    <div style={{width:"100%",height:"40px",cursor:"pointer",lineHeight:"40px",paddingLeft:"16px",fontSize:'14px',color:"#505050",backgroundColor:hover===2?"rgba(156, 49, 198, 0.1)":"#fff"}}
+                    onMouseOver={()=>{setHover(2)}}
+                    onMouseLeave={()=>{setHover(0)}}
+                    onClick={()=>{
+                        const alink = document.createElement("a");
+                        alink.href="/";
+                        localStorage.clear();
+                        alink.click();
+                        }}>로그아웃</div>
+                </div>}
+            
             </div>}
-            </div>
-        </div>}
+            
+            
             {hambug&&<div style={{position:"fixed",left:0,top:0,width:"100vw",height:"100vh",fontSize:'14px',color:"#505050",backgroundColor:"#fff",padding:"16px 20px 16px 20px",zIndex:9999}}>
                 <div style={{display:"flex",justifyContent:"space-between",height:"48px",}}>
                     <Link to="/"><div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`}}></div></Link>

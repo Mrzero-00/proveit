@@ -355,7 +355,7 @@ const Body =()=>{
 
     return(
         <>
-        {(render&&pageNum===0)&&<div style={{width:"100%",height:"100%",backgroundColor:"#F9F9F9",display:"flex",alignItems:"center",flexDirection:"column"}}>
+        {(render&&pageNum===0)&&<div style={{width:"100%",minHeight:window.innerHeight-48,backgroundColor:"#F9F9F9",display:"flex",alignItems:"center",flexDirection:"column"}}>
             <div style={{
                 width:"100%",
                 borderBottom:"1px solid #e5e5e5"

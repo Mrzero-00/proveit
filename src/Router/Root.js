@@ -1,5 +1,7 @@
 import React, { useEffect,useState } from 'react';
 import { Route,Prompt } from 'react-router-dom';
+import BlogMain from '../Components/blog/BlogMain';
+import Review from '../Components/blog/Review';
 import HelpUs from '../Components/Common/HelpUs';
 import MainPage from '../Components/MainPage';
 import ModifyProduct from '../Components/Product/ModifyProduct';
@@ -30,6 +32,8 @@ const Root = ()=>{
       <Route exact path="/guideline" component={HelpUs}></Route>
       <Route exact path="/tos" component={HelpUs}></Route>
       <Route exact path="/privacy_policy" component={HelpUs}></Route>
+      <Route exact path="/proreviewer" component={BlogMain}></Route>
+      <Route exact path="/review" component={Review}></Route>
   </div>  
   )
 }

@@ -9,7 +9,7 @@ import SignupWindow from './SignupWindow';
 
 const Body = ()=>{
     return(
-        <div>
+        <div style={{backgroundColor:"#f9f9f9"}}>
             {window.location.pathname ==="/tos"&&<div style={{display:"flex",justifyContent:"center"}}>
             <div style={{textAlign:"left",width:"1040px",color:"#505050"}}>
             <div style={{fontSize:"24px",fontWeight:"bold",marginBottom:"45px",marginTop:"40px"}}>이용약관</div>
