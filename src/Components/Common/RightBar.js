@@ -1,7 +1,9 @@
 import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 import intro from '../../image/intro.pdf';
+import icon_reviewer from '../../image/icon_reviewer.svg';
 import { Link } from 'react-router-dom';
+
 
 const RightBar = ()=>{
 
@@ -47,15 +49,20 @@ const RightBar = ()=>{
   return(
     <div className="main_proveit">
         <div style={{width:"100%",marginBottom:"32px"}}>
-        <div style={{fontWeight:"bold",marginBottom:"16px",color:"#505050",fontSize:'14px',lineHeight:"30px",height:"30px"}}><Link to="/proreviewer">리뷰 중독자</Link></div>
+        <div style={{fontWeight:"bold",marginBottom:"16px",color:"#505050",fontSize:'14px',lineHeight:"30px",height:"30px",display:"flex",alignItems:"center"}}>
+          <div style={{width:"14px",minWidth:"14px",minHeight:'14px',height:"14px",backgroundImage:`url(${icon_reviewer})`,marginRight:"4px",backgroundPosition:"center",backgroundSize:"cover"}}></div>
+          <Link to="/proreviewer">리뷰 중독자</Link>
+        </div>
         {reviewList.map((item,index)=>(<ReviewRender item={item} index={index} key={item.id}></ReviewRender>))}
         </div>
-        <div><a href={intro} target="_blank">소개</a></div>
-        <div><Link to="/guideline">커뮤니티 가이드라인</Link></div>
-        <div><Link to="/tos">이용약관</Link></div>
-        <div><Link to="/privacy_policy">개인정보 처리방침</Link></div>
-        이메일 문의 : hello@110corp.com<br/>
-        © 2021 oneonezero Inc.<br/>
+        <div style={{marginLeft:"20px"}}>
+          <div><a href={intro} target="_blank">소개</a></div>
+          <div><Link to="/guideline">커뮤니티 가이드라인</Link></div>
+          <div><Link to="/tos">이용약관</Link></div>
+          <div><Link to="/privacy_policy">개인정보 처리방침</Link></div>
+          <div>이메일 문의 : hello@110corp.com</div>
+          <div>© 2021 oneonezero Inc.<br/></div>
+        </div>
      </div> 
   )
 }

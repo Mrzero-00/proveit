@@ -1263,6 +1263,8 @@ input:hover{
       line-height: 20px;
       letter-spacing: 0em;
       text-align: left;
+      display: flex;
+      align-items: center;
     }
 
     .blogMain_item_thumb{
@@ -1344,6 +1346,8 @@ input:hover{
       line-height: 20px;
       letter-spacing: 0em;
       text-align: left;
+      display: flex;
+      align-items: center;
       margin-bottom: 33px;
     }
 

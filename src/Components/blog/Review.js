@@ -6,7 +6,8 @@ import Header from '../Common/Header';
 import LoginWindow from '../Common/LoginWindow';
 import RightBar from '../Common/RightBar';
 import SignupWindow from '../Common/SignupWindow';
-import intro from '../../image/intro.pdf';
+import icon_reviewer from '../../image/icon_reviewer.svg';
+import icon_writer from '../../image/icon_writer.svg';
 
 const Body =()=>{
     const [date,setDate] =useState({
@@ -87,7 +88,10 @@ const Body =()=>{
             </div>
             <div className="review_body">
                 <div className="review_mainText">
-                    <div className="review_mainText_date">작성자 {reviewState.admin_name} | {date.month}월 {date.day}일,{date.year}</div>
+                    <div className="review_mainText_date">
+                        <div style={{width:"14px",minWidth:"14px",minHeight:'14px',height:"14px",backgroundImage:`url(${icon_writer})`,marginRight:"4px"}}></div>
+                        <div>작성자 {reviewState.admin_name} | {date.month}월 {date.day}일,{date.year}</div>
+                    </div>
                     <ReactQuill value={reviewState.contents} theme="" readOnly></ReactQuill>
                     <Link to="/proreviewer"><div className="btn_three" style={{width:"112px",height:"48px"}}>목록으로</div></Link>
                 </div>

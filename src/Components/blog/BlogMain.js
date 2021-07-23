@@ -5,6 +5,8 @@ import LoginWindow from '../Common/LoginWindow';
 import SignupWindow from '../Common/SignupWindow';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import icon_reviewer from '../../image/icon_reviewer.svg';
+import icon_writer from '../../image/icon_writer.svg';
 
 const Body =()=>{
     const [blogList,setBlogList] = useState([]);
@@ -41,7 +43,10 @@ const Body =()=>{
                 <div className="blogMain_item_text_cate">{item.cate}</div>
                 <div className="blogMain_item_text_title">{item.title}</div>
                 <div className="blogMain_item_text_summary">{item.summary}</div>
-                <div className="blogMain_item_text_writer">작성자 {item.admin_name} | {month}월 {day}일,{year}년</div>
+                <div className="blogMain_item_text_writer">
+                  <div style={{width:"14px",minWidth:"14px",minHeight:'14px',height:"14px",backgroundImage:`url(${icon_writer})`,marginRight:"4px"}}></div>
+                  <div>작성자 {item.admin_name} | {month}월 {day}일,{year}년</div>
+                </div>
               </div>
               <div className="blogMain_item_thumb" style={{backgroundImage:`url(${item.thumb})`}}></div>
             </div>
