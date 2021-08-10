@@ -6,13 +6,7 @@ import icon_nonChecked from '../../image/nonChecked.svg';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const convertURLtoFile = async (url) => {
-    const response = await fetch(url);
-    const data = await response.blob();
-    const ext = url.split(".").pop(); // url 구조에 맞게 수정할 것
-    const metadata = { type: `image/${ext}` };
-    return new File([data],JSON.parse(localStorage.getItem("googleProfile")).name, metadata);
-  };
+
   
 
 const SignUp = ()=>{
@@ -25,19 +19,26 @@ const SignUp = ()=>{
     const [historyBack,setHistoryBack] =useState(false);
     const [currentImg,setCurrentImg] = useState(JSON.parse(localStorage.getItem("googleProfile")).imageUrl);
     const [currentUserInfo,setCurrnetUserInfo] =useState({
-        thumbnail:"",
         nick:"",
         department:"",
         position:"",
         mailing:true,
     });
+    const [imgFile,setImgFile] = useState("");
 
-    
+    const convertURLtoFile = async (url,setImgFile) => {
+        const response = await fetch(url);
+        // here image is url/location of image
+        const blob = await response.blob();
+        const file = new File([blob], 'image.jpg', {type: blob.type});
+        setImgFile(file);
+      };
+
     useEffect(()=>{
         if(currentUserInfo!==""){
             setRenderState(true);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        convertURLtoFile(JSON.parse(localStorage.getItem("googleProfile")).imageUrl,setImgFile);
     },[]);
 
     const Privacy =()=>{
@@ -332,10 +333,12 @@ const SignUp = ()=>{
 
     const inputLogic = (e)=>{
         const {name,value} = e.target;
-        setCurrnetUserInfo({
-         ...currentUserInfo,
-         [name]:value
-        })
+        if(value.length<21){
+            setCurrnetUserInfo({
+             ...currentUserInfo,
+             [name]:value
+            })
+        }
     }
 
     const userInfoApi = async()=>{
@@ -343,7 +346,7 @@ const SignUp = ()=>{
         data.append('email', localStorage.getItem("email"));
         data.append('token', localStorage.getItem("token"));
         data.append('type', 'update');
-        data.append('thumbnail', currentUserInfo.thumbnail);
+        data.append('thumbnail', imgFile);
         data.append('nick', currentUserInfo.nick===""?localStorage.getItem("userName"):currentUserInfo.nick);
         data.append('department', currentUserInfo.department);
         data.append('position', currentUserInfo.position);
@@ -383,10 +386,7 @@ const SignUp = ()=>{
                     fileSize *= 1;
                     if(fileSize <= 10000000){
                         setCurrentImg(window.URL.createObjectURL(file));
-                        setCurrnetUserInfo({
-                            ...currentUserInfo,
-                            thumbnail:data.files[0]
-                        })
+                        setImgFile(data.files[0]);
                     }else{
                         alert("파일 크기가 너무 큽니다.");
                     }
@@ -453,6 +453,8 @@ const SignUp = ()=>{
                         <div style={{textAlign:"left"}}>
                             <div style={{fontWeight:"bold",fontSize:'14px',height:'14px',lineHeight:"14px",marginBottom:"10px",textAlign:"left"}}>닉네임</div>
                             <input name="nick" placeholder="입력하지 않으면 구글 계정명으로 표시됩니다." value={currentUserInfo.nick} onChange={inputLogic}
+
+
                              className="signup_input"></input>
                         </div> 
                         <div style={{textAlign:"left",marginTop:'16px'}}>

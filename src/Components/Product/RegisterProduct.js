@@ -23,6 +23,7 @@ const Body=()=>{
       const [dataState,setDataState] =useState(false);
       const [renderState,setRenderState] =useState(false); 
       const imgNum = useRef(0);
+      const focusInput = useRef("");
       const [productInfo,setProductInfo] =useState({
         producerInfo:{
             department: null,
@@ -36,7 +37,6 @@ const Body=()=>{
             u_id: "",
             updated_at: "2021-07-06 11:21:12",
             user_name: "상일",
-            youtube: "",
           },
           title:"",
           subTitle:"",
@@ -63,7 +63,10 @@ const Body=()=>{
           image:[
 
           ],
+          makeBy:true,
           link:"",
+          ios_link:"",
+          android_link:"",
           thumbnail:"",
           youtube:""
       });
@@ -79,19 +82,23 @@ const Body=()=>{
       const [categoryWindowState,setCategoryWindowState] = useState(false);
       const [categoryNum,setCategoryNum] = useState(0);
       const [imgHover,setImgHover] = useState(0);
+      const [titleLength,setTitleLength] = useState(0);
+      const [subTitleLength,setSubTitleLength] = useState(0);
+      const [mainTextLength,setMainTextLength] = useState(0);
       const styled={
         input:{
-            width:"464px",
+            width:"100%",
             height: "40px",
             padding:"13px 12px 14px 12px",
             color:"#505050",
             borderRadius:"2px",
             backgroundColor:"#fff",
-            fontSize:'13px'
+            fontSize:'13px',
+            position:"absolute" 
         },
         dropBox:{
             border:"1px solid #e5e5e5",
-            width:"464px",
+            width:"100%",
             height: "40px",
             padding:"0px 12px 0px 12px",
             color:"#505050",
@@ -126,7 +133,7 @@ const Body=()=>{
         },
         textareaBox:{
             border:"1px solid #e5e5e5",
-            width:"464px",
+            width:"100%",
             height: "168px",
             color:"#a5a5a5",
             borderRadius:"2px",
@@ -143,20 +150,23 @@ const Body=()=>{
          {id:4,text:"금융"},
          {id:5,text:"사진 및 비디오"},
          {id:6,text:"비즈니스"},
-         {id:7,text:"엔터테이먼트"},
+         {id:7,text:"엔터테인먼트"},
          {id:8,text:"여행"},
          {id:9,text:"음악"},
          {id:10,text:"생산성"},
-         {id:11,text:"라이프스타일"},
-         {id:12,text:"의료"},
-         {id:13,text:"유틸리티"},
-         {id:14,text:"미디어"},
-         {id:15,text:"블록체인"},
-         {id:16,text:"인공지능"},
-         {id:17,text:"기타"},
+         {id:11,text:"푸드"},
+         {id:12,text:"라이프스타일"},
+         {id:13,text:"의료"},
+         {id:14,text:"유틸리티"},
+         {id:15,text:"미디어"},
+         {id:16,text:"블록체인"},
+         {id:17,text:"인공지능"},
+         {id:18,text:"교통"},
+         {id:19,text:"뉴스레터"},
+         {id:20,text:"기타"},
      ]
 
-     const CategoryRender =({item,categoryNum,setCategoryNum,setProductInfo,productInfo,setCategoryWindowState})=>{
+    const CategoryRender =({item,categoryNum,setCategoryNum,setProductInfo,productInfo,setCategoryWindowState})=>{
          const [hover,setHover] =useState(categoryNum);
          return(
              <div style={{
@@ -179,7 +189,7 @@ const Body=()=>{
          )
      }
 
-     const Page1_preview=({productInfo})=>{
+    const Page1_preview=({productInfo})=>{
          return(
             <div style={{width:"512px",height:"120px",display:"flex",alignItems:"center",backgroundColor:"#fff",position:"relative",cursor:"pointer",borderBottom:"1px solid #e5e5e5"}}>
             <div style={{width:"88px",marginLeft:"16px",height:"88px",marginRight:"16px",backgroundImage:`url(${productInfo.thumbnail})`,backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:"no-repeat",
@@ -203,15 +213,17 @@ const Body=()=>{
             </div>
           </div>
          )
-     }
+    }
 
-     const Page2_preview=({productInfo})=>{
-         const [imgNum,setimgNum] =useState(0);
-
+    const Page2_preview=({productInfo})=>{
+        const [imgNum,setimgNum] =useState(0);
          const ImageArray =({item,setimgNum})=>{
             return(
                 <div style={{width:"40px",height:"40px",marginRight:"8px",backgroundImage:`url(${item.imageUrl})`,cursor:"pointer",backgroundSize:"cover",backgroundRepeat:"no-repeat",backgroundPosition:"center"}}
-                onClick={()=>{setimgNum(item.id)}}>      
+                onMouseEnter={()=>{
+                    setimgNum(item.id-1);
+                }}
+                >      
                 </div>
             )
         }
@@ -268,31 +280,31 @@ const Body=()=>{
         )
     }
 
-      const inputLogic =(e)=>{
-        const {name,value}=e.target;
+    const inputLogic =(e)=>{
+    const {name,value}=e.target;
 
-        setProductInfo({
-            ...productInfo,
-            [name]:value
-        })
-      }
+    setProductInfo({
+        ...productInfo,
+        [name]:value
+    })
+    }
 
-      useEffect(()=>{
-        if(JSON.parse(localStorage.getItem("userInfo"))){
-            setProductInfo(
-                {
-                    ...productInfo,
-                    producerInfo:JSON.parse(localStorage.getItem("userInfo"))
-                }
-            )
-            setRenderState(true);
-        }else{
-            const alink = document.createElement("a");
-            alink.href = "/";
-            alink.click();
-        }
+    useEffect(()=>{
+    if(JSON.parse(localStorage.getItem("userInfo"))){
+        setProductInfo(
+            {
+                ...productInfo,
+                producerInfo:JSON.parse(localStorage.getItem("userInfo"))
+            }
+        )
+        setRenderState(true);
+    }else{
+        const alink = document.createElement("a");
+        alink.href = "/";
+        alink.click();
+    }
 
-      },[])
+    },[])
 
     const productRegisterApi = async()=>{
         var data = new FormData();
@@ -306,7 +318,10 @@ const Body=()=>{
         data.append('image', JSON.stringify(productInfo.image));
         data.append('comment',productInfo.comment[0].text);
         data.append('link', productInfo.link);
+        data.append('ios_link', productInfo.ios_link);
+        data.append('android_link', productInfo.android_link);
         data.append('thumbnail', productInfo.thumbnail);
+        data.append("make_by",productInfo.makeBy);
         data.append('youtube', productInfo.youtube);
         data.append('user_email', localStorage.getItem("email"));
         data.append('user_name',localStorage.getItem("userName"));
@@ -338,7 +353,8 @@ const Body=()=>{
         }
     }
 
-    const imgUploadApi = async(img,id)=>{
+    const imgUploadApi = async(img,id,num)=>{
+        console.log(num);
         var data = new FormData();
         data.append('img', img);
         try{
@@ -358,6 +374,7 @@ const Body=()=>{
                         )
                     }else{
                         if(productInfo.image.length!==6){
+                            console.log(e.data.img);
                             setProductInfo(
                                 {
                                     ...productInfo,
@@ -388,17 +405,17 @@ const Body=()=>{
     let data = e.target;
     if(data.files[0].type === "image/jpeg" ||data.files[0].type ===  "image/png" ||data.files[0].type ===  "image/jpg"){
         if (data.files) {
-        for (let i = 0; i < data.files.length; i++) {
-            let file = data.files[i];           
+            for (let i = 0; i < data.files.length; i++) {
+                let file = data.files[i];     
                 let fileSize = file.size;
                 fileSize *= 1;
                 if(fileSize <= 10000000){
-                    imgUploadApi(data.files[0],e.target.id);
+                    imgUploadApi(data.files[i],e.target.id,i);
                 }else{
                     alert("파일 크기가 너무 큽니다.");
                 }
             }
-            }
+        }
     }
     else{
         alert("해당 파일은 사용할 수 없습니다.");
@@ -408,52 +425,127 @@ const Body=()=>{
     }
 
     const ProductImgRender = ({setImgHover,productInfo,setProductInfo,item,styled})=>{
+
+
+        const reSort =(array)=>{
+        let currentArray = array;
+        let newArray = [];
+        for(let i=0;i<currentArray.length;i++){
+            const newData = {...currentArray[i],id:i+1};
+            newArray=[...newArray,newData];
+        }
+        setProductInfo(
+            {
+                ...productInfo,
+                image:newArray
+            })
+        }
+
         return(
-            <div style={{
-                border:"1px dashed #e5e5e5",
-                width: "40px",
-                height: "40px",
-                position:"relative",
-                borderRadius:"2px",
-                backgroundRepeat:"no-repeat",
-                backgroundPosition:"center",
-                backgroundImage:`url(${item.imageUrl})`,
-                backgroundSize:"cover",
-                marginRight:"8px"}} 
+            <div className="register_img" style={{
+                backgroundImage:`url(${item.imageUrl})`
+            }} 
                 onMouseLeave={()=>{setImgHover("");}}
-                onMouseEnter={()=>{setImgHover(item.id)}}>
+                onMouseEnter={()=>{setImgHover(item.id)}}
+                onTouchStart={()=>{if(imgHover===item.id){setImgHover("")}else{setImgHover(item.id)}}}
+                >
                 {imgHover===item.id&&<div style={styled.imgRemoveBtn}
-                onClick={()=>{setProductInfo(
-                    {
-                        ...productInfo,
-                        image:productInfo.image.filter(list=>list.id!==item.id)
-                    }
-                )}}></div>}
+                onClick={()=>{reSort(productInfo.image.filter(list=>list.id!==item.id));
+                }}></div>}
             </div>)
     }
 
+    const reactQuillinput=(e)=>{
+        const editor = document.querySelector(".ql-editor");
+        const text = e;
+        let textLenth = 0;
+
+        if(mainTextLength<280){
+            setProductInfo({...productInfo,mainText:text});
+            for(let i=0;i<editor.children.length;i++){
+                if(editor.children[i].innerHTML==="<br>"){
+    
+                }else{
+                    textLenth += editor.children[i].innerHTML.length;
+                }
+                if(i===editor.children.length-1){
+                    setMainTextLength(textLenth);
+                }
+            }
+        }else{
+            setProductInfo({...productInfo,mainText:text});
+            for(let i=0;i<editor.children.length;i++){
+                if(editor.children[i].innerHTML==="<br>"){
+    
+                }else{
+                    textLenth += editor.children[i].innerHTML.length;
+                }
+                if(i===editor.children.length-1){
+                    setMainTextLength(textLenth);
+                }
+            }
+        }
+    }
       return(
           <>
-          {renderState&&<div style={{width:"100%",height:'100%',backgroundColor:"#F9F9F9",display:"flex",justifyContent:"center",paddingTop:"40px"}}
+          {renderState&&<div id="pageBody"  style={{width:"100%",height:'100%',backgroundColor:"#F9F9F9",display:"flex",justifyContent:"center",paddingTop:"40px"}}
           onClick={()=>{setCategoryWindowState(false);}}>
-              <div style={{width:"1040px",display:"flex"}}>
-                  <div style={{width:"512px",marginRight:"16px"}}>
-                      <div style={{color:"#505050",fontSize:"14px",marginBottom:'16px',textAlign:"left"}}>프로젝트 기본정보 등록 ({pageNum}/3)</div>
-                      {pageNum===1&&<div style={{width:"100%",padding:"24px 24px 32px 24px",backgroundColor:"#fff"}}>
+              <div className="register_body">
+                  <div className="register_data_input">
+                      <div className="register_data_title">프로젝트 기본정보 등록 ({pageNum}/3)</div>
+                      {pageNum===1&&<div className="register_data_inputwindow">
                                         <div style={{marginBottom:"16px"}}>
-                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>사이트 주소 및 다운로드 링크<span style={{color:"#ED5C2E"}}>*</span></div>
-                                            <input name="link" value={productInfo.link} style={styled.input} placeholder="https://" onChange={inputLogic}></input>
+                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>
+                                                사이트 혹은 앱스토어 링크
+                                                <span style={{color:"#ED5C2E",marginRight:"16px",marginLeft:"4px"}}>*</span>
+                                                <span style={{color:"#a5a5a5",fontWeight:"normal"}}>최소 1개 이상 입력</span>
+                                            </div>
+                                            <div style={{position:"relative",width:"100%",height:"40px",marginBottom:"6px"}}>
+                                               <input name="link" value={productInfo.link} style={styled.input} placeholder="웹사이트 주소를 입력하세요." onChange={inputLogic}></input>
+                                            </div>
+                                            <div style={{position:"relative",width:"100%",height:"40px",marginBottom:"6px"}}>
+                                                <input name="ios_link" value={productInfo.ios_link} style={styled.input} placeholder="애플 앱스토어 주소를 입력하세요 (iOS)" onChange={inputLogic}
+                                                ></input>
+                                            </div>
+                                            <div style={{position:"relative",width:"100%",height:"40px",marginBottom:"6px"}}>
+                                                <input name="android_link" value={productInfo.android_link} style={styled.input} placeholder="구글 플레이스토어 주소를 입력하세요 (Android)" onChange={inputLogic}
+                                                ></input>
+                                            </div>
                                         </div>
-                                        <div style={{marginBottom:"16px"}}>
-                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>서비스 이름<span style={{color:"#ED5C2E"}}>*</span></div>
-                                            <input name="title" value={productInfo.title} style={styled.input} placeholder="서비스 이름" onChange={inputLogic}></input>
+                                        <div style={{marginBottom:"10px"}}>
+                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>
+                                                서비스 이름
+                                                <span style={{color:"#ED5C2E",marginLeft:"4px"}}>*</span>
+                                            </div>
+                                            <div style={{position:"relative",width:"100%",height:"40px",marginBottom:"6px"}}>
+                                                <input name="title" value={productInfo.title} style={styled.input} placeholder="서비스 이름" 
+                                                onChange={(e)=>{
+                                                    if(e.target.value.length<=32){
+                                                        inputLogic(e);
+                                                        setTitleLength(e.target.value.length);
+                                                    }
+                                                }}></input>
+                                                <div style={{position:"absolute",right:16,fontSize:"13px",height:"40px",lineHeight:"40px",color:"#a5a5a5"}}>({titleLength}/32)</div>
+                                            </div>
                                         </div>
-                                        <div style={{marginBottom:"16px"}}>
-                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>한 줄 소개<span style={{color:"#ED5C2E"}}>*</span></div>
-                                            <input name="subTitle" value={productInfo.subTitle} style={styled.input} placeholder="서비스를 한 줄로 요약해서 설명해주세요." onChange={inputLogic}></input>
+                                        <div style={{marginBottom:"10px"}}>
+                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>
+                                                한 줄 소개
+                                                <span style={{color:"#ED5C2E",marginLeft:"4px"}}>*</span></div>
+                                                <div style={{position:"relative",width:"100%",height:"40px",marginBottom:"6px"}}>
+                                                    <input name="subTitle" value={productInfo.subTitle} style={styled.input} placeholder="서비스를 한 줄로 요약해서 설명해주세요." 
+                                                    onChange={(e)=>{
+                                                    if(e.target.value.length<=40){
+                                                        inputLogic(e);
+                                                        setSubTitleLength(e.target.value.length);
+                                                    }
+                                                    }}></input>
+                                                    <div style={{position:"absolute",right:16,fontSize:"13px",height:"40px",lineHeight:"40px",color:"#a5a5a5"}}>({subTitleLength}/40)</div>
+                                                </div>
                                         </div>
                                         <div style={{marginBottom:"24px",position:"relative"}}>
-                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>카테고리<span style={{color:"#ED5C2E"}}>*</span></div>
+                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>
+                                                카테고리<span style={{color:"#ED5C2E",marginLeft:"4px"}}>*</span></div>
                                             <div name="category" style={styled.dropBox} onClick={(e)=>{setCategoryWindowState(!categoryWindowState);e.stopPropagation();}}>
                                                 {categoryNum===0?"카테고리를 선택하세요":categoryList[categoryNum-1].text}
                                                 <div style={{position:"absolute",width:"24px",height:'24px',right:"16px",top:"8px",backgroundImage:`url(${icon_dropBox})`}}></div>
@@ -464,20 +556,26 @@ const Body=()=>{
                                         </div>
                                         <div style={{marginBottom:"32px"}}>
                                             <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>이 서비스는 ...</div>
-                                            <div style={{display:"flex",alignItems:"center"}}>
-                                                <div style={{width:"24px",height:"24px",marginRight:"8px",backgroundImage:productInfo.paymentType==="무료"?`url(${icon_radioChecked})`:`url(${icon_radioUnChecked})`,cursor:"pointer"}}
-                                                onClick={(e)=>{setProductInfo({...productInfo,paymentType:"무료"});e.stopPropagation();}}></div>
-                                                <div style={{fontSize:"14px",color:'#505050',marginRight:"24px",height:"14px",lineHeight:"14px"}}>무료입니다.</div>
-                                                <div style={{width:"24px",height:"24px",marginRight:"8px",backgroundImage:productInfo.paymentType==="유료"?`url(${icon_radioChecked})`:`url(${icon_radioUnChecked})`,cursor:"pointer"}}
-                                                onClick={(e)=>{setProductInfo({...productInfo,paymentType:"유료"});e.stopPropagation();}}></div>
-                                                <div style={{fontSize:"14px",color:'#505050',marginRight:"24px",height:"14px",lineHeight:"14px"}}>유료입니다.</div>
-                                                <div style={{width:"24px",height:"24px",marginRight:"8px",backgroundImage:productInfo.paymentType==="부분 유료"?`url(${icon_radioChecked})`:`url(${icon_radioUnChecked})`,cursor:"pointer"}}
-                                                onClick={(e)=>{setProductInfo({...productInfo,paymentType:"부분 유료"});e.stopPropagation();}}></div>
-                                                <div style={{fontSize:"14px",color:'#505050',marginRight:"24px",height:"14px",lineHeight:"14px"}}>일부 유료입니다.</div>
+                                            <div className="register_payment">
+                                                <div className="register_payment_item_sort">
+                                                    <div style={{width:"24px",minWidth:"24px",minHeight:'24px',height:"24px",marginRight:"8px",backgroundImage:productInfo.paymentType==="무료"?`url(${icon_radioChecked})`:`url(${icon_radioUnChecked})`,cursor:"pointer"}}
+                                                    onClick={(e)=>{setProductInfo({...productInfo,paymentType:"무료"});e.stopPropagation();}}></div>
+                                                    <div className="register_payment_item">무료입니다.</div>
+                                                </div>
+                                                <div className="register_payment_item_sort">
+                                                    <div style={{width:"24px",minWidth:"24px",minHeight:'24px',height:"24px",marginRight:"8px",backgroundImage:productInfo.paymentType==="유료"?`url(${icon_radioChecked})`:`url(${icon_radioUnChecked})`,cursor:"pointer"}}
+                                                    onClick={(e)=>{setProductInfo({...productInfo,paymentType:"유료"});e.stopPropagation();}}></div>
+                                                    <div className="register_payment_item">유료입니다.</div>
+                                                </div>
+                                                <div className="register_payment_item_sort">
+                                                    <div style={{width:"24px",minWidth:"24px",minHeight:'24px',height:"24px",marginRight:"8px",backgroundImage:productInfo.paymentType==="부분 유료"?`url(${icon_radioChecked})`:`url(${icon_radioUnChecked})`,cursor:"pointer"}}
+                                                    onClick={(e)=>{setProductInfo({...productInfo,paymentType:"부분 유료"});e.stopPropagation();}}></div>
+                                                    <div className="register_payment_item" style={{marginRight:"0px"}}>일부 유료입니다.</div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div style={{marginBottom:"16px"}}>
-                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>썸네일<span style={{color:"#ED5C2E"}}>*</span></div>
+                                        <div style={{marginBottom:"24px"}}>
+                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>썸네일<span style={{color:"#ED5C2E",marginLeft:"4px"}}>*</span></div>
                                             <div style={{display:"flex",alignItems:"center"}}>
                                                 <div style={{width:"88px",height:"88px",borderRadius:"2px",backgroundImage:productInfo.thumbnail===""?`url(${icon_noneimg})`:`url(${productInfo.thumbnail})`,border:"1px dashed #c4c4c4",marginRight:"12px",
                                                             backgroundPosition:"center",backgroundRepeat:"no-repeat",backgroundSize:"cover"}}></div>
@@ -491,13 +589,28 @@ const Body=()=>{
                                                 </div>
                                             </div>
                                         </div>
+                                        <div>
+                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>메이커 정보<span style={{color:"#ED5C2E",marginLeft:"4px"}}>*</span></div>
+                                            <div className="register_payment">
+                                                <div className="register_payment_item_sort">
+                                                    <div style={{width:"24px",minWidth:"24px",minHeight:'24px',height:"24px",marginRight:"8px",backgroundImage:productInfo.makeBy?`url(${icon_radioChecked})`:`url(${icon_radioUnChecked})`,cursor:"pointer"}}
+                                                    onClick={(e)=>{setProductInfo({...productInfo,makeBy:true});e.stopPropagation();}}></div>
+                                                    <div className="register_payment_item">제가 만들었어요.</div>
+                                                </div>
+                                                <div className="register_payment_item_sort">
+                                                    <div style={{width:"24px",minWidth:"24px",minHeight:'24px',height:"24px",marginRight:"8px",backgroundImage:!productInfo.makeBy?`url(${icon_radioChecked})`:`url(${icon_radioUnChecked})`,cursor:"pointer"}}
+                                                    onClick={(e)=>{setProductInfo({...productInfo,makeBy:false});e.stopPropagation();}}></div>
+                                                    <div className="register_payment_item">제가 만들지는 않았지만 좋아서 소개해요.</div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>}
-                      {pageNum===2&&<div style={{width:"100%",padding:"24px 24px 32px 24px",backgroundColor:"#fff"}}>
+                      {pageNum===2&&<div className="register_data_inputwindow">
                             <div style={{marginBottom:"16px"}}>
-                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>대표 이미지<span style={{color:"#ED5C2E"}}>*</span></div>
+                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>대표 이미지<span style={{color:"#ED5C2E",marginLeft:"4px"}}>*</span></div>
                                             <div style={{display:"flex",alignItems:"center"}}>
                                                 <form style={{display:"block"}}>
-                                                            <input type='file' id="productImg" style={{display:"none"}}  accept=".jpg,.jpeg,.png,.bmp" onChange={FileUploder}></input>
+                                                            <input type='file' id="productImg" style={{display:"none"}}  accept=".jpg,.jpeg,.png,.bmp" onChange={FileUploder} multiple></input>
                                                             <label for="productImg" className="btn_three" style={{width:"120px",height:"40px"}}>이미지 등록
                                                             </label>
                                                 </form>
@@ -513,16 +626,7 @@ const Body=()=>{
                                             styled={styled}
                                             />))}
                                             {productInfo.image.length===0&&
-                                            <div style={{
-                                                border:"1px dashed #e5e5e5",
-                                                width: "40px",
-                                                height: "40px",
-                                                position:"relative",
-                                                borderRadius:"2px",
-                                                backgroundRepeat:"no-repeat",
-                                                backgroundPosition:"center",
-                                                backgroundSize:"cover",
-                                                marginRight:"8px"}} 
+                                            <div className="register_img"
                                                 onMouseLeave={()=>{setImgHover(0);}}
                                                 onMouseEnter={()=>{setImgHover(1)}}>
                                                 {imgHover===1&&<div style={styled.imgRemoveBtn}></div>}
@@ -530,47 +634,82 @@ const Body=()=>{
                                         </div>
                                         <div style={{marginBottom:"33px",fontSize:"13px",lineHeight:"13px",height:'13px',color:"#a5a5a5"}}>추천 사이즈 : 1280*720 (16:9) jpg, png, gif, 최대 파일크기 각 2MB, 최소 1장 필수</div>
                                         <div style={{marginBottom:"16px"}}>
-                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>서비스 설명<span style={{color:"#ED5C2E"}}>*</span></div>
-                                            <ReactQuill className="quillInput" value={productInfo.mainText}  placeholder="내용을 입력해주세요. 공백 포함 280자까지 입력할 수 있습니다."
-                                             theme="" onChange={(e)=>{setProductInfo({...productInfo,mainText:e})}} style={{width:"464px",fontSize:"13px",position:"relative",height:"168px",textAlign:"left",padding:"16px",overflow:"auto"}}></ReactQuill>
+                                            <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>서비스 설명<span style={{color:"#ED5C2E",marginLeft:"4px"}}>*</span></div>
+                                            <div style={{position:"relative"}}>
+                                                <ReactQuill className="quillInput" value={productInfo.mainText}  placeholder="내용을 입력해주세요. 공백 포함 280자까지 입력할 수 있습니다."
+                                                theme="" 
+                                                onChange={(e)=>{
+                                                    reactQuillinput(e);}} 
+                                                onFocus={()=>{
+                                                    const focustDiv = document.querySelector(".quillInput");
+                                                    focustDiv.style.border="1px solid rgba(156,49,198,0.3)";
+                                                }} 
+                                                onBlur={()=>{
+                                                    const focustDiv = document.querySelector(".quillInput");
+                                                    focustDiv.style.border="1px solid #e5e5e5";
+                                                }}
+                                                style={{width:"100%",fontSize:"13px",position:"relative",height:"168px",textAlign:"left",padding:"16px",overflow:"auto"}}
+                                                ></ReactQuill>
+                                                <div style={{position:"absolute",bottom:"16px",right:"16px",fontSize:"13px",color:"#a5a5a5"}}>({mainTextLength}/280)</div>
+                                            </div>
                                         </div>     
                                         <div style={{marginBottom:"16px"}}>
                                             <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>유튜브 동영상 링크</div>
-                                            <input name="youtube" value={productInfo.youtube} style={styled.input} placeholder="유튜브 주소를 입력해주세요" onChange={inputLogic}></input>
+                                            <div style={{position:"relative",width:"100%",height:"40px",marginBottom:"6px"}}>
+                                                <input name="youtube" value={productInfo.youtube} style={styled.input} placeholder="유튜브 주소를 입력해주세요" onChange={inputLogic}></input>
+                                            </div>
                                         </div>  
                                     </div>}
-                      {pageNum===3&&<div style={{width:"100%",padding:"24px 24px 32px 24px",backgroundColor:"#fff"}}>
+                      
+                      {pageNum===3&&<div className="register_data_inputwindow">
                             <div style={{marginBottom:"16px"}}>
                                             <div style={{fontWeight:"bold",color:"#505050",textAlign:"left",fontSize:"14px",height:'14px',lineHeight:"14px",marginBottom:'10px'}}>첫번째 댓글을 써보세요</div>
                                             <ReactQuill className="quillInput" placeholder="내용을 입력해주세요. 공백 포함 280자까지 입력할 수 있습니다."
                                             value={productInfo.comment[0].text}
-                                             theme="" onChange={(e)=>{
-                                                 setProductInfo(
-                                                     {...productInfo,
-                                                        comment:[{...productInfo,text:e}]})}} style={{width:"464px",position:"relative",height:"168px",textAlign:"left",border:"1px solid #e5e5e5",fontSize:'13px',padding:"16px",overflow:"auto"}}></ReactQuill>
+                                             theme="" 
+                                             onChange={(e)=>{
+                                                setProductInfo(
+                                                    {...productInfo,
+                                                        comment:[{
+                                                            ...productInfo,
+                                                            text:e}]
+                                                    }
+                                                )
+                                            }}
+                                            onFocus={()=>{
+                                                const focustDiv = document.querySelector(".quillInput");
+                                                focustDiv.style.border="1px solid rgba(156,49,198,0.3)";
+                                                console.log("d");
+                                            }} 
+                                            onBlur={()=>{
+                                                const focustDiv = document.querySelector(".quillInput");
+                                                focustDiv.style.border="1px solid #e5e5e5";
+                                            }}
+                                            
+                                            
+                                            style={{width:"100%",position:"relative",height:"168px",textAlign:"left",fontSize:'13px',padding:"16px",overflow:"auto"}}></ReactQuill>
                                         </div>
                             </div>}
-                      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",position:""}}>
+                      <div className="register_btn">
                           {!dataState&&<div style={{width:"10px"}}></div>}
                           {dataState&&<div style={{color:'#EA4335',fontSize:"13px"}}>필수 항목을 빠짐없이 입력해 주세요.</div>}
                           <div style={{display:"flex",flexDirection:"row-reverse"}}>
                             {pageNum!==3&&<div className="btn_one" style={{marginTop:"16px",width:"72px",height:"32px"}} onClick={(e)=>{
                                 if(pageNum===1){
-                                    if(productInfo.link===""||productInfo.title===""||productInfo.subTitle===""||productInfo.category===""||productInfo.thumbnail===""){
+                                    if((productInfo.link===""&&productInfo.android_link===""&&productInfo.ios_link==="")||productInfo.title===""||productInfo.subTitle===""||productInfo.category===""||productInfo.thumbnail===""){
                                         setDataState(true);
                                     }else{
                                         setPageNum(pageNum+1);
                                         setDataState(false);
                                     }
                                 }else if(pageNum===2){
-                                    if(productInfo.image.length===0||productInfo.mainText===""){
+                                    if(productInfo.image.length===0||productInfo.mainText===""||productInfo.mainText==="<p><br></p>"){
                                         setDataState(true);
                                     }else{
                                         setPageNum(pageNum+1);
                                         setDataState(false);
                                     }
                                 }
-                                
                                 e.stopPropagation();
                                 }}>다음</div>}
                             {pageNum===3&&<div className="btn_one" style={{marginTop:"16px",width:"96px",height:"32px"}} onClick={(e)=>{setRegisterState(true);e.stopPropagation();}}>등록하기</div>}
@@ -579,7 +718,7 @@ const Body=()=>{
                       </div>
 
                   </div>
-                  <div style={{width:"512px"}}>
+                  <div className="register_preview" style={{width:"512px"}}>
                       <div style={{color:"#505050",fontSize:"14px",marginBottom:'16px',textAlign:"left"}}>미리보기</div>
                       {pageNum===1&&<Page1_preview productInfo={productInfo}></Page1_preview>}
                       {pageNum===2&&<Page2_preview productInfo={productInfo}></Page2_preview>}
@@ -604,8 +743,41 @@ const Body=()=>{
 const RegisterProduct = ()=>{
     const [loginWindow,setLoginWindow] = useState(false);
     const [modal,setModal] = useState(false);
+
+    const userInfoGetApi = async()=>{
+        var data = new FormData();
+        data.append('email', localStorage.getItem("email"));
+        data.append('token', localStorage.getItem("token"));
+        data.append('type', 'select');
+        try{
+            await axios({
+                method:"post",
+                url : "https://www.proveit.co.kr/api/user.php",
+                data:data
+      
+            }).then((e)=>{
+                if(e.data.ret_code === "0000"){
+
+                }else if(e.data.ret_code ==="500"){
+                    alert("로그인 해쉬가 만료되었습니다. 다시 로그인해주세요");
+                    const alink = document.createElement("a");
+                    alink.href="/";
+                    setTimeout(() => {
+                        localStorage.clear();
+                        alink.click();
+                    }, 1000);
+                }
+            })
+        }catch{
+      
+        }
+    }
+    useEffect(()=>{
+        userInfoGetApi();
+
+    },[])
     return(
-    <div style={{width:"100%",height:"100vh",display:"flex",flexDirection:"column"}}>
+    <div style={{width:"100%",height:"100%",display:"flex",flexDirection:"column"}}>
     <Header 
     setLoginWindow={setLoginWindow}
     loginWindow={loginWindow}

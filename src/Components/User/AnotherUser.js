@@ -34,7 +34,7 @@ const Body =()=>{
 
     const userInfoGetApi = async()=>{
         var data = new FormData();
-        data.append('email', window.location.search.substring(1));
+        data.append('user_id', window.location.search.substring(1));
         data.append('type', 'product');
         try{
             await axios({
@@ -149,7 +149,7 @@ const Body =()=>{
 
     return(
         <>
-        {render&&<div style={{width:"100%",height:"100%",backgroundColor:"#F9F9F9",display:"flex",alignItems:"center",flexDirection:"column"}}>
+        {render&&<div id="pageBody"  style={{width:"100%",height:"100%",minHeight:window.innerHeight-48,backgroundColor:"#F9F9F9",display:"flex",alignItems:"center",flexDirection:"column"}}>
             <div style={{
                 width:"100%",
                 borderBottom:"1px solid #e5e5e5"
@@ -164,13 +164,13 @@ const Body =()=>{
                         borderRadius:"50%",
                         backgroundColor:"#e5e5e5",
                         marginRight:"40px",
-                        backgroundImage:`url(${"https://www.proveit.co.kr"+currentUserInfo.thumbnail})`,
+                        backgroundImage:`url(${currentUserInfo.thumbnail})`,
                         backgroundSize:"cover",
                         backgroundRepeat:"no-repeat",
                         backgroundPosition:"center"}}></div>
                     <div>
                         <div style={{fontSize:"20px",color:'#505050',height:"20px",lineHeight:"20px",marginBottom:"16px",fontWeight:"bold"}}>{currentUserInfo.nick}</div>
-                        <div style={{fontSize:"14px",color:'#828282',height:"14px",lineHeight:"14px",marginBottom:"16px"}}>{currentUserInfo.department},{currentUserInfo.position}</div>
+                        <div style={{fontSize:"14px",color:'#828282',height:"14px",lineHeight:"14px",marginBottom:"16px"}}>{currentUserInfo.position}{currentUserInfo.department!==""?`,${currentUserInfo.department}`:""}</div>
                     </div>
                 </div>
             </div>

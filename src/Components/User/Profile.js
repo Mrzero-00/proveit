@@ -114,10 +114,12 @@ const Body =()=>{
 
     const inputLogic = (e)=>{
         const {name,value} = e.target;
-        setCurrentUserInfo({
-         ...currentUserInfo,
-         [name]:value
-        })
+        if(value.length<21){
+            setCurrentUserInfo({
+             ...currentUserInfo,
+             [name]:value
+            })
+        }
     }
 
     const FileUploder =(e) =>{
@@ -198,6 +200,7 @@ const Body =()=>{
                     setMyProducts(e.data.product);
                     setLikelyProducts(e.data.like);
                     setMyReply(e.data.reply);
+                    // setMyReply([...e.data.reply,...e.data.blog_reply]);
                     localStorage.setItem("userInfo",JSON.stringify(e.data.user));
                     setRender(true);
                 }else if(e.data.ret_code ==="500"){
@@ -243,7 +246,6 @@ const Body =()=>{
     useEffect(()=>{
         userInfoGetApi();
     },[pageNum])
-    
     const ProductRender =({item,type,index})=>{
         return(
             <div style={{position:"relative"}}>
@@ -301,9 +303,9 @@ const Body =()=>{
           </Link>
             }
             
-            {(index<4&&type==="myProduct")&&<Link to={`/modifyproduct?productnum=${item.id}`}><div className="btn_one" style={{width:"64px",height:"32px",zIndex:"9999",top:"50%",left:"520px",transform:"translate(0,-50%)",position:"absolute"}}
+            {(index<4&&type==="myProduct")&&<Link to={`/modifyproduct?productnum=${item.id}`}><div className="btn_one" style={{width:"64px",height:"32px",zIndex:"9999",top:"50%",right:"104px",transform:"translate(0,-50%)",position:"absolute"}}
               onClick={(e)=>{e.stopPropagation();}}>수정</div></Link>}
-            {(index===undefined&&type==="myProduct")&&<Link to={`/modifyproduct?productnum=${item.id}`}><div className="btn_one" style={{width:"64px",height:"32px",zIndex:"9999",top:"50%",left:"520px",transform:"translate(0,-50%)",position:"absolute"}}
+            {(index===undefined&&type==="myProduct")&&<Link to={`/modifyproduct?productnum=${item.id}`}><div className="btn_one" style={{width:"64px",height:"32px",zIndex:"9999",top:"50%",right:"104px",transform:"translate(0,-50%)",position:"absolute"}}
               onClick={(e)=>{e.stopPropagation();}}>수정</div></Link>}
             </div>
         )
@@ -354,8 +356,8 @@ const Body =()=>{
     }
 
     return(
-        <>
-        {(render&&pageNum===0)&&<div style={{width:"100%",minHeight:window.innerHeight-48,backgroundColor:"#F9F9F9",display:"flex",alignItems:"center",flexDirection:"column"}}>
+        <div id="pageBody" style={{minHeight:window.innerHeight-48,backgroundColor:"#F9F9F9"}}>
+        {(render&&pageNum===0)&&<div style={{width:"100%",backgroundColor:"#F9F9F9",display:"flex",alignItems:"center",flexDirection:"column"}}>
             <div style={{
                 width:"100%",
                 borderBottom:"1px solid #e5e5e5"
@@ -365,7 +367,7 @@ const Body =()=>{
                 }}>
                 <div className="profile_main">
                     <div className="profile_main_thumbnail" style={{
-                        backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
+                        backgroundImage:localStorage.getItem("userInfo")&&`url(${JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
                         }}></div>
                     <div>
                         <div className="profile_main_nick" style={{fontSize:"20px",color:'#505050',height:"20px",lineHeight:"20px",marginBottom:"16px",fontWeight:"bold"}}>{JSON.parse(localStorage.getItem("userInfo")).nick}</div>
@@ -381,7 +383,7 @@ const Body =()=>{
             {fullListState==="none"&&<div className="profile_main_body">
                 <div className="profile_main_productList">
                     <div style={{marginBottom:"40px"}}>
-                        <div style={{fontWeight:"bold",marginBottom:"16px"}}>등록한 서비스</div>
+                        <div style={{fontWeight:"bold",marginBottom:"16px",fontSize:"14px"}}>등록한 서비스</div>
                         {myProducts.map((item,index)=>(<ProductRender key={index} index={index} item={item} type="myProduct"/>))}
                         {myProducts.length>4&&<div style={{
                         width:"100%",
@@ -397,7 +399,7 @@ const Body =()=>{
                         onClick={()=>{setFullListState("myProducts")}}>모두 보기</div>}
                     </div>
                     <div style={{marginBottom:"40px"}}>
-                        <div style={{fontWeight:"bold",marginBottom:"16px"}}>추천했어요</div>
+                        <div style={{fontWeight:"bold",marginBottom:"16px",fontSize:"14px"}}>추천했어요</div>
                         {likelyProducts.map((item,index)=>(<ProductRender key={index} index={index} item={item} type="likely"/>))}
                         {likelyProducts.length>4&&<div style={{
                         width:"100%",
@@ -414,7 +416,7 @@ const Body =()=>{
                     </div>
                 </div>
                 <div style={{width:"336px",marginBottom:"32px"}}>
-                    <div style={{fontWeight:"bold",marginBottom:"16px"}}>코멘트</div>
+                    <div style={{fontWeight:"bold",marginBottom:"16px",fontSize:"14px"}}>코멘트</div>
                     {myReply.map((item,index)=>(<ReplyRender key={index} myReply={myReply} index={index} item={item}></ReplyRender>))}
                     {myReply.length>4&&<div style={{
                         width:"100%",
@@ -462,7 +464,7 @@ const Body =()=>{
                             <div style={{height:"14px",fontSize:"14px",lineHeight:'14px',fontWeight:'bold',color:"#505050",marginBottom:"18px",width:"380px",textAlign:"left"}}>프로필 이미지 변경</div>
                                 <div style={{display:"flex"}}>
                                     <div style={{width:"80px",height:"80px",borderRadius:"50%",backgroundColor:"#c4c4c4",marginRight:"20px",
-                                    backgroundImage:currentImg===""?(localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr"+currentUserInfo.thumbnail})`):`url(${currentImg})`,
+                                    backgroundImage:currentImg===""?(localStorage.getItem("userInfo")&&`url(${currentUserInfo.thumbnail})`):`url(${currentImg})`,
                                     backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:"no-repeat"}}></div>
                                     <div style={{width:"364px",textAlign:"left",fontSize:"13px",marginBottom:'24px'}}>
                                     <form style={{display:"block"}}>
@@ -511,7 +513,7 @@ const Body =()=>{
                 </div>
             </div>
         </div>}
-        {(render&&pageNum===2)&&<div style={{width:"100%",height:"100%",backgroundColor:"#F9F9F9",display:"flex",justifyContent:"center"}}>
+        {(render&&pageNum===2)&&<div style={{width:"100%",minHeight:window.innerHeight-48,backgroundColor:"#F9F9F9",display:"flex",justifyContent:"center"}}>
             <div onClick={()=>{setReasonWindow(false)}}>
                 <div style={{width:"512px",marginTop:"40px",marginBottom:"24px",fontSize:"20px",height:"20px",lineHeight:"20px",textAlign:"left",fontWeight:"bold"}}>
                     회원 탈퇴
@@ -552,7 +554,7 @@ const Body =()=>{
                 </div>
             </div>
         </div>}
-        {leaveWindow&&<div style={{width:"100%",height:"100%",position:"absolute",backgroundColor:"rgba(80,80,80,0.4)",display:"flex",justifyContent:"center"}}
+        {leaveWindow&&<div style={{width:"100%",height:"100%",position:"fixed",backgroundColor:"rgba(80,80,80,0.4)",display:"flex",justifyContent:"center",top:0,left:0}}
         onClick={(e)=>{setLeaveWindow(false);e.stopPropagation();}}>
             <div style={{width:"336px",height:"184px",backgroundColor:"#fff",display:"flex",alignItems:"center",flexDirection:"column",marginTop:"179px"}}>
                 <div style={{fontSize:"14px",fontWeight:"bold",color:'#505050',marginBottom:"16px",marginTop:"32px"}}>탈퇴 하시겠습니까?</div>
@@ -563,7 +565,7 @@ const Body =()=>{
                 </div>
             </div>
         </div>}
-        </>
+    </div>
     )
 }
 

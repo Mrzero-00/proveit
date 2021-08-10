@@ -5,8 +5,9 @@ import LoginWindow from '../Common/LoginWindow';
 import SignupWindow from '../Common/SignupWindow';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import icon_reviewer from '../../image/icon_reviewer.svg';
+import icon_review_title from '../../image/icon_review_title.svg';
 import icon_writer from '../../image/icon_writer.svg';
+import { Helmet } from "react-helmet";
 
 const Body =()=>{
     const [blogList,setBlogList] = useState([]);
@@ -20,7 +21,6 @@ const Body =()=>{
                 url : `https://proveit.co.kr/api/blogList.php?id&page=1`,
       
             }).then((e)=>{
-                console.log(e);
                 if(e.data.ret_code === "0000"){
                     setMaxPageNum(e.data.last_page);
                     setBlogList(e.data.blog);
@@ -31,55 +31,55 @@ const Body =()=>{
         }
       }
 
-      const ReviewRender=({item})=>{
-        const year = item.created_at.slice(0,4);
-        const month = item.created_at.slice(5,7);
-        const day = item.created_at.slice(8,10);
+    const ReviewRender=({item})=>{
+      const year = item.created_at.slice(0,4);
+      const month = item.created_at.slice(5,7);
+      const day = item.created_at.slice(8,10);
 
-        return(
-          <Link to={`/review?id=${item.id}`}>
-            <div className="blogMain_item">
-              <div className="blogMain_item_text">
-                <div className="blogMain_item_text_cate">{item.cate}</div>
-                <div className="blogMain_item_text_title">{item.title}</div>
-                <div className="blogMain_item_text_summary">{item.summary}</div>
-                <div className="blogMain_item_text_writer">
-                  <div style={{width:"14px",minWidth:"14px",minHeight:'14px',height:"14px",backgroundImage:`url(${icon_writer})`,marginRight:"4px"}}></div>
-                  <div>작성자 {item.admin_name} | {month}월 {day}일,{year}년</div>
-                </div>
+      return(
+        <Link to={`/review?id=${item.id}`}>
+          <div className="blogMain_item">
+            <div className="blogMain_item_text">
+              <div className="blogMain_item_text_cate">{item.cate}</div>
+              <div className="blogMain_item_text_title">{item.title}</div>
+              <div className="blogMain_item_text_summary">{item.summary}</div>
+              <div className="blogMain_item_text_writer">
+                <div style={{width:"14px",minWidth:"14px",minHeight:'14px',height:"14px",backgroundImage:`url(${icon_writer})`,marginRight:"4px"}}></div>
+                <div>작성자 {item.admin_name} | {month}월 {day}일,{year}년</div>
               </div>
-              <div className="blogMain_item_thumb" style={{backgroundImage:`url(${item.thumb})`}}></div>
             </div>
-          </Link>
-        )
-      }
+            <div className="blogMain_item_thumb" style={{backgroundImage:`url(${item.thumb})`}}></div>
+          </div>
+        </Link>
+      )
+    }
 
-      const PageBtn = ({index,blogPageNum,setBlogPageNum}) =>{
-        return(
-          <div style={{
-            width:"48px",
-            minWidth:"48px",
-            height:"48px",
-            marginRight:"8px",
-            color:blogPageNum===index+1?"#9C31C6":"#505050",
-            cursor:"pointer",
-            display:"flex",
-            justifyContent:"center",
-            alignItems:"center",
-            borderRadius:"4px",
-            backgroundColor:blogPageNum===index+1?"rgba(156,49,198,0.3)":"#f1f1f1"
-          }}
-            onClick={()=>{setBlogPageNum(index+1);}}>{index+1}</div>
-        )
-      }
+    const PageBtn = ({index,blogPageNum,setBlogPageNum}) =>{
+      return(
+        <div style={{
+          width:"48px",
+          minWidth:"48px",
+          height:"48px",
+          marginRight:"8px",
+          color:blogPageNum===index+1?"#9C31C6":"#505050",
+          cursor:"pointer",
+          display:"flex",
+          justifyContent:"center",
+          alignItems:"center",
+          borderRadius:"4px",
+          backgroundColor:blogPageNum===index+1?"rgba(156,49,198,0.3)":"#f1f1f1"
+        }}
+          onClick={()=>{setBlogPageNum(index+1);}}>{index+1}</div>
+      )
+    }
 
       useEffect(()=>{
           blogListGetApi();
       },[])
     return(
-        <div className="blogMain_body">
+        <div id="pageBody" className="blogMain_body">
             <div className="blogMain_header">
-                <div className="blogMain_title">리뷰 중독자</div>
+                <div className="blogMain_title">리뷰 중독자 <div className="blogMain_title_icon" style={{backgroundImage:`url(${icon_review_title})`}}></div></div>
                 <div className="blogMain_subtitle">새로 업로드 된 서비스 리뷰부터 인터뷰, 스타트업에 유용한 칼럼까지 다양한 정보를 공유합니다.</div>
             </div>
             <div className="blogMain_contents">
@@ -179,6 +179,14 @@ const BlogMain = ()=>{
         position:"relative"
     }}
     onClick={()=>{setModal(false)}}>
+      <Helmet>
+        <title>리뷰 중독자 | 프루브잇 - 되는 서비스들의 런칭 플랫폼</title>
+        <meta
+          name="description"
+          content="좋은 서비스는 직접 써보고 리뷰합니다."
+          data-react-helmet="true"
+        />
+      </Helmet>
     <Header 
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}

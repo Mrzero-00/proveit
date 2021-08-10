@@ -3,21 +3,26 @@ import icon_commentModify from '../../image/icon_commentModify.png';
 import icon_like_off from '../../image/icon_like_off.svg';
 import icon_like_on from '../../image/icon_like_on.svg';
 import icon_upBtn_black from '../../image/icon_upBtn_black.svg';
-import icon_facebook from '../../image/icon_facebook.svg';
-import icon_kakao from '../../image/icon_kakao.svg';
-import icon_link from '../../image/icon_link.svg';
-import icon_twitter from '../../image/icon_twitter.svg';
+import icon_comment_first from '../../image/icon_comment_first.svg';
+
+import icon_product_adroid from '../../image/icon_product_adroid.svg';
+import icon_product_ios from '../../image/icon_product_ios.svg';
+import icon_product_link from '../../image/icon_product_link.svg';
+import icon_product_link_arrow from '../../image/icon_product_link_arrow.svg';
+
+import icon_links from '../../image/icon_links.svg';
 import icon_bigImg_off from '../../image/icon_bigImg_off.svg';
 import ReactQuill from 'react-quill';
-import { BrowserRouter, Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import axios from 'axios';
 /*global Kakao*/
 import ReactPlayer from 'react-player';
 import Header from '../Common/Header';
 import LoginWindow from '../Common/LoginWindow';
 import SignupWindow from '../Common/SignupWindow';
+import { Helmet } from 'react-helmet';
 
-const Body = ({setModal,modal,setLoginWindow})=>{
+const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
 
     const [renderState,setRenderState] = useState(false);
     const [replyList,setReplyList] = useState([]);
@@ -28,13 +33,8 @@ const Body = ({setModal,modal,setLoginWindow})=>{
     const [deviceWidth,setDeviceWidth] = useState(0);
     const [product,setProduct] =useState({
         id:0,
-        producerInfo:{
-            userId:"",
-            nickName:"",   
-            profileUrl:"",
-            belong:"",
-            position:""
-        },
+        email:'',
+        user_id:"",
         title:"",
         sub_title:"",
         like_count:0,
@@ -49,14 +49,24 @@ const Body = ({setModal,modal,setLoginWindow})=>{
             {id:4,imageUrl:"4"},
         ],
         link:"",
+        ios_link:"",
+        android_link:"",
+        make_by:"",
         thumbnail:"",
+    })
+
+    const [producer,setProducer] = useState({
+        nick:"",
+        position:"",
+        department:""
     })
     const [btnOnOff,setBtnOnOff] = useState(false);
     const [bigImgWindow,setBigImgWindow] = useState(false);
     const [imgNum,setImgNum] =useState(0);
     const [replyState,setReplyState] = useState(true);
     const [phoneState,setPhoneState] =useState(false);
-
+    const linkState= useRef(0);
+    
     const ImageArray =({item,imgNum,setImgNum,product})=>{
         const url = item.imageUrl;
         let subNum =0;
@@ -137,7 +147,6 @@ const Body = ({setModal,modal,setLoginWindow})=>{
             data.append('parent_id', item.depth==="1"?item.parent_id:item.id);
             data.append('reply', replyText);
             data.append('user_email',localStorage.getItem("email"));
-            data.append('nick',JSON.parse(localStorage.getItem("userInfo")).nick);
             data.append('hash', localStorage.getItem("hash"));
             data.append("product_id",window.location.search.substring(12));
             try{
@@ -151,7 +160,13 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                         localStorage.setItem("replyId",e.data.reply_id);
                         setRerender(true);
                     }else{
-          
+                        alert("로그인 해쉬가 만료되었습니다. 다시 로그인해주세요");
+                        const alink = document.createElement("a");
+                        alink.href="/";
+                        setTimeout(() => {
+                            localStorage.clear();
+                            alink.click();
+                        }, 1000);
                     }
                 })
             }catch{
@@ -165,7 +180,6 @@ const Body = ({setModal,modal,setLoginWindow})=>{
             data.append('reply', modifyText);
             data.append('user_email',localStorage.getItem("email"));
             data.append("reply_id",item.id);
-            data.append('nick',JSON.parse(localStorage.getItem("userInfo")).nick);
             data.append('hash', localStorage.getItem("hash"));
             data.append("product_id",window.location.search.substring(12));
             data.append("type","update");
@@ -179,6 +193,13 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                     if(e.data.ret_code === "0000"){
                         setRerender(true);
                     }else{
+                        alert("로그인 해쉬가 만료되었습니다. 다시 로그인해주세요");
+                        const alink = document.createElement("a");
+                        alink.href="/";
+                        setTimeout(() => {
+                            localStorage.clear();
+                            alink.click();
+                        }, 1000);
                     }
                 })
             }catch{
@@ -206,6 +227,13 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                     if(e.data.ret_code === "0000"){
                         setRerender(true);
                     }else{
+                        alert("로그인 해쉬가 만료되었습니다. 다시 로그인해주세요");
+                        const alink = document.createElement("a");
+                        alink.href="/";
+                        setTimeout(() => {
+                            localStorage.clear();
+                            alink.click();
+                        }, 1000);
           
                     }
                 })
@@ -218,9 +246,10 @@ const Body = ({setModal,modal,setLoginWindow})=>{
         //     setModifyText(item.reply);
         // },[])
         return(
-            <div id={item.id} 
+            <div id={item.id} style={{position:"relative"}}
              className={item.depth==="0"?"product_item_reply":"product_item_reply_depth"}>
-                <Link to={item.user_email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${item.user_email}`}><div style={{
+                {item.first==="Y"&&<div style={{position:"absolute",width:"14px",height:"18px",right:"20px",top:"-px",backgroundImage:`url(${icon_comment_first})`}}></div>}
+                <Link to={item.user_email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${item.user_id}`}><div style={{
                     width:"40px",
                     height:"40px",
                     minHeight:"40px",
@@ -228,7 +257,7 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                     borderRadius:"50%",
                     marginRight:'16px',
                     backgroundColor:"#c4c4c4",
-                    backgroundImage:`url(${"https://www.proveit.co.kr/"+item.thumbnail})`,
+                    backgroundImage:`url(${item.thumbnail})`,
                     backgroundSize:"cover",
                     backgroundPosition:"center",
                     backgroundRepeat:"no-repeat"
@@ -238,8 +267,8 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                 </Link>
                 <div>
                     <div style={{display:"flex"}}>
-                    <Link to={item.user_email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${item.user_email}`}><div style={{fontWeight:"bold",marginBottom:'8px',height:"14px",lineHeight:"14px",marginRight:"4px",fontSize:'14px',color:"#505050"}}>{item.nick}</div></Link>
-                        {item.user_email ===product.produce_info.email&&<div style={{color:'#9c31c6',lineHeight:"16px",height:"16px",fontSize:'10px',textAlign:"center",width:"48px",borderRadius:"8px",backgroundColor:"#f1f1f1"}}>제작자</div>}
+                    <Link to={item.user_email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${item.user_id}`}><div style={{fontWeight:"bold",marginBottom:'8px',height:"14px",lineHeight:"14px",marginRight:"4px",fontSize:'14px',color:"#505050"}}>{item.nick}</div></Link>
+                        {(item.user_email ===product.email&&product.make_by==="true")&&<div style={{color:'#9c31c6',lineHeight:"16px",height:"16px",fontSize:'10px',textAlign:"center",width:"48px",borderRadius:"8px",backgroundColor:"#f1f1f1"}}>제작자</div>}
                     </div>
                     <div style={{color:"#a5a5a5",marginBottom:'7px',height:"13px",lineHeight:"13px",fontSize:'13px'}}>{item.position}{item.department!==""&&`,${item.department}`}</div>
                     {!modifyState&&<div style={{width:"100%",position:"relative",marginBottom:"8px"}}>
@@ -318,6 +347,8 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                             if(localStorage.getItem("hash")){
                                 depthReplyApi();
                                 setReplyText(`${item.nick}`);
+                            }else{
+                                setLoginWindow(true);
                             }
                         }}>남기기</div>
                     </div>}
@@ -326,6 +357,25 @@ const Body = ({setModal,modal,setLoginWindow})=>{
             </div>
         )
     }
+
+    const userInfoApi =async(id)=>{
+        var data = new FormData();
+        data.append("user_id",id);
+        try{
+            await axios({
+                method:"post",
+                url : "https://proveit.co.kr/api/userTrace.php",
+                data:data
+    
+            }).then((e)=>{
+                if(e.data.ret_code === "400"){
+                    setProducer(e.data.user)
+                }
+            })
+        }catch{
+    
+        }
+        }
 
     const productListApi = async()=>{
     var data = new FormData();
@@ -343,8 +393,8 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                 const data = e.data.product;
                 setProduct({
                     id:data.id,
-                    produce_info:JSON.parse(data.produce_info),
                     title:data.title,
+                    email:data.user_email,
                     sub_title:data.sub_title,
                     like_count:data.like_count,
                     main_text:data.main_text,
@@ -352,10 +402,46 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                     category:data.category,
                     image:(data.youtube!==""&&data.youtube!=="undefined")?[{id:0,type:"video",imageUrl:data.youtube},...JSON.parse(data.image)]:JSON.parse(data.image),
                     link:data.link,
+                    ios_link:data.ios_link,
+                    android_link:data.android_link,
+                    make_by:data.make_by,
                     thumbnail:data.thumbnail,
                     like_m:data.like_m,
-                    youtube:data.youtube
+                    youtube:data.youtube,
+                    user_id:data.user_id
                 });
+                userInfoApi(data.user_id);
+                if(linkState.current===0){
+                    if(data.link!==""){
+                        if(data.ios_link!==""){
+                            if(data.android_link!==""){
+                                linkState.current=3;
+                            }else{
+                                linkState.current=2;
+                            }
+                        }else{
+                            if(data.android_link!==""){
+                                linkState.current=2;
+                            }else{
+                                linkState.current=1;
+                            }
+                        }
+                    }else{
+                        if(data.ios_link!==""){
+                            if(data.android_link!==""){
+                                linkState.current=2;
+                            }else{
+                                linkState.current=2;
+                            }
+                        }else{
+                            if(data.android_link!==""){
+                                linkState.current=1;
+                            }else{
+                                
+                            }
+                        }
+                    }
+                }
                 setRenderState(true);
             }
         })
@@ -379,13 +465,20 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                 data:data
       
             }).then((e)=>{
-                console.log(e);
                 if(e.data.ret_code === "0000"){
                     localStorage.setItem("replyId",e.data.reply_id);
                     setRerender(true);
                     setReplyState(true);
-                }else{
+                }else if(e.data.ret_code ==="400"){
                     setReplyState(false);
+                }else if(e.data.ret_code ==="500"){
+                    alert("로그인 해쉬가 만료되었습니다. 다시 로그인해주세요");
+                    const alink = document.createElement("a");
+                    alink.href="/";
+                    setTimeout(() => {
+                        localStorage.clear();
+                        alink.click();
+                    }, 1000);
                 }
             })
         }catch{
@@ -429,7 +522,13 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                 if(e.data.ret_code === "0000"){
                     setRerender(true);
                 }else{
-      
+                    alert("로그인 해쉬가 만료되었습니다. 다시 로그인해주세요");
+                    const alink = document.createElement("a");
+                    alink.href="/";
+                    setTimeout(() => {
+                        localStorage.clear();
+                        alink.click();
+                    }, 1000);
                 }
             })
         }catch{
@@ -595,18 +694,19 @@ const Body = ({setModal,modal,setLoginWindow})=>{
         start.current=0;
         currentX.current=0;
     }
+
     return(
     <>
-        {renderState&&<div style={{width:'100%',backgroundColor:"#f9f9f9",display:"flex",alignItems:"center",flexDirection:"column"}}
-        onClick={(e)=>{setBigImgWindow(false);e.stopPropagation();}}>
+        {renderState&&<div id="pageBody" style={{width:'100%',minHeight:window.innerHeight-48,backgroundColor:"#f9f9f9",display:"flex",alignItems:"center",flexDirection:"column"}}
+        onClick={(e)=>{setBigImgWindow(false);setModal(false);setLinkWindow(false);e.stopPropagation();}}>
                 <a id="replyNavi" style={{display:"none"}} href={`#${localStorage.getItem("replyId")}`}></a>
                 <div style={{textAlign:"left",marginTop:"48px",marginBottom:"32px"}}>
                 <div className="product_item">
                     <div className="product_thumbnail" style={{backgroundImage:`url(${product.thumbnail})`}}></div>
                     
                     <div style={{width:"100%",textAlign:"left"}}>
-                        <div className="product_item_title">{product.title}</div>
-                        <div className="product_item_subtitle" >{product.sub_title}</div>
+                        <h1 className="product_item_title">{product.title}</h1>
+                        <h2 className="product_item_subtitle" >{product.sub_title}</h2>
                         <div style={{display:"flex",height:"24px",alignItems:"center"}}>
                         <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>{product.payment_type}</div>
                         <div style={{height:"14px",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px",width:"1px",backgroundColor:"#e5e5e5"}}></div>
@@ -617,12 +717,21 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                 </div>
                 </div>
                 <div className="product_btn_phone">
+                        {linkState.current===1?
                         <div className="btn_two" style={{width:"100%",maxWidth:"144px",height:"100%",marginRight:"8px"}} onClick={()=>{
                             const alink = document.createElement("a");
                             alink.target="blink";
                             alink.href = product.link;
                             alink.click();
                         }}>써보러 가기</div>
+                        :
+                        <div className="btn_two" style={{width:"100%",maxWidth:"144px",height:"100%",marginRight:"8px"}} onClick={()=>{
+                            const alink = document.createElement("a");
+                            alink.target="blink";
+                            alink.href = product.link;
+                            alink.click();
+                        }}>써보러 가기</div>
+                        }
                         {product.like_m==="0"&&<div className="btn_one_big" style={{width:"100%",height:"56px"}}
                         onClick={()=>{
                             if(localStorage.getItem("hash")){
@@ -632,9 +741,9 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                             }
                             }}
                             >
-                            <div style={{width:'16px',height:"16px",backgroundImage:`url(${icon_like_off})`,marginRight:"8px"}}></div>
-                            <div  style={{marginRight:"4px"}}>추천해요</div>
-                            {product.like_count}
+                            <div style={{width:'24px',height:"24px",backgroundImage:`url(${icon_like_off})`,marginRight:"4px"}}></div>
+                            <div>추천해요</div>
+                                <div style={{width:"48px",height:"16px",lineHeight:"16px",textAlign:"center"}}>{product.like_count}</div>
                             </div>}
                         {product.like_m==="1"&&<div className="btn_one_big2" style={{width:"100%",height:"56px"}}
                         onClick={()=>{
@@ -645,9 +754,9 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                             }
                             }}
                         >
-                            <div style={{width:'16px',height:"16px",backgroundImage:`url(${icon_like_on})`,marginRight:"8px"}}></div>
-                            <div  style={{marginRight:"4px"}}>추천했음</div>
-                            {product.like_count}
+                            <div style={{width:'24px',height:"24px",backgroundImage:`url(${icon_like_on})`,marginRight:"4px"}}></div>
+                            <div>추천했음</div>
+                                <div style={{width:"48px",height:"16px",lineHeight:"16px",textAlign:"center"}}>{product.like_count}</div>
                             </div>}
                     </div>
                 <div className="product_item_sort">
@@ -711,13 +820,15 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                                 </div>
                         </div>
                         <div className="product_item_producer">
-                        <div style={{color:"#a5a5a5",marginBottom:"16px"}}>소개한 사람</div>
+                        <div style={{color:"#a5a5a5",marginBottom:"16px"}}>{product.make_by==="true"?"제작자":"소개한 사람"}</div>
                         <div style={{display:"flex"}}>
-                            <div style={{width:"32px",height:'32px',borderRadius:"50%",backgroundImage:`url(${"https://www.proveit.co.kr/"+product.produce_info.thumbnail})`,backgroundColor:"#c4c4c4",marginRight:"24px",
-                        backgroundPosition:"center",backgroundSize:"cover",backgroundRepeat:"no-repeat"}}></div>
+                            <Link to={product.email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${product.user_id}`}>
+                                <div style={{width:"32px",height:'32px',borderRadius:"50%",backgroundImage:`url(${producer.thumbnail})`,backgroundColor:"#c4c4c4",marginRight:"24px",
+                                backgroundPosition:"center",backgroundSize:"cover",backgroundRepeat:"no-repeat",cursor:"pointer"}}></div>
+                            </Link>
                             <div style={{textAlign:"left"}}>
-                                <div style={{fontWeight:'bold',color:'#505050',marginBottom:"8px",height:"14px",lineHeight:"14px"}}>{product.produce_info.nick}</div>
-                                <div style={{color:"#a5a5a5",height:"14px",lineHeight:"14px"}}>{product.produce_info.position},{product.produce_info.department}</div>
+                                <div style={{fontWeight:'bold',color:'#505050',marginBottom:"8px",height:"14px",lineHeight:"14px"}}>{producer.nick}</div>
+                                <div style={{color:"#a5a5a5",height:"14px",lineHeight:"14px"}}>{producer.position}{producer.department!==""?`,${producer.department}`:""}</div>
                             </div>
                         </div>
                     </div>
@@ -731,7 +842,7 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                                     marginRight:"16px",
                                     borderRadius:"50%",
                                     backgroundColor:"#c4c4c4",
-                                    backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`,
+                                    backgroundImage:localStorage.getItem("userInfo")&&`url(${JSON.parse(localStorage.getItem("userInfo")).thumbnail})`,
                                     backgroundSize:"cover",
                                     backgroundRepeat:"no-repeat",
                                     backgroundPosition:"center"
@@ -768,7 +879,7 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                                 marginRight:"16px",
                                 borderRadius:"50%",
                                 backgroundColor:"#c4c4c4",
-                                backgroundImage:localStorage.getItem("userInfo")&&`url(${"https://www.proveit.co.kr/"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`,
+                                backgroundImage:localStorage.getItem("userInfo")&&`url(${JSON.parse(localStorage.getItem("userInfo")).thumbnail})`,
                                 backgroundSize:"cover",
                                 backgroundRepeat:"no-repeat",
                                 backgroundPosition:"center"
@@ -782,23 +893,90 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                                 {!replyState&&<div style={{color:"#ea4335",fontSize:'14px',marginTop:"8px",marginBottom:'16px',height:'14px',lineHeight:"14px"}}>내용을 입력해 주세요.</div>}
                             </div>
                             <div className="btn_one product_item_comment_submitbtn"
-                            onClick={()=>{
-                            if(localStorage.getItem("hash")){
-                                replyAddApi();
-                                setCurrentComment("");
-                            }}}>남기기</div>
+                                onClick={()=>{
+                                    if(localStorage.getItem("hash")){
+                                        replyAddApi();
+                                        setCurrentComment("");
+                                    }else{
+                                        setLoginWindow(true);
+                                    }
+                                }}>남기기</div>
                         </div>}
                         </div>
-                    </div>
+                        </div>
                     </div>
                     <div className="product_item_web">
                         <div style={{display:"flex",marginBottom:"24px"}}>
-                            <div className="btn_two" style={{width:"112px",height:"56px",marginRight:"8px"}} onClick={()=>{
+                            {linkState.current===1?
+                            <div className="btn_two" style={{width:"114px",maxWidth:"144px",height:"56px",marginRight:"8px"}} onClick={()=>{
                                 const alink = document.createElement("a");
                                 alink.target="blink";
-                                alink.href = product.link;
+                                if(product.link!==""){
+                                    alink.href = product.link;
+                                }else if(product.ios_link!==""){
+                                    alink.href = product.ios_link;
+                                }else if(product.android_link!==""){
+                                    alink.href = product.android_link;
+                                }
                                 alink.click();
                             }}>써보러 가기</div>
+                            :
+                            <div className="btn_two" style={{width:"114px",maxWidth:"144px",height:"56px",marginRight:"8px",position:"relative"}}
+                             onClick={(e)=>{
+                                setLinkWindow(!linkWindow);
+                                e.stopPropagation();
+                            }}
+                            >
+                            <div>써보러 가기</div>
+                            <div style={{width:"20px",minWidth:"20px",minHeight:"20px",height:"20px",backgroundImage:`url(${icon_links})`}}></div>
+                            {linkWindow&&<div style={{
+                                position:"absolute",
+                                width:"216px",
+                                borderRadius:"2px",
+                                boxShadow:"0px 1px 4px rgba(0,0,0,0.1)",
+                                backgroundColor:"#fff",
+                                paddingTop:"4px",
+                                paddingBottom:"4px",
+                                top:"64px",
+                                left:"0px"}}>
+                                {product.link&&<div className="product_linkitem"
+                                onClick={()=>{
+                                    const alink = document.createElement("a");
+                                    alink.target="blink";
+                                    alink.href = product.link;
+                                    alink.click();
+                                }}>
+                                    <div style={{width:"16px",height:"16px",minWidth:"16px",backgroundImage:`url(${icon_product_link})`,marginRight:"8px"}}></div>
+                                    <div style={{width:"132px"}}>웹사이트</div>
+                                    <div style={{width:"20px",height:"20px",backgroundImage:`url(${icon_product_link_arrow})`}}></div>
+                                </div>}
+                                {product.ios_link&&<div className="product_linkitem"
+                                onClick={()=>{
+                                    const alink = document.createElement("a");
+                                    alink.target="blink";
+                                    alink.href = product.ios_link;
+                                    alink.click();
+                                }}>
+                                    <div style={{width:"16px",height:"16px",minWidth:"16px",backgroundImage:`url(${icon_product_ios})`,marginRight:"8px"}}></div>
+                                    <div style={{width:"132px"}}>App Store</div>
+                                    <div style={{width:"20px",height:"20px",backgroundImage:`url(${icon_product_link_arrow})`}}></div>
+                                </div>}
+                                {product.android_link&&<div className="product_linkitem"
+                                onClick={()=>{
+                                    const alink = document.createElement("a");
+                                    alink.target="blink";
+                                    alink.href = product.android_link;
+                                    alink.click();
+                                }}>
+                                    <div style={{width:"16px",height:"16px",minWidth:"16px",backgroundImage:`url(${icon_product_adroid})`,marginRight:"8px"}}></div>
+                                    <div style={{width:"132px"}}>Google Play</div>
+                                    <div style={{width:"20px",height:"20px",backgroundImage:`url(${icon_product_link_arrow})`}}></div>
+                                </div>}
+                            </div>}
+                            </div>
+                            }
+                            
+                            
                             {product.like_m==="0"&&<div className="btn_one_big" style={{width:"216px",height:"56px"}}
                             onClick={()=>{
                                 if(localStorage.getItem("hash")){
@@ -808,9 +986,9 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                                 }
                                 }}
                                 >
-                                <div style={{width:'16px',height:"16px",backgroundImage:`url(${icon_like_off})`,marginRight:"8px"}}></div>
-                                <div  style={{marginRight:"4px"}}>추천해요</div>
-                                {product.like_count}
+                                <div style={{width:'24px',height:"24px",backgroundImage:`url(${icon_like_off})`,marginRight:"4px"}}></div>
+                                <div>추천해요</div>
+                                    <div style={{width:"40px",height:"16px",lineHeight:"16px",textAlign:"center"}}>{product.like_count}</div>
                                 </div>}
                             {product.like_m==="1"&&<div className="btn_one_big2" style={{width:"216px",height:"56px"}}
                             onClick={()=>{
@@ -821,19 +999,23 @@ const Body = ({setModal,modal,setLoginWindow})=>{
                                 }
                                 }}
                             >
-                                <div style={{width:'16px',height:"16px",backgroundImage:`url(${icon_like_on})`,marginRight:"8px"}}></div>
-                                <div  style={{marginRight:"4px"}}>추천했음</div>
-                                {product.like_count}
+                                <div style={{width:'24px',height:"24px",backgroundImage:`url(${icon_like_on})`,marginRight:"4px"}}></div>
+                                <div>추천했음</div>
+                                    <div style={{width:"40px",height:"16px",lineHeight:"16px",textAlign:"center"}}>{product.like_count}</div>
                                 </div>}
                         </div>
                         <div style={{width:"336px",height:"108px",backgroundColor:"#fff",borderRadius:"2px",fontSize:"14px",padding:"16px 24px 24px 24px",textAlign:"left"}}>
-                            <div style={{color:"#a5a5a5",marginBottom:"16px"}}>소개한 사람</div>
+                            <div style={{color:"#a5a5a5",marginBottom:"16px"}}>{product.make_by==="true"?"제작자":"소개한 사람"}</div>
                             <div style={{display:"flex"}}>
-                                <div style={{width:"32px",height:'32px',borderRadius:"50%",backgroundImage:`url(${"https://www.proveit.co.kr/"+product.produce_info.thumbnail})`,backgroundColor:"#c4c4c4",marginRight:"24px",
-                            backgroundPosition:"center",backgroundSize:"cover",backgroundRepeat:"no-repeat"}}></div>
+                            <Link to={product.email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${product.user_id}`}>
+                                <div style={{width:"32px",height:'32px',borderRadius:"50%",backgroundImage:`url(${producer.thumbnail})`,backgroundColor:"#c4c4c4",marginRight:"24px",
+                                backgroundPosition:"center",backgroundSize:"cover",backgroundRepeat:"no-repeat",cursor:"pointer"}}></div>
+                            </Link>
                                 <div style={{textAlign:"left"}}>
-                                    <div style={{fontWeight:'bold',color:'#505050',marginBottom:"8px",height:"14px",lineHeight:"14px"}}>{product.produce_info.nick}</div>
-                                    <div style={{color:"#a5a5a5",height:"14px",lineHeight:"14px"}}>{product.produce_info.position},{product.produce_info.department}</div>
+                                    <Link to={product.email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${product.user_id}`}>
+                                    <div style={{fontWeight:'bold',color:'#505050',marginBottom:"8px",height:"14px",lineHeight:"14px"}}>{producer.nick}</div>
+                                    </Link>
+                                    <div style={{color:"#a5a5a5",height:"14px",lineHeight:"14px"}}>{producer.position}{producer.department!==""?`,${producer.department}`:""}</div>
                                 </div>
                             </div>
                         </div>
@@ -895,6 +1077,7 @@ const Product = ()=>{
     const [loginWindow,setLoginWindow] = useState(false);
     const [signupWindow,setSignUpWindow] = useState(false);
     const [modal,setModal] = useState(false);
+    const [linkWindow,setLinkWindow] = useState(false);
 
 
     const submitGoogleData= async(name,id,token)=>{
@@ -969,6 +1152,13 @@ const Product = ()=>{
       }
     }
 
+    useEffect(()=>{
+        if(window.location.search.substring(12)===""){
+            const alink = document.createElement("a");
+            alink.href="/";
+            alink.click();
+        }
+    },[])
   return(
     <div id="renderPage" style={{
         width:"100%",
@@ -976,7 +1166,13 @@ const Product = ()=>{
         flexDirection:"column",
         position:"relative"
     }}
-    onClick={()=>{setModal(false)}}>
+    onClick={(e)=>{setModal(false);setLinkWindow(false)}}>
+    <Helmet>
+        <meta
+          name="description"
+          content="잘 되고 있는 서비스, 잘 되고 싶은 서비스를 소개해주세요."
+        />
+    </Helmet>
     <Header 
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}
@@ -988,6 +1184,8 @@ const Product = ()=>{
     <Body
     modal={modal}
     setModal={setModal}
+    linkWindow={linkWindow}
+    setLinkWindow={setLinkWindow}
     setLoginWindow={setLoginWindow}
     ></Body>
 

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
-import icon_logo from '../image/logo.svg';
-import icon_upBtn from '../image/icon_upBtn.svg';
 import icon_like from '../image/likeIcon.svg';
+import icon_like_m from '../image/likeIcon_m.svg';
 import icon_comment from '../image/commentIcon.svg';
+import icon_mainTitle_hand from '../image/icon_mainTitle_hand.svg';
 import intro from '../image/intro.pdf';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -11,9 +11,33 @@ import Header from './Common/Header';
 import SignupWindow from './Common/SignupWindow';
 import LoginWindow from './Common/LoginWindow';
 import RightBar from './Common/RightBar';
+import { Helmet } from 'react-helmet';
 
-const Body=({productOrderState,setProductOrderState})=>{
+import icon_category1 from '../image/icon_category1.png';
+import icon_category2 from '../image/icon_category2.png';
+import icon_category3 from '../image/icon_category3.png';
+import icon_category4 from '../image/icon_category4.png';
+import icon_category5 from '../image/icon_category5.png';
+import icon_category6 from '../image/icon_category6.png';
+import icon_category7 from '../image/icon_category7.png';
+import icon_category8 from '../image/icon_category8.png';
+import icon_category9 from '../image/icon_category9.png';
+import icon_category10 from '../image/icon_category10.png';
+import icon_category11 from '../image/icon_category11.png';
+import icon_category12 from '../image/icon_category12.png';
+import icon_category13 from '../image/icon_category13.png';
+import icon_category14 from '../image/icon_category14.png';
+import icon_category15 from '../image/icon_category15.png';
+import icon_category16 from '../image/icon_category16.png';
+import icon_category17 from '../image/icon_category17.png';
+import icon_category18 from '../image/icon_category18.png';
+import icon_category19 from '../image/icon_category19.png';
+import icon_category20 from '../image/icon_category20.png';
+
+
+const Body=({productOrderState,setProductOrderState,setLoginWindow})=>{
   const [renderState,setRenderState] = useState(true);
+  const [fullProject,setFullProject] = useState([]);
   const [project,setProject] = useState(
     [
     {
@@ -40,171 +64,170 @@ const Body=({productOrderState,setProductOrderState})=>{
         youtube: "",
       }
     ]
-    },    {
-      product:[
-        {
-        category: "",
-        created_at: "2021-07-04 10:48:19",
-        date: "2021-07-04",
-        id: "1",
-        image:[],
-        like_count:0,
-        link: "",
-        main_text: "",
-        payment_type: "",
-        produce_info: "",
-        review_count: 0,
-        status: "N",
-        sub_title: "",
-        thumbnail: "",
-        title: "test",
-        updated_at: "2021-07-06 14:53:40",
-        user_email: "test",
-        user_name: "",
-        youtube: "",
-      }
-    ]
-    },    {
-      product:[
-        {
-        category: "",
-        created_at: "2021-07-04 10:48:19",
-        date: "2021-07-04",
-        id: "1",
-        image:[],
-        like_count:0,
-        link: "",
-        main_text: "",
-        payment_type: "",
-        produce_info: "",
-        review_count: 0,
-        status: "N",
-        sub_title: "",
-        thumbnail: "",
-        title: "test",
-        updated_at: "2021-07-06 14:53:40",
-        user_email: "test",
-        user_name: "",
-        youtube: "",
-      }
-    ]
-    },    {
-      product:[
-        {
-        category: "",
-        created_at: "2021-07-04 10:48:19",
-        date: "2021-07-04",
-        id: "1",
-        image:[],
-        like_count:0,
-        link: "",
-        main_text: "",
-        payment_type: "",
-        produce_info: "",
-        review_count: 0,
-        status: "N",
-        sub_title: "",
-        thumbnail: "",
-        title: "test",
-        updated_at: "2021-07-06 14:53:40",
-        user_email: "test",
-        user_name: "",
-        youtube: "",
-      }
-    ]
-    },    {
-      product:[
-        {
-        category: "",
-        created_at: "2021-07-04 10:48:19",
-        date: "2021-07-04",
-        id: "1",
-        image:[],
-        like_count:0,
-        link: "",
-        main_text: "",
-        payment_type: "",
-        produce_info: "",
-        review_count: 0,
-        status: "N",
-        sub_title: "",
-        thumbnail: "",
-        title: "test",
-        updated_at: "2021-07-06 14:53:40",
-        user_email: "test",
-        user_name: "",
-        youtube: "",
-      }
-    ]
-    },    {
-      product:[
-        {
-        category: "",
-        created_at: "2021-07-04 10:48:19",
-        date: "2021-07-04",
-        id: "1",
-        image:[],
-        like_count:0,
-        link: "",
-        main_text: "",
-        payment_type: "",
-        produce_info: "",
-        review_count: 0,
-        status: "N",
-        sub_title: "",
-        thumbnail: "",
-        title: "test",
-        updated_at: "2021-07-06 14:53:40",
-        user_email: "test",
-        user_name: "",
-        youtube: "",
-      }
-    ]
-    },
+    }
   ])
 
-  const ProjectRender = ({item,productOrderState,setProductOrderState,index})=>{
+  const ProjectRender = ({item,productOrderState,setProductOrderState,setRenderState,index,setLoginWindow})=>{
     const currentDate = new Date();
     const now = new Date();
     const yesterdayDate = new Date(now.setDate(now.getDate()-1));
     const month = (currentDate.getMonth()+1)/10;
     const date = (currentDate.getDate())/10;
     const today = `${currentDate.getFullYear()}-${month<1?`0${currentDate.getMonth()+1}`:currentDate.getMonth()+1}-${date<1?`0${currentDate.getDate()}`:currentDate.getDate()}`
-    const yesterday = `${yesterdayDate.getFullYear()}-${month<1?`0${yesterdayDate.getMonth()+1}`:yesterdayDate.getMonth()+1}-${date<1?`0${yesterdayDate.getDate()}`:yesterdayDate.getDate()}`
+    const yesterday = `${yesterdayDate.getFullYear()}-${month<1?`0${yesterdayDate.getMonth()+1}`:yesterdayDate.getMonth()+1}-${date<=1?`0${yesterdayDate.getDate()}`:yesterdayDate.getDate()}`
     const length = item.product.length;
     const [popularArray,setPopularArray] =useState(item.product);
     const [fastestArray,setFastestArray] =useState(item.product);
     const [renderDate,setRenderDate] = useState("");
 
-    const RenderList =({item,index,length})=>{
-      const currentNum = index;
-      const maxNum = length;
-      return(
+    const RenderList =({item,index,length,setRenderState,setLoginWindow})=>{
+      const [hover,setHover] = useState(false);
+      const [likeState,setLikeState] = useState(item.like_m==="0"?false:true);
+      const [likeCount,setLikeCount] = useState(item.like_count*1);
+      
+      const iconSet = (text)=>{
+        let icon;
+        switch(text){
+          case "그래픽 및 디자인":
+            icon = icon_category1;
+            break;
+          case "건강 및 피트니스":
+            icon = icon_category2;
+            break;
+          case "교육":
+            icon = icon_category3;
+            break;
+          case "금융":
+            icon = icon_category4;
+            break;
+          case "사진 및 비디오":
+            icon = icon_category5;
+            break;
+          case "비즈니스":
+            icon = icon_category6;
+            break;
+          case "엔터테인먼트":
+            icon = icon_category7;
+            break;
+          case "여행":
+            icon = icon_category8;
+            break;
+          case "음악":
+            icon = icon_category9;
+            break;
+          case "생산성":
+            icon = icon_category10;
+            break;
+          case "푸드":
+            icon = icon_category11;
+            break;
+          case "라이프스타일":
+            icon = icon_category12;
+            break;
+          case "의료":
+            icon = icon_category13;
+            break;
+          case "유틸리티":
+            icon = icon_category14;
+            break;
+          case "미디어":
+            icon = icon_category15;
+          break;
+          case "블록체인":
+            icon = icon_category16;
+            break;
+          case "인공지능":
+            icon = icon_category17;
+            break;
+          case "교통":
+            icon = icon_category18;
+            break;
+          case "뉴스레터":
+            icon = icon_category19;
+            break;
+          case "기타":
+            icon = icon_category20;
+            break;
+          default:
+            break;
+        }
+        return icon;
+      }
+
+      const categoryIcon = iconSet(item.category);
+
+      const likeApi = async()=>{
+        var data = new FormData();
+        data.append("user_email",localStorage.getItem("email"));
+        data.append("hash",localStorage.getItem("hash"));
+        data.append("product_id",item.id);
+        try{
+            await axios({
+                method:"post",
+                url : "https://www.proveit.co.kr/api/productLike.php",
+                data:data
+      
+            }).then((e)=>{
+                if(e.data.ret_code === "0000"){
+                  if(e.data.ret_msg ==="추천취소"){
+                    setLikeCount(likeCount-1);
+                    setLikeState(false);
+                  }else{
+                    setLikeCount(likeCount+1);
+                    setLikeState(true);
+                  }
+                  // setRenderState(false);
+                }else{
+                  if(localStorage.getItem("email")){
+                    alert("로그인 해쉬가 만료되었습니다. 다시 로그인해주세요");
+                    localStorage.clear();
+                  }else{
+                    setLoginWindow(true);
+                  }
+                }
+            })
+        }catch{
+      
+        }
+      }
+
+      
+      return( 
         <>
-        <Link to={`/product?productnum=${item.id}`}><div id={item.id} 
-          onClick={(e)=>{e.stopPropagation();}}
+        <div id={item.id} 
+          onClick={(e)=>{
+            const alink = document.createElement("a");
+            alink.href = `/product?productnum=${item.id}`;
+            alink.click();
+            e.stopPropagation();
+          }}
           className="main_body_product_item"
         >
-          <div className="main_body_product_thumbnail" style={{backgroundImage:`url(${item.thumbnail})`}}></div>
+          <div className="main_body_product_thumbnail" role="img" alt={`${item.title}_thumbnail`} style={{backgroundImage:`url(${item.thumbnail})`}}></div>
           <div style={{width:"100%",textAlign:"left"}}>
-            <div className="main_body_product_title">{item.title}</div>
-            <div className="main_body_product_subtitle">{item.sub_title}</div>
+            <h3 className="main_body_product_title">{item.title}</h3>
+            <p className="main_body_product_subtitle">{item.sub_title}</p>
             <div className="iphone" style={{display:"flex",height:"24px",alignItems:"center"}}>
-              <div style={{padding:"3.5px 5px 3.5px 5px",maxHeight:"24px",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px",backgroundColor:"#F1F1F1"}}>
+              <div style={{padding:"3.5px 5px 3.5px 5px",maxHeight:"24px",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>
                 <div style={{width:"14px",height:"14px",backgroundImage:`url(${icon_comment})`,marginRight:"8px"}}></div>
                 <div>{item.review_count}</div>
               </div>
               <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>{item.payment_type}</div>
               <div style={{height:"14px",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px",width:"1px",backgroundColor:"#e5e5e5"}}></div>
-              <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>{item.category}</div>
+              <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>
+                <div style={{width:"13px",height:"13px",marginRight:"4px",backgroundImage:`url(${categoryIcon})`,backgroundPosition:"center",backgroundSize:"cover"}}></div>
+                <div>{item.category}</div>
+              </div>
             </div>
           </div>
-          <div className="main_body_product_likecount">
-            <div style={{height:"24px",width:"24px",backgroundImage:`url(${icon_like})`,backgroundRepeat:"no-repeat",backgroundPosition:"center",marginTop:'16px',marginBottom:"4px"}}></div>
-            <div style={{height:"16px",lineHeight:"16px",width:"100%",fontSize:"14px",fontWeight:"bold",color:"#505050",textAlign:"center"}}>{item.like_count*1/1000>=1?`${item.like_count*1/1000}k`:item.like_count}</div>
+          <div className="main_body_product_likecount" style={{border:(likeState||hover)&&"1px solid #9C31C6",}}
+          onMouseEnter={()=>{setHover(true);}}
+          onMouseLeave={()=>{setHover(false);}}
+          onClick={(e)=>{likeApi();e.stopPropagation();}}>
+            <div style={{height:"24px",width:"24px",backgroundImage:(likeState||hover)?`url(${icon_like_m})`:`url(${icon_like})`,backgroundRepeat:"no-repeat",backgroundPosition:"center",marginTop:'16px',marginBottom:"4px"}}></div>
+            <div style={{height:"16px",lineHeight:"16px",width:"100%",fontSize:"14px",fontWeight:"bold",color:(likeState||hover)?"#9C31C6":"#505050",textAlign:"center"}}>{likeCount*1/1000>=1?`${likeCount*1/1000}k`:likeCount}</div>
           </div>
         </div>
-        </Link>
         </>
       )
     }
@@ -264,6 +287,7 @@ const Body=({productOrderState,setProductOrderState})=>{
 
     useEffect(()=>{
       setFastestArray(item.product);
+      // setProductOrderState("popular");
       setDate();
     },[])
 
@@ -284,22 +308,26 @@ const Body=({productOrderState,setProductOrderState})=>{
               marginRight:"8px",
               cursor:"pointer",
               fontWeight:productOrderState==="popular"&&"bold",
-          }} onClick={()=>{setProductOrderState("popular")}}>인기순</div>
+              color:productOrderState==="popular"?"#323232":"#828282",
+          }} onClick={()=>{setProductOrderState("popular")}}>인기순 |</div>
             <div style={{
               fontSize:"14px",
               cursor:"pointer",
-              fontWeight:productOrderState==="fastest"&&"bold",}} 
+              fontWeight:productOrderState==="fastest"&&"bold",
+              color:productOrderState==="fastest"?"#323232":"#828282",}} 
               onClick={()=>{setProductOrderState("fastest")}}>최신순</div>
           </div>}
         </div>
-        {productOrderState==="fastest"&&<div>{fastestArray.map((item,index)=>(<RenderList index={index} length={length} key={item.id} item={item}></RenderList>))}</div>}
-        {productOrderState==="popular"&&<div>{popularArray.map((item,index)=>(<RenderList index={index} length={length} key={item.id} item={item}></RenderList>))}</div>}
+        {productOrderState==="fastest"&&<div>{fastestArray.map((item,index)=>(<RenderList index={index} setLoginWindow={setLoginWindow} setRenderState={setRenderState} length={length} key={item.id} item={item}></RenderList>))}</div>}
+        {productOrderState==="popular"&&<div>{popularArray.map((item,index)=>(<RenderList index={index} setLoginWindow={setLoginWindow} setRenderState={setRenderState} length={length} key={item.id} item={item}></RenderList>))}</div>}
       </div>
     )
   }
 
   const productListApi = async()=>{
     var data = new FormData();
+    data.append("user_email",localStorage.getItem("email"));
+    data.append("hash",localStorage.getItem("hash"));
     try{
         await axios({
             method:"post",
@@ -309,6 +337,7 @@ const Body=({productOrderState,setProductOrderState})=>{
         }).then((e)=>{
             if(e.data.ret_code === "0000"){
               setProject(e.data.product);
+              setRenderState(true);
             }else{
 
             }
@@ -320,17 +349,36 @@ const Body=({productOrderState,setProductOrderState})=>{
 
   useEffect(()=>{
     productListApi();
+    if(renderState){
+      let array=[];
+      for(let i =0;i<project.length;i++){
+        for(let k=0; k<project[i].product.length;k++){
+          array =[...array,project[i].product[k]];
+        }
+        if(i===project.length-1){
+          setFullProject(array);
+        }
+      }
+    }
   },[])
+
+  useEffect(()=>{
+    productListApi();
+  },[localStorage.getItem("email"),renderState])
+
   return(
-    <div style={{width:"100%",height:"100%",paddingTop:"48px",backgroundColor:"#f9f9f9",display:"flex",alignItems:"center",flexDirection:"column"}}> 
-        <div className="homepage_title">
-          <div className="hompage_title_main">가능성을 확인하는 곳,<br/>프루브잇</div>
-          <div className="hompage_title_sub">내가 만든 서비스를 소개해보세요</div>
+    <div id="pageBody" style={{width:"100%",height:"100%",backgroundColor:"#fffefc",display:"flex",alignItems:"center",flexDirection:"column"}}> 
+        <div className="hompage_title_box">
+          <div className="homepage_title">
+            <p className="hompage_title_main">되는 서비스들의 런칭 플랫폼, 프루브잇</p>
+            <p className="hompage_title_sub">잘 되고 있는 서비스, 잘 되고 싶은 서비스를 소개해 주세요.</p>
+            <div><a href={intro} className="btn_five" target="_blank" style={{width:"124px",height:"48px",color:"#fff"}}>소개<span style={{width:"20px",height:"20px",marginLeft:"5px",backgroundImage:`url(${icon_mainTitle_hand})`}}></span></a></div>
+          </div>
         </div>
       {renderState&&<div className="main_body">
         <div className="main_body_product_list">
-          {project.map((item,index)=>(<ProjectRender key={index} index={index} productOrderState={productOrderState} setProductOrderState={setProductOrderState} setRenderState={setRenderState} item={item}></ProjectRender>))}
-          <div style={{width:"100%",height:"19px",fontSize:'13px',color:"#828282",textAlign:"center"}}>여기가 끝이에요</div>
+          {project.map((item,index)=>(<ProjectRender key={index} setLoginWindow={setLoginWindow} setRenderState={setRenderState} fullProject={fullProject} setFullProject={setFullProject} index={index} productOrderState={productOrderState} setProductOrderState={setProductOrderState} item={item}></ProjectRender>))}
+          <div style={{width:"100%",height:"19px",fontSize:'13px',color:"#828282",textAlign:"center",marginBottom:"32px"}}>여기가 끝이에요</div>
         </div>
         <RightBar></RightBar>
       </div>}
@@ -342,8 +390,7 @@ const MainPage = ()=>{
   const [loginWindow,setLoginWindow] = useState(false);
   const [signupWindow,setSignUpWindow] = useState(false);
   const [modal,setModal] = useState(false);
-  const [productOrderState,setProductOrderState] = useState("fastest");
-
+  const [productOrderState,setProductOrderState] = useState("popular");
   const submitGoogleData= async(name,id,token)=>{
     //유효성 검사
     //let crt = document.getElementById('crt');
@@ -391,8 +438,7 @@ const MainPage = ()=>{
     localStorage.setItem("token",tokenObj.access_token);
     submitGoogleData(profileObj.givenName,profileObj.email,tokenObj.access_token);
   }
-
-  
+ 
   const userInfoApi = async(id,token)=>{
     var data = new FormData();
     data.append('email', id);
@@ -422,6 +468,14 @@ const MainPage = ()=>{
     flexDirection:"column"
   }}
   onClick={()=>{setModal(false)}}>
+      <Helmet>
+        <title>프루브잇 - 되는 서비스들의 런칭 플랫폼</title>
+        <meta
+          name="description"
+          content="잘 되고 있는 서비스, 잘 되고 싶은 서비스를 소개해주세요."
+          data-react-helmet="true"
+        />
+      </Helmet>
     <Header 
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}
@@ -432,7 +486,9 @@ const MainPage = ()=>{
     ></Header>
     <Body 
       productOrderState={productOrderState}
-      setProductOrderState={setProductOrderState}></Body>
+      setLoginWindow={setLoginWindow}
+      setProductOrderState={setProductOrderState}
+      ></Body>
 
     {loginWindow&&<LoginWindow 
     responseGoogle={responseGoogle}

@@ -6,10 +6,11 @@ import axios from 'axios';
 import Header from './Header';
 import LoginWindow from './LoginWindow';
 import SignupWindow from './SignupWindow';
+import { Helmet } from 'react-helmet';
 
 const Body = ()=>{
     return(
-        <div style={{backgroundColor:"#f9f9f9"}}>
+        <div id="pageBody" style={{backgroundColor:"#f9f9f9",height:"100%",minHeight:window.innerHeight-48}}>
             {window.location.pathname ==="/tos"&&<div style={{display:"flex",justifyContent:"center"}}>
             <div style={{textAlign:"left",width:"1040px",color:"#505050"}}>
             <div style={{fontSize:"24px",fontWeight:"bold",marginBottom:"45px",marginTop:"40px"}}>이용약관</div>
@@ -295,7 +296,7 @@ const Body = ()=>{
             </div>
             </div>}
             {window.location.pathname ==="/guideline"&&<div style={{display:"flex",justifyContent:"center",flexDirection:"column",alignItems:'center',height:"100%"}}>
-                <div style={{width:'1040px',height:"24px",display:"flex",fontSize:"24px",lineHeight:"24px",marginRight:"8px",marginTop:"48px"}}>프부르잇 커뮤니티 가이드라인<div style={{backgroundImage:`url(${icon_guide})`,width:'24px',height:"24px"}}></div></div>
+                <div style={{width:'1040px',height:"24px",display:"flex",fontSize:"24px",lineHeight:"24px",marginRight:"8px",marginTop:"48px"}}>프루브잇 커뮤니티 가이드라인<div style={{backgroundImage:`url(${icon_guide})`,width:'24px',height:"24px"}}></div></div>
                 <div style={{textAlign:"left",width:"1040px",height:"664px",fontSize:"15px",color:"#505050",backgroundColor:"#fff",padding:"40px 48px 40px 48px",marginTop:"40px"}}>
                     <div style={{marginBottom:"20px"}}>
                         <div style={{fontSize:'20px',fontWeight:"bold",marginBottom:"8px"}}>긍정적인 커뮤니케이션을 해요</div>
@@ -407,12 +408,19 @@ const HelpUs = ()=>{
   return(
   <div style={{
       width:"100%",
-      height:"100vh",
       display:"flex",
       flexDirection:"column",
       overflow:(loginWindow||signupWindow)&&"hidden"
     }}
   onClick={()=>{setModal(false)}}>
+    <Helmet>
+        <title>이용 약관 및 가이드라인  | 프루브잇 - 되는 서비스들의 런칭 플랫폼</title>
+        <meta
+          name="description"
+          content="잘 되고 있는 서비스, 잘 되고 싶은 서비스를 소개해주세요."
+          data-react-helmet="true"
+        />
+    </Helmet>
     <Header 
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}
