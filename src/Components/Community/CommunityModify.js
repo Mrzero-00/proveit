@@ -21,14 +21,14 @@ const Body =()=>{
     const [categoryModal,setCategoryModal] = useState(false);
     const [categoryNum,setCategoryNum] = useState(0);
     const [addState,setAddState] = useState(false);
-    const [communityState,setCommunityState] = useState(
-        {
-        nick:"",
-        title:"",
-        text:"",
-        like_count:0,
-        review_count:0,
-        category:""}
+    const [render,setRender] = useState(false);
+    const [communityState,setCommunityState] = useState({
+        category: "피드백을 부탁드립니다",
+        contents: "<p>ㅇㅇㅇㅇㅇ</p>",
+        id: "16",
+        thumbnail: "/api/uploads/user/570.jpg",
+        title: "ㅇㅇ",
+    }
     );
 
     const categoryList = [
@@ -37,21 +37,42 @@ const Body =()=>{
         {id:2,text:"피드백을 부탁드립니다",icon:icon_community_category_3},
         {id:3,text:"도와주세요",icon:icon_community_category_4}
     ]
+    const communityItemGetApi = async()=>{
+        let data = new FormData();
+        data.append("type","view");
+        data.append("user_email",localStorage.getItem("email"));
+        data.append("hash",localStorage.getItem("hash"));
+        data.append("id",window.location.search.substring(4));
+            try{
+                await axios({
+                    method:"post",
+                    url : `https://proveit.co.kr/api/community.php`,
+                    data
+                }).then((e)=>{
+                    if(e.data.ret_code === "400"){
+                        switch(e.data.view.category){
+                            case "궁금합니다":
+                                setCategoryNum(1);
+                                break;
+                            case "피드백을 부탁드립니다":
+                                setCategoryNum(2);
+                                break;
+                            case "도와주세요":
+                                setCategoryNum(3);
+                                break;
+                            default:
+                                break;
+                        }
+                        setCommunityState(e.data.view);
+                    }
+                }).then(()=>{
+                    setRender(true);
+                })
+            }catch{
 
-    const blogListGetApi = async()=>{
-        try{
-            await axios({
-                method:"get",
-                url : `https://proveit.co.kr/api/blogList.php?id&page=1`,
-        
-            }).then((e)=>{
-                if(e.data.ret_code === "0000"){
-                }
-            })
-        }catch{
-        
-        }
-        }
+            }
+    }
+
 
     const CategoryWindow = ({item,categoryNum,setCategoryNum,setCategoryModal,communityState,setCommunityState})=>{
         const [hover,setHover] = useState("");
@@ -78,12 +99,40 @@ const Body =()=>{
         )
     }
 
+    const communityModifyApi = async()=>{
+        let data = new FormData();
+        data.append("type","update");
+        data.append("user_email",localStorage.getItem("email"));
+        data.append("hash",localStorage.getItem("hash"));
+        data.append("title",communityState.title);
+        data.append("contents",communityState.contents);
+        data.append("category",communityState.category);
+        data.append("id",window.location.search.substring(4));
+        try{
+            await axios({
+                method:"post",
+                url : `https://proveit.co.kr/api/community.php`,
+                data
+        
+            }).then((e)=>{
+                console.log(e);
+                if(e.data.ret_code === "0000"){
+                    const alink = document.createElement("a");
+                    alink.href = '/community';
+                    alink.click();
+                }
+            })
+        }catch{
+        
+        }
+        }
+
     useEffect(()=>{
-        blogListGetApi();
+        communityItemGetApi();
     },[])
-    console.log(JSON.parse(localStorage.getItem("userInfo")))
   return(
-      <div id="pageBody" className="blogMain_body"
+      <>
+      {render&&<div id="pageBody" className="blogMain_body"
       onClick={()=>{setCategoryModal(false)}}>
           <div className="community_header">
               <div className="community_title">커뮤니티<div className="blogMain_title_icon" style={{backgroundImage:`url(${icon_community_title_icon})`}}></div></div>
@@ -106,13 +155,15 @@ const Body =()=>{
                     <div className="community_item_add_title">제목</div>
                     <input className="community_item_add_input" placeholder="제목을 입력해 주세요."
                     value={communityState.title}
-                    onChange={(e)=>{setCommunityState({...communityState,title:e.target.value})}}
+                    onChange={(e)=>{if(e.target.value.length<51){
+                        setCommunityState({...communityState,title:e.target.value})
+                    }}}
                     style={{height:"44px",marginBottom:"18px"}}></input>
                     <div className="community_item_add_title">내용</div>
                     <ReactQuill className="community_item_add_input"
                     placeholder="내용을 입력해주세요."
-                    value={communityState.text}
-                    onChange={(e)=>{setCommunityState({...communityState,text:e})}}
+                    value={communityState.contents}
+                    onChange={(e)=>{setCommunityState({...communityState,contents:e})}}
                     style={{height:"320px",marginBottom:"24px",overflow:"auto"}} theme=""></ReactQuill>
                     <div className="community_item_add_title">카테고리</div>
                     <div className="community_item_add_input"
@@ -127,7 +178,7 @@ const Body =()=>{
                                 backgroundPosition:"center",
                                 backgroundImage:`url(${categoryList[categoryNum].icon})`,
                                 marginRight:"8px"}}></div>
-                            <div style={{width:"100%"}}>{categoryList[categoryNum].text}</div>
+                            <div style={{width:"100%"}}>{communityState.category}</div>
                             <div style={{
                                 width:"16px",
                                 height:"16px",
@@ -148,9 +199,10 @@ const Body =()=>{
                     {addState&&<div style={{width:"100%",textAlign:"right",marginRight:"16px",color:"#ea4335",fontSize:'13px'}}>항목을 빠짐없이 입력해 주세요.</div>}
                     <div className="btn_one" style={{width:"104px",height:'40px',minWidth:"104px",maxWidth:"104px"}}
                     onClick={()=>{
-                        if(communityState.category!==""&&communityState.title!==""&&communityState.text!==""&&communityState!=="<p><br></p>"){
+                        if(communityState.category===""&&communityState.title===""&&communityState.contents==="<p><br></p>"){
                             setAddState(false);
                         }else{
+                            communityModifyApi();
                             setAddState(true);
                         }
                     }}>수정 완료</div>
@@ -164,7 +216,8 @@ const Body =()=>{
                 </div>
             </div>
           </div>
-      </div>
+      </div>}
+      </>
   )
 }
 

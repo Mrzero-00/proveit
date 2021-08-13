@@ -38,14 +38,25 @@ const Body =()=>{
         {id:3,text:"도와주세요",icon:icon_community_category_4}
     ]
 
-    const blogListGetApi = async()=>{
+    const communityAddApi = async()=>{
+        let data = new FormData();
+        data.append("type","insert");
+        data.append("user_email",localStorage.getItem("email"));
+        data.append("hash",localStorage.getItem("hash"));
+        data.append("title",communityState.title);
+        data.append("contents",communityState.text);
+        data.append("category",communityState.category);
         try{
             await axios({
-                method:"get",
-                url : `https://proveit.co.kr/api/blogList.php?id&page=1`,
+                method:"post",
+                url : `https://proveit.co.kr/api/community.php`,
+                data
         
             }).then((e)=>{
                 if(e.data.ret_code === "0000"){
+                    const alink = document.createElement("a");
+                    alink.href = '/community';
+                    alink.click();
                 }
             })
         }catch{
@@ -78,10 +89,6 @@ const Body =()=>{
         )
     }
 
-    useEffect(()=>{
-        blogListGetApi();
-    },[])
-    console.log(JSON.parse(localStorage.getItem("userInfo")))
   return(
       <div id="pageBody" className="blogMain_body"
       onClick={()=>{setCategoryModal(false)}}>
@@ -106,7 +113,9 @@ const Body =()=>{
                     <div className="community_item_add_title">제목</div>
                     <input className="community_item_add_input" placeholder="제목을 입력해 주세요."
                     value={communityState.title}
-                    onChange={(e)=>{setCommunityState({...communityState,title:e.target.value})}}
+                    onChange={(e)=>{if(e.target.value.length<51){
+                        setCommunityState({...communityState,title:e.target.value})
+                    }}}
                     style={{height:"44px",marginBottom:"18px"}}></input>
                     <div className="community_item_add_title">내용</div>
                     <ReactQuill className="community_item_add_input"
@@ -149,6 +158,7 @@ const Body =()=>{
                     <div className="btn_one" style={{width:"104px",height:'40px',minWidth:"104px",maxWidth:"104px"}}
                     onClick={()=>{
                         if(communityState.category!==""&&communityState.title!==""&&communityState.text!==""&&communityState!=="<p><br></p>"){
+                            communityAddApi();
                             setAddState(false);
                         }else{
                             setAddState(true);
@@ -254,14 +264,14 @@ const CommunityAdd = ()=>{
         position:"relative"
     }}
     onClick={()=>{setModal(false)}}>
-      <Helmet>
+      {/* <Helmet>
         <title>리뷰 중독자 | 프루브잇 - 되는 서비스들의 런칭 플랫폼</title>
         <meta
           name="description"
           content="좋은 서비스는 직접 써보고 리뷰합니다."
           data-react-helmet="true"
         />
-      </Helmet>
+      </Helmet> */}
     <Header 
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}

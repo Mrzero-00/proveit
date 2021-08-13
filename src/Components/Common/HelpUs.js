@@ -413,14 +413,14 @@ const HelpUs = ()=>{
       overflow:(loginWindow||signupWindow)&&"hidden"
     }}
   onClick={()=>{setModal(false)}}>
-    <Helmet>
+    {/* <Helmet>
         <title>이용 약관 및 가이드라인  | 프루브잇 - 되는 서비스들의 런칭 플랫폼</title>
         <meta
           name="description"
           content="잘 되고 있는 서비스, 잘 되고 싶은 서비스를 소개해주세요."
           data-react-helmet="true"
         />
-    </Helmet>
+    </Helmet> */}
     <Header 
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}

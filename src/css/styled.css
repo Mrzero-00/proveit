@@ -129,6 +129,26 @@
     align-items: center;
 }
 
+.btn_six{
+  background: #FFFFFF;
+  border: 1px solid #F1F1F1;
+  box-sizing: border-box;
+  border-radius: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color:#828282;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.btn_six:hover{
+  border: 1px solid #9C31C6;
+  font-weight: 700;
+  color:#9C31C6;
+}
+
 .btn_textBtn13{
     font-size:13px;
     color:#505050;
@@ -1851,6 +1871,7 @@ input:focus{
       border-radius: 16px;
       padding: 16px 24px 20px 24px;
       transition: 0.3s;
+      margin-bottom: 8px;
   }
 
   
@@ -2046,7 +2067,8 @@ input:focus{
     background-color:#fff;
     box-sizing:border-box;
     border-bottom: 1px solid #F1F1F1;
-  }
+    padding-left: 24px;
+  }  
 }
 
 .review_btn:hover{

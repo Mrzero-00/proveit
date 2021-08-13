@@ -196,6 +196,7 @@ const Body =()=>{
                 data:data
       
             }).then((e)=>{
+                console.log(e);
                 if(e.data.ret_code === "0000"){
                     setMyProducts(e.data.product);
                     setLikelyProducts(e.data.like);
@@ -325,7 +326,6 @@ const Body =()=>{
     }
 
     const ReplyRender =({item,index})=>{
-        console.log(index);
         return(
             <div style={{cursor:"pointer"}} onClick={
                 ()=>{
@@ -357,13 +357,15 @@ const Body =()=>{
 
     return(
         <div id="pageBody" style={{minHeight:window.innerHeight-48,backgroundColor:"#F9F9F9"}}>
-        {(render&&pageNum===0)&&<div style={{width:"100%",backgroundColor:"#F9F9F9",display:"flex",alignItems:"center",flexDirection:"column"}}>
+        {(render&&pageNum===0)&&
+        <div style={{width:"100%",backgroundColor:"#F9F9F9",display:"flex",alignItems:"center",flexDirection:"column"}}>
             <div style={{
                 width:"100%",
-                borderBottom:"1px solid #e5e5e5"
-                ,height:"272px",
+                borderBottom:"1px solid #e5e5e5",
                 display:"flex",
                 justifyContent:"center",
+                paddingTop:"55px",
+                paddingBottom:"48px"
                 }}>
                 <div className="profile_main">
                     <div className="profile_main_thumbnail" style={{
@@ -447,7 +449,7 @@ const Body =()=>{
                 </div>}
                 <div style={{width:"100%",height:"19px",fontSize:'13px',color:"#828282",textAlign:"center",marginTop:"24px",marginBottom:"39px"}}>여기가 끝이에요</div>
             </div>}
-        
+                        
         </div>}
         {(render&&pageNum===1)&&<div style={{width:"100%",height:"100%",backgroundColor:"#F9F9F9",display:"flex",justifyContent:"center"}}>
             <div style={{width:"1040px",marginTop:"40px"}}>

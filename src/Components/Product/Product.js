@@ -1167,12 +1167,12 @@ const Product = ()=>{
         position:"relative"
     }}
     onClick={(e)=>{setModal(false);setLinkWindow(false)}}>
-    <Helmet>
+    {/* <Helmet>
         <meta
           name="description"
           content="잘 되고 있는 서비스, 잘 되고 싶은 서비스를 소개해주세요."
         />
-    </Helmet>
+    </Helmet> */}
     <Header 
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}

@@ -178,17 +178,38 @@ const RightBar = ({setLoginWindow,categoryState,setCategoryState})=>{
             <div style={{color:categoryState===0&&"#9C31C6",fontWeight:categoryState===0&&"bold"}}>전체보기</div>
           </div>
           <div className="community_item_category"
-          onClick={()=>{setCategoryState(1)}}>
+            onClick={()=>{
+              if(window.location.pathname==="/communityitem"){
+                const alink = document.createElement("a");
+                alink.href = '/community';
+                alink.click();
+              }else{
+                setCategoryState(1)
+              }}}>
             <div style={{width:"16px",height:'16px',backgroundImage:`url(${icon_community_2})`,marginRight:"8px"}}></div>
             <div style={{color:categoryState===1&&"#9C31C6",fontWeight:categoryState===1&&"bold"}}>궁금합니다</div>
           </div>
           <div className="community_item_category"
-          onClick={()=>{setCategoryState(2)}}>
+            onClick={()=>{
+              if(window.location.pathname==="/communityitem"){
+                const alink = document.createElement("a");
+                alink.href = '/community';
+                alink.click();
+              }else{
+                setCategoryState(2)
+              }}}>
             <div style={{width:"16px",height:'16px',backgroundImage:`url(${icon_community_3})`,marginRight:"8px"}}></div>
             <div style={{color:categoryState===2&&"#9C31C6",fontWeight:categoryState===2&&"bold"}}>피드백을 부탁드립니다</div>
           </div>
           <div className="community_item_category"
-          onClick={()=>{setCategoryState(3)}}>
+            onClick={()=>{
+              if(window.location.pathname==="/communityitem"){
+                const alink = document.createElement("a");
+                alink.href = '/community';
+                alink.click();
+              }else{
+                setCategoryState(3)
+              }}}>
             <div style={{width:"16px",height:'16px',backgroundImage:`url(${icon_community_4})`,marginRight:"8px"}}></div>
             <div style={{color:categoryState===3&&"#9C31C6",fontWeight:categoryState===3&&"bold"}}>도와주세요</div>
           </div>

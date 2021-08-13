@@ -83,7 +83,7 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
                     <div style={{position:"absolute",width:"100%",height:"100%",top:0,left:0,display:"flex",justifyContent:"center",alignItems:"center"}}>
                         <div className="header_bar_menu">
                             <div style={{marginRight:"48px"}}><Link to="/proreviewer">리뷰 중독자</Link></div>
-                            {/* <div><Link to="/community">커뮤니티</Link></div> */}
+                            <div><Link to="/community">커뮤니티</Link></div>
                         </div>
                         
                     </div>
@@ -122,7 +122,7 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
                     <div style={{position:"absolute",width:"100%",height:"100%",top:0,left:0,display:"flex",justifyContent:"center",alignItems:"center"}}>
                         <div className="header_bar_menu">
                             <div style={{marginRight:"48px"}}><Link to="/proreviewer">리뷰 중독자</Link></div>
-                            {/* <div><Link to="/community">커뮤니티</Link></div> */}
+                            <div><Link to="/community">커뮤니티</Link></div>
                         </div>
                     </div>
                 </div>             

@@ -179,14 +179,14 @@ const BlogMain = ()=>{
         position:"relative"
     }}
     onClick={()=>{setModal(false)}}>
-      <Helmet>
+      {/* <Helmet>
         <title>리뷰 중독자 | 프루브잇 - 되는 서비스들의 런칭 플랫폼</title>
         <meta
           name="description"
           content="좋은 서비스는 직접 써보고 리뷰합니다."
           data-react-helmet="true"
         />
-      </Helmet>
+      </Helmet> */}
     <Header 
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}

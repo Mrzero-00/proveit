@@ -24,20 +24,24 @@ const Body =({setLoginWindow})=>{
       id:0,
       nick:"dkdkdk",
       title:"1,000명 까지 사용자를 모으는 데 가장 중요한 것은 무엇이라고 생각하시나요?",
-      text:"커뮤니티 내에서는 상대방을 배려하는 태도를 갖추어 주세요. 서로 비난하고 스타트업과 서비스에 관해 질문을 하거나 받거나, 노하우와 정보를 공유하거나 치열하게 토론하거나. 이런 것들을 합니다.",
+      contents:"커뮤니티 내에서는 상대방을 배려하는 태도를 갖추어 주세요. 서로 비난하고 스타트업과 서비스에 관해 질문을 하거나 받거나, 노하우와 정보를 공유하거나 치열하게 토론하거나. 이런 것들을 합니다.",
       like_count:0,
-      review_count:0,
-      category:"궁금합니다",}
+      reply_count:0,
+      category:"궁금합니다",
+      ago_time:""}
   ]);
 
-  const blogListGetApi = async()=>{
+  const communityListGetApi = async()=>{
+    let data = new FormData();
+    data.append("type","list");
       try{
           await axios({
-              method:"get",
-              url : `https://proveit.co.kr/api/blogList.php?id&page=1`,
-    
+              method:"post",
+              url : `https://proveit.co.kr/api/community.php`,
+              data
           }).then((e)=>{
               if(e.data.ret_code === "0000"){
+                setCommunity(e.data.list);
               }
           })
       }catch{
@@ -87,7 +91,7 @@ const Body =({setLoginWindow})=>{
           <div className="community_item_title">{item.title}</div>
           <ReactQuill className="community_item_text"
               placeholder="내용을 입력해주세요."
-              value={item.text}
+              value={item.contents}
               readOnly
               style={{height:"32px",backgroundColor:"transparent"}} theme=""></ReactQuill>
           <div className="community_item_footer">
@@ -96,9 +100,9 @@ const Body =({setLoginWindow})=>{
             <div style={{width:'12px',height:'12px',backgroundImage:`url(${icon})`,marginRight:'8px',backgroundSize:"cover"}}></div>
             <div style={{marginRight:"4px"}}>{item.category}</div>
             <div style={{marginRight:"4px"}}>·</div>
-            <div style={{marginRight:"4px"}}>1일 전</div>
+            <div style={{marginRight:"4px"}}>{item.ago_time}</div>
             <div style={{marginRight:"4px"}}>·</div>
-            <div style={{color:"#9C31C6"}}>{`${item.review_count}개의 댓글`}</div>
+            <div style={{color:"#9C31C6"}}>{`${item.reply_count}개의 댓글`}</div>
           </div>
         </div>
       </Link>
@@ -122,7 +126,7 @@ const Body =({setLoginWindow})=>{
           <div className="community_item_title">{item.title}</div>
           <ReactQuill className="community_item_text"
               placeholder="내용을 입력해주세요."
-              value={item.text}
+              value={item.contents}
               readOnly
               style={{height:"32px",backgroundColor:"transparent"}} theme=""></ReactQuill>
           <div className="community_item_footer">
@@ -133,7 +137,7 @@ const Body =({setLoginWindow})=>{
             <div style={{marginRight:"4px"}}>·</div>
             <div style={{marginRight:"4px"}}>1일 전</div>
             <div style={{marginRight:"4px"}}>·</div>
-            <div style={{color:"#9C31C6"}}>{`${item.review_count}개의 댓글`}</div>
+            <div style={{color:"#9C31C6"}}>{`${item.reply_count}개의 댓글`}</div>
           </div>
         </div>
       </Link>
@@ -157,7 +161,7 @@ const Body =({setLoginWindow})=>{
           <div className="community_item_title">{item.title}</div>
           <ReactQuill className="community_item_text"
               placeholder="내용을 입력해주세요."
-              value={item.text}
+              value={item.contents}
               readOnly
               style={{height:"32px",backgroundColor:"transparent"}} theme=""></ReactQuill>
           <div className="community_item_footer">
@@ -168,7 +172,7 @@ const Body =({setLoginWindow})=>{
             <div style={{marginRight:"4px"}}>·</div>
             <div style={{marginRight:"4px"}}>1일 전</div>
             <div style={{marginRight:"4px"}}>·</div>
-            <div style={{color:"#9C31C6"}}>{`${item.review_count}개의 댓글`}</div>
+            <div style={{color:"#9C31C6"}}>{`${item.reply_count}개의 댓글`}</div>
           </div>
         </div>
       </Link>
@@ -192,7 +196,7 @@ const Body =({setLoginWindow})=>{
           <div className="community_item_title">{item.title}</div>
           <ReactQuill className="community_item_text"
               placeholder="내용을 입력해주세요."
-              value={item.text}
+              value={item.contents}
               readOnly
               style={{height:"32px",backgroundColor:"transparent"}} theme=""></ReactQuill>
           <div className="community_item_footer">
@@ -203,7 +207,7 @@ const Body =({setLoginWindow})=>{
             <div style={{marginRight:"4px"}}>·</div>
             <div style={{marginRight:"4px"}}>1일 전</div>
             <div style={{marginRight:"4px"}}>·</div>
-            <div style={{color:"#9C31C6"}}>{`${item.review_count}개의 댓글`}</div>
+            <div style={{color:"#9C31C6"}}>{`${item.reply_count}개의 댓글`}</div>
           </div>
         </div>
       </Link>
@@ -213,7 +217,7 @@ const Body =({setLoginWindow})=>{
   }
 
     useEffect(()=>{
-        blogListGetApi();
+      communityListGetApi();
     },[])
   return(
       <div id="pageBody" className="blogMain_body">
@@ -228,7 +232,9 @@ const Body =({setLoginWindow})=>{
               <div style={{cursor:"pointer",fontWeight:!sortState&&"bold"}}
               onClick={()=>{setSortState(false)}}>최신순</div>
             </div>
+            <div>
               {community.map((item)=>(<CommunityRender item={item} categoryState={categoryState}></CommunityRender>))}
+            </div>
               <RightBar setLoginWindow={setLoginWindow} setCategoryState={setCategoryState} categoryState={categoryState}></RightBar>
           </div>
       </div>

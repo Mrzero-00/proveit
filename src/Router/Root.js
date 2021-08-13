@@ -39,10 +39,10 @@ const Root = ()=>{
       <Route exact path="/privacy_policy" component={HelpUs}></Route>
       <Route exact path="/proreviewer" component={BlogMain}></Route>
       <Route exact path="/review" component={Review}></Route>
-      {/* <Route exact path="/community" component={CommunityMain}></Route>
+      <Route exact path="/community" component={CommunityMain}></Route>
       <Route exact path="/communityitem" component={CommunityItem}></Route>
       <Route exact path="/community_add" component={CommunityAdd}></Route>
-      <Route exact path="/community_modify" component={CommunityModify}></Route> */}
+      <Route exact path="/community_modify" component={CommunityModify}></Route>
   </div>  
   )
 }

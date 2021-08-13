@@ -28,7 +28,7 @@ const Body =({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
     const [reRender,setReRender] = useState(false);
 
 
-    const CommentRender =({item,reRender,setReRender})=>{
+    const CommentRender =({item,reRender,setReRender,replayListApi})=>{
         const [hover,setHover] =useState(0);    
         const [modal,setModal] = useState(false);
         const [replyText,setReplyText] =useState(`<p><div style="display:inline-block;">@${item.nick}</div></br></p>`);
@@ -54,6 +54,7 @@ const Body =({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                 }).then((e)=>{
                     if(e.data.ret_code === "0000"){
                         localStorage.setItem("replyId",e.data.reply_id);
+                        replayListApi();
                         setReRender(!reRender);
                     }else{
                         alert("로그인 해쉬가 만료되었습니다. 다시 로그인해주세요");
@@ -89,6 +90,7 @@ const Body =({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                 }).then((e)=>{
                     console.log(e);
                     if(e.data.ret_code === "0000"){
+                        replayListApi();
                         setReRender(!reRender);
                     }else{
                         alert("로그인 해쉬가 만료되었습니다. 다시 로그인해주세요");
@@ -123,6 +125,7 @@ const Body =({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
           
                 }).then((e)=>{
                     if(e.data.ret_code === "0000"){
+                        replayListApi();
                         setReRender(!reRender);
                     }else{
                         alert("로그인 해쉬가 만료되었습니다. 다시 로그인해주세요");
@@ -320,6 +323,7 @@ const Body =({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
             }).then((e)=>{
                 if(e.data.ret_code === "0000"){
                     localStorage.setItem("replyId",e.data.reply_id);
+                    replayListApi();
                     setReRender(!reRender);
                 }else if(e.data.ret_code ==="400"){
                     setReplyState(false);
@@ -348,6 +352,7 @@ const Body =({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                 data:data
       
             }).then((e)=>{
+                console.log(e);
                 if(e.data.ret_code === "0000"){
                     setCommnetList(e.data.ret_data);
                 }else{
@@ -359,14 +364,12 @@ const Body =({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
         }
     }
     
-    useEffect(()=>{
-        reviewGetApi();
-    },[reRender]);
 
     useEffect(()=>{
         reviewGetApi();
         window.scrollTo(0,0);
     },[window.location.search]);
+
     return(
         <div id="pageBody" className="review_page" style={{minHeight:window.innerHeight-48}}>
             <div className="review_header">
