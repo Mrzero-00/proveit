@@ -173,7 +173,14 @@ const RightBar = ({setLoginWindow,categoryState,setCategoryState})=>{
         marginLeft:"16px"}}>
           <div style={{width:"100%"}}>
           <div className="community_item_category"
-          onClick={()=>{setCategoryState(0)}}>
+            onClick={()=>{
+              if(window.location.pathname==="/communityitem"){
+                const alink = document.createElement("a");
+                alink.href = '/community';
+                alink.click();
+              }else{
+                setCategoryState(0)
+              }}}>
             <div style={{width:"16px",height:'16px',backgroundImage:`url(${icon_community_1})`,marginRight:"8px"}}></div>
             <div style={{color:categoryState===0&&"#9C31C6",fontWeight:categoryState===0&&"bold"}}>전체보기</div>
           </div>
