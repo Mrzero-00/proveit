@@ -1,56 +1,68 @@
 import React, { useEffect, useState } from 'react';
 
-import icon_like from '../../image/likeIcon.svg';
-import icon_comment from '../../image/commentIcon.svg';
+
+import icon_profile_item_comment from '../../image/icon_profile_item_comment.png';
+import icon_profile_item_like from '../../image/icon_profile_item_like.png';
+import icon_profile_notItem from '../../image/icon_profile_notItem.png';
+
+import icon_profile_commentIcon from '../../image/icon_profile_commentIcon.png';
+
+import icon_review_title from '../../image/icon_review_title.svg';
+import icon_community_title_icon from '../../image/icon_community_title_icon.png';
+
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import ReactQuill from 'react-quill';
 import Header from '../Common/Header';
-import LoginWindow from '../Common/LoginWindow';
-import SignupWindow from '../Common/SignupWindow';
 
 
 const Body =()=>{
-    const [render,setRender] =useState(false);
-    const [myProducts,setMyProducts] =useState(["",]);
+    const [pageNum,setPageNum] =useState(0);
     const [likelyProducts,setLikelyProducts] =useState([]);
     const [myReply,setMyReply] =useState([]);
-    const [fullListState,setFullListState]= useState("none");
+    const [productNum,setProductNum] =useState({
+        like:0,
+        introduce:0,
+        make:0,
+        community:0
+    });
+    const [renderList,setRenderList]= useState("like");
+    const [rendering,setrendering] =useState(false);
+    const [myProducts,setMyProducts] = useState([]);
+    const [currentUserInfo,setCurrentUserInfo] = useState({
 
-    const [currentUserInfo,setCurrentUserInfo] = useState(
-        {
-            userId:"dkdk@gmail.com",
-            name:"아무개",
-            nickName:"아무개",
-            belong:"한국",
-            position:"직장인",
-            profileUrl:"",
-            comment:"",
-            likeProject:"",
-            registerProject:"",
-            newLetterState:false
-        }
-    )
+    })
 
-    const userInfoGetApi = async()=>{
+    const userInfoGetApi = async(type)=>{
         var data = new FormData();
         data.append('user_id', window.location.search.substring(1));
-        data.append('type', 'product');
+        data.append('type', type);
         try{
             await axios({
                 method:"post",
-                url : "https://www.proveit.co.kr/api/userTrace.php",
+                url : "https://proveit.co.kr/api/mypage.php",
                 data:data
       
             }).then((e)=>{
                 if(e.data.ret_code === "400"){
-                    setCurrentUserInfo(e.data.user);
-                    setMyProducts(e.data.product);
-                    setLikelyProducts(e.data.like);
-                    setMyReply(e.data.reply);
-                    setRender(true);
-                }else{
-      
+                    if(type==="userInfo"){
+                        setCurrentUserInfo(e.data.list);
+                        setrendering(true);
+                    }
+                }else if(e.data.ret_code === "0000"){
+                    if(type==="likeProdcut"){
+                        setLikelyProducts(e.data.list);
+                    }else if(type==="myReply"){
+                        setMyReply(e.data.list);
+                    }else if(type==="counting"){
+                        setProductNum({
+                            like:e.data.list.like*1,
+                            introduce:e.data.list.introduce*1,
+                            make:e.data.list.make*1,
+                        });
+                    }else{
+                        setMyProducts(e.data.list);
+                    }
                 }
             })
         }catch{
@@ -59,269 +71,206 @@ const Body =()=>{
     }
 
     useEffect(()=>{
-        userInfoGetApi();
-    },[])
-    
+        userInfoGetApi("userInfo");
+        userInfoGetApi("counting");
+        userInfoGetApi("myReply");
+        userInfoGetApi("likeProdcut");
+        if(rendering){
+            if(renderList==="like"){
+                userInfoGetApi("likeProdcut");
+            }else if(renderList ==="introduce" || renderList ==="make"){
+                userInfoGetApi("myProduct");
+            }
+        }
+    },[renderList])
+
     const ProductRender =({item,type,index})=>{
         return(
-            <div style={{position:"relative"}}>
-            {index<4&&<Link to={`/product?productnum=${item.id}`}><div id={item.id} 
-              style={{width:"688px",height:"120px",display:"flex",alignItems:"center",backgroundColor:"#fff",position:"relative",cursor:"pointer",borderBottom:"1px solid #e5e5e5"}}
-              onClick={(e)=>{e.stopPropagation();}}
-            >
-              <div style={{width:"88px",marginLeft:"16px",height:"88px",marginRight:"16px",backgroundImage:`url(${item.thumbnail})`,backgroundPosition:"center",backgroundSize:"cover"}}></div>
-              <div style={{width:type==="myProduct"?"368px":"480px",textAlign:"left",marginRight:"32px"}}>
-                <div style={{color:"#505050",height:"16px",fontWeight:"bold",fontSize:'16px',marginBottom:"12px",lineHeight:"16px"}}>{item.title}</div>
-                <div style={{color:"#828282",height:"14px",fontSize:'13px',marginBottom:'16px',lineHeight:"14px"}}>{item.sub_title}</div>
-                <div style={{display:"flex",height:"24px",alignItems:"center"}}>
-                  <div style={{padding:"3.5px 5px 3.5px 5px",maxHeight:"24px",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px",backgroundColor:"#F1F1F1"}}>
-                    <div style={{width:"14px",height:"14px",backgroundImage:`url(${icon_comment})`,marginRight:"8px"}}></div>
-                    <div>{item.review_count}</div>
-                  </div>
-                  <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>{item.payment_type}</div>
-                  <div style={{height:"14px",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px",width:"1px",backgroundColor:"#e5e5e5"}}></div>
-                  <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>{item.category}</div>
-                </div>
-              </div>
-              <div style={{position:"absolute",width:"48px",height:"52px",right:"28px"}}>
-                <div style={{height:"50%",width:"100%",backgroundImage:`url(${icon_like})`,backgroundRepeat:"no-repeat",backgroundPosition:"center"}}></div>
-                <div style={{height:"50%",width:"100%",fontSize:"18px",fontWeight:"bold",color:"#505050",textAlign:"center"}}>{item.like_count}</div>
-              </div>
-            </div>
-            </Link>}
-            {index===undefined&&<Link to={`/product?productnum=${item.id}`}><div id={item.id} 
-              style={{width:"688px",height:"120px",display:"flex",alignItems:"center",backgroundColor:"#fff",position:"relative",cursor:"pointer",borderBottom:"1px solid #e5e5e5"}}
-              onClick={(e)=>{e.stopPropagation();}}
-            >
-              <div style={{width:"88px",marginLeft:"16px",height:"88px",marginRight:"16px",backgroundImage:`url(${item.thumbnail})`,backgroundColor:"#000",backgroundPosition:"center",backgroundSize:"cover"}}></div>
-              <div style={{width:"480px",textAlign:"left",marginRight:"24px"}}>
-                <div style={{color:"#505050",height:"16px",fontWeight:"bold",fontSize:'16px',marginBottom:"12px",lineHeight:"16px"}}>{item.title}</div>
-                <div style={{color:"#828282",height:"14px",fontSize:'13px',marginBottom:'16px',lineHeight:"14px"}}>{item.sub_title}</div>
-                <div style={{display:"flex",height:"24px",alignItems:"center"}}>
-                  <div style={{padding:"3.5px 5px 3.5px 5px",maxHeight:"24px",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px",backgroundColor:"#F1F1F1"}}>
-                    <div style={{width:"14px",height:"14px",backgroundImage:`url(${icon_comment})`,marginRight:"8px"}}></div>
-                    <div>{item.review_count}</div>
-                  </div>
-                  <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>{item.payment_type}</div>
-                  <div style={{height:"14px",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px",width:"1px",backgroundColor:"#e5e5e5"}}></div>
-                  <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>{item.category}</div>
-                </div>
-              </div>
-              <div style={{position:"absolute",width:"48px",height:"52px",right:"28px"}}>
-                <div style={{height:"50%",width:"100%",backgroundImage:`url(${icon_like})`,backgroundRepeat:"no-repeat",backgroundPosition:"center"}}></div>
-                <div style={{height:"50%",width:"100%",fontSize:"18px",fontWeight:"bold",color:"#505050",textAlign:"center"}}>{item.like_count}</div>
-              </div>
-            </div>
-            </Link>}
-            </div>
+            <>
+            {item.category&&<div style={{position:"relative"}}>
+                {type==="like"&&<Link to={`/product?productnum=${item.id}`}>
+                    <div id={item.id} 
+                        onClick={(e)=>{e.stopPropagation();}}
+                        className="profile_item_render"
+                        >
+                        <div className="profile_product_thumbnail" style={{backgroundImage:`url(${item.thumbnail})`}}></div>
+                        <div className="profile_product_info">
+                            <div className="profile_product_title">{item.title}</div>
+                            <div style={{display:"flex",alignItems:"center"}}>
+                                <div style={{width:'16px',minWidth:"16px",height:"16px",backgroundImage:`url(${icon_profile_item_comment})`,backgroundSize:'cover',marginRight:"8px"}}></div>
+                                <div className="profile_product_info_text">{item.review_count}</div>
+                                <div style={{width:'16px',minWidth:"16px",height:"16px",backgroundImage:`url(${icon_profile_item_like})`,backgroundSize:'cover',marginRight:"8px",marginLeft:"8px"}}></div>
+                                <div className="profile_product_info_text">{item.like_count}</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </Link>}
+                {(type==="myProduct"&&item.make_by==="true")&&<Link to={`/product?productnum=${item.id}`}>
+                    <div id={item.id} 
+                        onClick={(e)=>{e.stopPropagation();}}
+                        className="profile_item_render"
+                        >
+                        <div className="profile_product_thumbnail" style={{backgroundImage:`url(${item.thumbnail})`}}></div>
+                        <div className="profile_product_info">
+                            <div className="profile_product_title">{item.title}</div>
+                            <div style={{display:"flex",alignItems:"center"}}>
+                                <div style={{width:'16px',minWidth:"16px",height:"16px",backgroundImage:`url(${icon_profile_item_comment})`,backgroundSize:'cover',marginRight:"8px"}}></div>
+                                <div className="profile_product_info_text">{item.review_count}</div>
+                                <div style={{width:'16px',minWidth:"16px",height:"16px",backgroundImage:`url(${icon_profile_item_like})`,backgroundSize:'cover',marginRight:"8px",marginLeft:"8px"}}></div>
+                                <div className="profile_product_info_text">{item.like_count}</div>
+                            </div>
+                        </div>
+                    </div>
+                </Link>}
+                {(type==="introduceProduct"&&item.make_by==="false")&&<Link to={`/product?productnum=${item.id}`}>
+                    <div id={item.id} 
+                        onClick={(e)=>{e.stopPropagation();}}
+                        className="profile_item_render"
+                        >
+                        <div className="profile_product_thumbnail" style={{backgroundImage:`url(${item.thumbnail})`}}></div>
+                        <div className="profile_product_info">
+                            <div className="profile_product_title">{item.title}</div>
+                            <div style={{display:"flex",alignItems:"center"}}>
+                                <div style={{width:'16px',minWidth:"16px",height:"16px",backgroundImage:`url(${icon_profile_item_comment})`,backgroundSize:'cover',marginRight:"8px"}}></div>
+                                <div className="profile_product_info_text">{item.review_count}</div>
+                                <div style={{width:'16px',minWidth:"16px",height:"16px",backgroundImage:`url(${icon_profile_item_like})`,backgroundSize:'cover',marginRight:"8px",marginLeft:"8px"}}></div>
+                                <div className="profile_product_info_text">{item.like_count}</div>
+                            </div>
+                        </div>
+                    </div>
+                </Link>}
+            </div>}
+            </>
         )
     }
+
+    window.history.pushState(null,"",window.location.href);
+    window.onpopstate = ()=>{
+        if(pageNum!==0){
+            window.history.go(1);
+            setPageNum(0);
+        }else{
+            const alink = document.createElement("a");
+            alink.href = "/";
+            alink.click();
+        }
+
+    }
+
 
     const ReplyRender =({item,index})=>{
         return(
-            <div style={{cursor:"pointer"}} onClick={
+            <>
+            {item!==null&&<div className="profile_comment" onClick={
                 ()=>{
-                    localStorage.setItem("replyId",item.reply_id);
+                    localStorage.setItem("replyId",item.id);
                     const alink = document.createElement("a");
-                    alink.href =`/product?productnum=${item.product_id}`;
+                    alink.href =item.url;
                     alink.click();
                 }
                 }>
-            {index<3&&<div style={{width:"336px",backgroundColor:"#fff",padding:"24px 24px 32px 24px",borderBottom:"1px solid #e5e5e5"}}>
-                <div style={{fontSize:"16px",fontWeight:"bold"}}>{item.title}에 단 댓글</div>
-                <div style={{width:"288px",position:"relative",marginBottom:"24px"}}>
-                    <ReactQuill theme=""
-                    value={item.reply} style={{textAlign:"left",color:"#505050",fontSize:'14px',width:"100%"}}></ReactQuill>
-                    <div style={{width:"100%",height:"100%",position:'absolute',top:0,left:0}}></div>
+                <div className="profile_comment_icon" style={{backgroundImage:`url(${icon_profile_commentIcon})`}}></div>
+                <div style={{width:'100%',overflow:"hidden"}}>
+                    <div style={{display:"flex",alignItems:"center",marginBottom:"5px",height:"16px",lineHeight:'16px',flexWrap:"nowrap",width:"1000px"}}>
+                        {item.target==="blog"&&<div style={{backgroundImage:`url(${icon_review_title})`,width:'16px',height:'16px',minWidth:"16px",minHeight:"16px",backgroundSize:'cover',marginRight:"4px"}}></div>}
+                        {item.target==="community"&&<div style={{backgroundImage:`url(${icon_community_title_icon})`,width:'16px',lineHeight:'16px',height:'16px',minWidth:"16px",minHeight:"16px",backgroundSize:'cover',marginRight:"4px"}}></div>}
+                        <div style={{fontSize:"14px",lineHeight:'16px',fontWeight:"500",color:"#9c31c6"}}>{item.target==="product"?`${item.title}`:`"${item.title}"`}</div>
+                        <div style={{fontSize:"14px",lineHeight:'16px'}}>에 남긴 코멘트</div>
+                    </div>
+                    <div style={{width:"100%",position:"relative",height:'16px',lineHeight:"16px"}}>
+                        <ReactQuill theme=""
+                        className="profile_comment_quill"
+                        value={item.reply.length>56?item.reply.slice(0,50)+"···":item.reply} style={{textAlign:"left",color:"#505050",fontSize:'13px',width:"100%",height:'16px',lineHeight:"16px",overflow:"hidden"}}></ReactQuill>
+                        <div style={{width:"100%",height:"100%",position:'absolute',top:0,left:0}}></div>
+                    </div>
                 </div>
             </div>}
-            {index===undefined&&<div style={{width:"687px",backgroundColor:"#fff",padding:"24px 24px 24px 24px",borderBottom:"1px solid #e5e5e5"}}>
-                <div style={{fontSize:"16px",fontWeight:"bold"}}>{item.title}에 단 댓글</div>
-                <div style={{width:"288px",position:"relative",marginBottom:"24px"}}>
-                    <ReactQuill theme=""
-                    value={item.reply} style={{textAlign:"left",color:"#505050",fontSize:'14px',width:"100%"}}></ReactQuill>
-                    <div style={{width:"100%",height:"100%",position:'absolute',top:0,left:0}}></div>
-                </div>
-            </div>}
-            </div>
+            </>
         )
-    }
-
+    }   
     return(
-        <>
-        {render&&<div id="pageBody"  style={{width:"100%",height:"100%",minHeight:window.innerHeight-48,backgroundColor:"#F9F9F9",display:"flex",alignItems:"center",flexDirection:"column"}}>
-            <div style={{
-                width:"100%",
-                borderBottom:"1px solid #e5e5e5"
-                ,height:"272px",
-                display:"flex",
-                justifyContent:"center",
-                }}>
-                <div style={{width:"1040px",height:"100%",display:"flex",alignItems:"center"}}>
-                    <div style={{
-                        width:'160px',
-                        height:"160px",
-                        borderRadius:"50%",
-                        backgroundColor:"#e5e5e5",
-                        marginRight:"40px",
-                        backgroundImage:`url(${currentUserInfo.thumbnail})`,
-                        backgroundSize:"cover",
-                        backgroundRepeat:"no-repeat",
-                        backgroundPosition:"center"}}></div>
-                    <div>
-                        <div style={{fontSize:"20px",color:'#505050',height:"20px",lineHeight:"20px",marginBottom:"16px",fontWeight:"bold"}}>{currentUserInfo.nick}</div>
-                        <div style={{fontSize:"14px",color:'#828282',height:"14px",lineHeight:"14px",marginBottom:"16px"}}>{currentUserInfo.position}{currentUserInfo.department!==""?`,${currentUserInfo.department}`:""}</div>
-                    </div>
-                </div>
-            </div>
-            {fullListState==="none"&&<div style={{width:"1040px",display:"flex",marginTop:"32px"}}>
-                <div style={{width:"688px",marginRight:"16px"}}>
-                    <div style={{marginBottom:"40px"}}>
-                        <div style={{fontWeight:"bold",marginBottom:"16px"}}>등록한 서비스</div>
-                        {myProducts.map((item,index)=>(<ProductRender key={index} index={index} item={item} type="myProduct"/>))}
-                        {myProducts.length>4&&<div style={{
-                        width:"100%",
-                        height:"40px",
-                        borderBottom:"1px solid #e5e5e5",
-                        backgroundColor:"#fff",
-                        display:"flex",
-                        justifyContent:"center",
-                        alignItems:"center",
-                        fontSize:"14px",
-                        color:"#828282",
-                        cursor:"pointer"}}
-                        onClick={()=>{setFullListState("myProducts")}}>모두 보기</div>}
-                    </div>
-                    <div style={{marginBottom:"40px"}}>
-                        <div style={{fontWeight:"bold",marginBottom:"16px"}}>추천했어요</div>
-                        {likelyProducts.map((item,index)=>(<ProductRender key={index} index={index} item={item} type="likely"/>))}
-                        {likelyProducts.length>4&&<div style={{
-                        width:"100%",
-                        height:"40px",
-                        borderBottom:"1px solid #e5e5e5",
-                        backgroundColor:"#fff",
-                        display:"flex",
-                        justifyContent:"center",
-                        fontSize:"14px",
-                        alignItems:"center",
-                        color:"#828282",
-                        cursor:"pointer"}}
-                        onClick={()=>{setFullListState("likelyProduct")}}>모두 보기</div>}
-                    </div>
-                </div>
-                <div style={{width:"336px"}}>
-                    <div style={{fontWeight:"bold",marginBottom:"16px"}}>코멘트</div>
-                    {myReply.map((item,index)=>(<ReplyRender key={index} myReply={myReply} index={index} item={item}></ReplyRender>))}
-                    {myReply.length>4&&<div style={{
-                        width:"100%",
-                        height:"40px",
-                        borderBottom:"1px solid #e5e5e5",
-                        backgroundColor:"#fff",
-                        display:"flex",
-                        justifyContent:"center",
-                        alignItems:"center",
-                        fontSize:"14px",
-                        color:"#828282",
-                        cursor:"pointer"}}
-                        onClick={()=>{setFullListState("myReply")}}>모두 보기</div>}
-                </div>
-            </div>}
-            {fullListState!=="none"&&<div style={{width:"1040px",display:"flex",marginTop:"32px",flexDirection:"column"}}>
-                {fullListState==="myProducts"&&<div>
-                {myProducts.map((item,index)=>(<ProductRender key={index} item={item} type="myProduct"/>))}
-                </div>}
-                {fullListState==="likelyProduct"&&<div>
-                {myProducts.map((item,index)=>(<ProductRender key={index} item={item} type="myProduct"/>))}
-                </div>}
-                {fullListState==="myReply"&&<div>
-                {myReply.map((item,index)=>(<ReplyRender key={index} myReply={myReply} item={item}></ReplyRender>))}
-                </div>}
-                <div style={{width:"687px",height:"19px",fontSize:'13px',color:"#828282",textAlign:"center",marginTop:"24px",marginBottom:"39px"}}>여기가 끝이에요</div>
-            </div>}
+        <div id="pageBody" style={{minHeight:window.innerHeight-48,backgroundColor:"#FFFEFC"}}>
         
-        </div>}
-        </>
+        <div style={{width:"100%",backgroundColor:"#FFFEFC",display:"flex",alignItems:"center",flexDirection:"column"}}>
+            <div className="profile_header_info">
+                <div className="profile_main_myinfo">
+                    <div className="profile_main_thumbnail" style={{
+                        backgroundImage:currentUserInfo.thumbnail
+                        }}></div>
+                    <div>
+                        <div className="profile_main_nick">{currentUserInfo.nick}</div>
+                        <div className="profile_main_position">
+                            {currentUserInfo.position}{currentUserInfo.department?`,${currentUserInfo.department}`:""}
+                        </div>
+                        {/* <div className="profile_main_join">
+                            {currentUserInfo.created_at.slice(0,4)}년 {currentUserInfo.created_at.slice(5,7)}월 {currentUserInfo.created_at.slice(8,10)}일에 가입함
+                        </div> */}
+                    </div>
+                </div>
+                <div className="profile_main">
+                   <div className="profile_category"
+                   style={{color:renderList==="like"&&"#9C31C6",
+                           borderBottom:renderList==="like"&&"2px solid#9C31C6",
+                           fontWeight:renderList==="like"&&"500"}}
+                    onClick={()=>{setRenderList("like")}}>추천({productNum.like})</div>
+                   <div className="profile_category"
+                   style={{color:renderList==="make"&&"#9C31C6",
+                           borderBottom:renderList==="make"&&"2px solid#9C31C6",
+                           fontWeight:renderList==="make"&&"500"}}
+                    onClick={()=>{setRenderList("make")}}>제작({productNum.make})</div>
+                   <div className="profile_category"
+                   style={{color:renderList==="introduce"&&"#9C31C6",
+                           borderBottom:renderList==="introduce"&&"2px solid#9C31C6",
+                           fontWeight:renderList==="introduce"&&"500"}}
+                    onClick={()=>{setRenderList("introduce")}}>소개({productNum.introduce})</div>
+                   <div className="profile_category"
+                   style={{color:renderList==="comment"&&"#9C31C6",
+                           borderBottom:renderList==="comment"&&"2px solid#9C31C6",
+                           fontWeight:renderList==="comment"&&"500"}}
+                    onClick={()=>{setRenderList("comment")}}>코멘트</div>
+                </div>
+                <div style={{width:"100%",height:"1px",backgroundColor:"#c4c4c4",position:"absolute",bottom:0,left:0}}></div>
+            </div>
+            <div className="profile_main_full">
+                {renderList==="like"&&<div>
+                    {likelyProducts.map((item,index)=>(<ProductRender key={index} item={item} type="like"/>))}
+                </div>}
+                {renderList==="make"&&<div>
+                    {myProducts.map((item,index)=>(<ProductRender key={index} item={item} type="myProduct"/>))}
+                </div>}
+                {renderList==="introduce"&&<div>
+                    {myProducts.map((item,index)=>(<ProductRender key={index} item={item} type="introduceProduct"/>))}
+                </div>}
+                {renderList==="comment"&&<div>
+                    {myReply.map((item,index)=>(<ReplyRender key={index} myReply={myReply} item={item}></ReplyRender>))}
+                </div>}
+                {(productNum.like===0&&renderList==="like")&&<div className="profile_not_item">
+                    <div style={{width:"16px",height:'16px',backgroundImage:`url(${icon_profile_notItem})`,marginRight:"8px"}}></div>
+                    <div>추천한 서비스가 없습니다.</div>
+                </div>}
+                {(productNum.make===0&&renderList==="make")&&<div className="profile_not_item">
+                    <div style={{width:"16px",height:'16px',backgroundImage:`url(${icon_profile_notItem})`,marginRight:"8px"}}></div>
+                    <div>업로드한 서비스가 없습니다.</div>    
+                </div>}
+                {(productNum.introduce===0&&renderList==="introduce")&&<div className="profile_not_item">
+                    <div style={{width:"16px",height:'16px',backgroundImage:`url(${icon_profile_notItem})`,marginRight:"8px"}}></div>
+                    <div>소개한 서비스가 없습니다.</div>
+                </div>}
+                {(myReply.length===0&&renderList==="comment")&&<div className="profile_not_item">
+                    <div style={{width:"16px",height:'16px',backgroundImage:`url(${icon_profile_notItem})`,marginRight:"8px"}}></div>
+                    <div>코멘트가 없습니다.</div>
+                </div>}
+            </div>
+                        
+        </div>
+    </div>
     )
 }
 
 const AnotherUser = ()=>{
     const [loginWindow,setLoginWindow] = useState(false);
-    const [signupWindow,setSignUpWindow] = useState(false);
     const [modal,setModal] = useState(false);
-
-
-    const submitGoogleData= async(name,id,token)=>{
-        //유효성 검사
-        //let crt = document.getElementById('crt');
-        // e.preventDefault();
-        var data = new FormData();
-        data.append('name',name);
-        data.append('email',id);
-        data.append('token',token);
-        try{
-            await axios({
-                method:"post",
-                url : "https://www.proveit.co.kr/api/login.php",
-                headers: {
-                    //'Header-110': 'UxgOISh44O3eJxbKInDj3',
-                },
-                data:data
-    
-            }).then((e)=>{
-                if(e.data.ret_code === "0000"){
-                    window.localStorage.setItem("hash",e.data.hash);
-                    window.localStorage.setItem("email",id);
-                    window.localStorage.setItem("userName",name);
-                    userInfoApi(id,token);
-                    setSignUpWindow(false);
-                    setLoginWindow(false);
-    
-                }else if(e.data.ret_code ==="1000"){
-                  window.localStorage.setItem("hash",e.data.hash);
-                  window.localStorage.setItem("email",id);
-                  window.localStorage.setItem("userName",name);
-                  const alink = document.createElement("a");
-                  alink.href="/signup";
-                  alink.click();
-                }
-            })
-        }catch{
-    
-        }
-      }
-      
-      const responseGoogle = (response) => {
-        const profileObj = response.profileObj;
-        const tokenObj = response.tokenObj;
-        localStorage.setItem("googleProfile",JSON.stringify(response.profileObj));
-        localStorage.setItem("token",tokenObj.access_token);
-        submitGoogleData(profileObj.givenName,profileObj.email,tokenObj.access_token);
-      }
-    
-      
-      const userInfoApi = async(id,token)=>{
-        var data = new FormData();
-        data.append('email', id);
-        data.append('token', token);
-        data.append('type', 'select');
-        try{
-            await axios({
-                method:"post",
-                url : "https://www.proveit.co.kr/api/user.php",
-                data:data
-    
-            }).then((e)=>{
-                if(e.data.ret_code === "0000"){
-                    localStorage.setItem("userInfo",JSON.stringify(e.data.user));
-                }else{
-    
-                }
-            })
-        }catch{
-    
-        }
-      }
-
   return(
     <div style={{width:"100%",display:"flex",flexDirection:"column"}}
     onClick={()=>{setModal(false)}}>
@@ -333,16 +282,6 @@ const AnotherUser = ()=>{
     ></Header>
     <Body
     ></Body>
-
-    {loginWindow&&<LoginWindow 
-    responseGoogle={responseGoogle}
-    setLoginWindow={setLoginWindow}
-    ></LoginWindow >}
-
-    {signupWindow&&<SignupWindow 
-    responseGoogle={responseGoogle}
-    setSignUpWindow={setSignUpWindow}
-    ></SignupWindow>}
   </div>  
   )
 }

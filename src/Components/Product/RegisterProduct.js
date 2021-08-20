@@ -1,18 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import icon_logo from '../../image/logo.svg';
 import icon_like from '../../image/likeIcon.svg';
 import icon_comment from '../../image/commentIcon.svg';
 import icon_checked from '../../image/icon_checked.svg';
 import icon_dropBox from '../../image/icon_dropBox.svg';
 import icon_radioChecked from '../../image/icon_radioChecked.svg';
 import icon_radioUnChecked from '../../image/icon_radioUnChecked.svg';
-import icon_upBtn from '../../image/icon_upBtn.svg';
 import icon_noneimg from '../../image/icon_noneimg.svg';
 import icon_imgRemoveBtn from '../../image/icon_imgRemoveBtn.svg';
-import icon_likeBtn from '../../image/icon_likeBtn.svg';
 import ReactQuill from 'react-quill';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../Common/Header';
 
@@ -22,8 +18,6 @@ const Body=()=>{
       const [pageNum,setPageNum] = useState(1);
       const [dataState,setDataState] =useState(false);
       const [renderState,setRenderState] =useState(false); 
-      const imgNum = useRef(0);
-      const focusInput = useRef("");
       const [productInfo,setProductInfo] =useState({
         producerInfo:{
             department: null,
@@ -70,15 +64,7 @@ const Body=()=>{
           thumbnail:"",
           youtube:""
       });
-      const currentDate = new Date();
-      const tommowDate = new Date(currentDate.setDate(currentDate.getDate()+1));
-      const registerDate={
-          year:tommowDate.getFullYear(),
-          month:tommowDate.getDate()===1?(tommowDate.getMonth()===0?1:tommowDate.getMonth()+1):tommowDate.getMonth()+1,
-          date:tommowDate.getDate()
-      }
       const [registerState,setRegisterState] =useState(false);
-
       const [categoryWindowState,setCategoryWindowState] = useState(false);
       const [categoryNum,setCategoryNum] = useState(0);
       const [imgHover,setImgHover] = useState(0);
@@ -333,7 +319,6 @@ const Body=()=>{
                 data:data
     
             }).then((e)=>{
-                console.log(e);
                 if(e.data.ret_code === "0000"){
                     const alink = document.createElement("a");
                     alink.href="/profile";
@@ -354,7 +339,6 @@ const Body=()=>{
     }
 
     const imgUploadApi = async(img,id,num)=>{
-        console.log(num);
         var data = new FormData();
         data.append('img', img);
         try{
@@ -374,7 +358,6 @@ const Body=()=>{
                         )
                     }else{
                         if(productInfo.image.length!==6){
-                            console.log(e.data.img);
                             setProductInfo(
                                 {
                                     ...productInfo,
@@ -403,7 +386,7 @@ const Body=()=>{
     const FileUploder =(e) =>{
     e.preventDefault();
     let data = e.target;
-    if(data.files[0].type === "image/jpeg" ||data.files[0].type ===  "image/png" ||data.files[0].type ===  "image/jpg"){
+    if(data.files[0].type === "image/jpeg" ||data.files[0].type ===  "image/png" ||data.files[0].type ===  "image/jpg"||data.files[0].type ===  "image/gif"){
         if (data.files) {
             for (let i = 0; i < data.files.length; i++) {
                 let file = data.files[i];     
@@ -488,7 +471,7 @@ const Body=()=>{
     }
       return(
           <>
-          {renderState&&<div id="pageBody"  style={{width:"100%",height:'100%',backgroundColor:"#F9F9F9",display:"flex",justifyContent:"center",paddingTop:"40px"}}
+          {renderState&&<div id="pageBody"  style={{width:"100%",height:'100%',backgroundColor:"#F9F9F9",display:"flex",justifyContent:"center",paddingTop:"40px",paddingBottom:"40px"}}
           onClick={()=>{setCategoryWindowState(false);}}>
               <div className="register_body">
                   <div className="register_data_input">
@@ -679,7 +662,6 @@ const Body=()=>{
                                             onFocus={()=>{
                                                 const focustDiv = document.querySelector(".quillInput");
                                                 focustDiv.style.border="1px solid rgba(156,49,198,0.3)";
-                                                console.log("d");
                                             }} 
                                             onBlur={()=>{
                                                 const focustDiv = document.querySelector(".quillInput");

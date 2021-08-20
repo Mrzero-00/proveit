@@ -10,7 +10,7 @@ import { Helmet } from 'react-helmet';
 
 const Body = ()=>{
     return(
-        <div id="pageBody" style={{backgroundColor:"#f9f9f9",height:"100%",minHeight:window.innerHeight-48}}>
+        <div id="pageBody" style={{backgroundColor:"#f9f9f9",height:"100%",minHeight:window.innerHeight-96}}>
             {window.location.pathname ==="/tos"&&<div style={{display:"flex",justifyContent:"center"}}>
             <div style={{textAlign:"left",width:"1040px",color:"#505050"}}>
             <div style={{fontSize:"24px",fontWeight:"bold",marginBottom:"45px",marginTop:"40px"}}>이용약관</div>
@@ -295,37 +295,7 @@ const Body = ()=>{
                 </div>
             </div>
             </div>}
-            {window.location.pathname ==="/guideline"&&<div style={{display:"flex",justifyContent:"center",flexDirection:"column",alignItems:'center',height:"100%"}}>
-                <div style={{width:'1040px',height:"24px",display:"flex",fontSize:"24px",lineHeight:"24px",marginRight:"8px",marginTop:"48px"}}>프루브잇 커뮤니티 가이드라인<div style={{backgroundImage:`url(${icon_guide})`,width:'24px',height:"24px"}}></div></div>
-                <div style={{textAlign:"left",width:"1040px",height:"664px",fontSize:"15px",color:"#505050",backgroundColor:"#fff",padding:"40px 48px 40px 48px",marginTop:"40px"}}>
-                    <div style={{marginBottom:"20px"}}>
-                        <div style={{fontSize:'20px',fontWeight:"bold",marginBottom:"8px"}}>긍정적인 커뮤니케이션을 해요</div>
-                        <div style={{marginBottom:"4px"}}>커뮤니티의 건강한 토론과 의견 전달을 방해하고, 감정을 상하게 하는 부정적인 커뮤니케이션은 지양해 주세요.</div>
-                        <li style={{marginBottom:"4px"}}>나쁜 예 : 이거 너무 별로에요 / 되는 게 하나도 없네요. / 아무도 안쓸 것 같아요.</li> 
-                        <li style={{marginBottom:"4px"}}>좋은 예 : 로그인 버튼을 찾기가 조금 힘들어요. 좀 더 잘 보이는 곳에 있었으면 좋겠어요! / 아이디어가 좋네요! 혹시 게시글 기능 업데이트가 예정되어 있나요?</li>
-                    </div>
-                    <div style={{marginBottom:"20px"}}>
-                        <div style={{fontSize:'20px',fontWeight:"bold",marginBottom:"8px"}}>제작자들을 응원해주세요</div>
-                        <div style={{marginBottom:"4px"}}>서비스를 경험해보시고, 특별한 서비스라고 느껴지시면 응원의 댓글을 달아주세요. 응원의 한마디가 더 좋은 서비스를 만들 수 있는 힘이 됩니다.</div>
-                    </div>
-                    <div style={{marginBottom:"20px"}}>
-                        <div style={{fontSize:'20px',fontWeight:"bold",marginBottom:"8px"}}>추천을 요청하기보다 서비스 소개를 충실히 해주세요.</div>
-                        <li style={{marginBottom:"4px"}}>서비스를 등록할 땐 서비스를 만든 이유, 서비스의 특징, 서비스 이미지 등을 잘 입력해 주세요. 서비스 소개를 충실히 할 수록 사용자들의 질문과 토론할 것이 많아져요. 
-                        서비스 소개 텍스트 영역의 공간이 부족하다면, 첫번째 댓글로 사용자들에게 추가적인 정보를 알려주세요.</li>
-                        <li style={{marginBottom:"4px"}}>사람들에게 추천을 요청하기보다는 서비스 소개를 충실히 해서 자발적 추천을 유도해주세요.</li>
-                    </div>
-                    <div style={{marginBottom:"20px"}}>
-                        <div style={{fontSize:'20px',fontWeight:"bold",marginBottom:"8px"}}>내가 등록한 서비스에 달린 답글에 반응해주세요.</div>
-                        <div>여러분의 서비스에 관심있는 사용자가 제작자에게 질문을 하거나 의견을 줄 수 있습니다. 꼼꼼한 답변을 추천드려요. 더 나은 피드백 경험과 서비스 아이디어를 얻으실 수 있을 거에요.</div>
-                    </div>
-                    <div style={{marginBottom:"20px"}}>
-                        <div style={{fontSize:'20px',fontWeight:"bold",marginBottom:"8px"}}>아래와 같은 서비스나 댓글은 통보 없이 삭제될 수 있습니다.</div>
-                        <li style={{marginBottom:"4px"}}>불법이나 사행성 서비스, 일반적인 상품 판매 페이지, 행사 이벤트 및 모집 페이지, 뉴스 기사, 블로그 포스트 등 단순 텍스트 페이지 등 사용자가 
-                        서비스나 제품을 경험해보거나 판단하기 어려운 단순 정보 페이지</li>
-                        <li>타인에 대한 위협, 모욕, 방해, 성가신 행동 및 괴롭힘, 연령, 성적 취향, 성별, 민족, 인종, 종교 또는 장애에 근거한 고의적인 차별과 혐오 표현이 포함된 서비스 소개나 댓글</li>
-                    </div>
-                </div>
-            </div>}
+            
         </div>
     )
 }

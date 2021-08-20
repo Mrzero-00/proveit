@@ -17,6 +17,7 @@ const SignUp = ()=>{
     const [privacyWindow,setPrivacyWindow] =useState(false);
     const [termsOfServiceWindow,setTermsOfService] =useState(false);
     const [historyBack,setHistoryBack] =useState(false);
+    const [nickCheck,setNickCheck] = useState(false);
     const [currentImg,setCurrentImg] = useState(JSON.parse(localStorage.getItem("googleProfile")).imageUrl);
     const [currentUserInfo,setCurrnetUserInfo] =useState({
         nick:"",
@@ -375,30 +376,49 @@ const SignUp = ()=>{
         }
       }
 
-      const FileUploder =(e) =>{
-        e.preventDefault();
-        let data = e.target;
-        if(data.files[0].type === "image/jpeg" ||data.files[0].type ===  "image/png" ||data.files[0].type ===  "image/jpg"){
-            if (data.files) {
-            for (let i = 0; i < data.files.length; i++) {
-                let file = data.files[i];           
-                    let fileSize = file.size;
-                    fileSize *= 1;
-                    if(fileSize <= 10000000){
-                        setCurrentImg(window.URL.createObjectURL(file));
-                        setImgFile(data.files[0]);
-                    }else{
-                        alert("파일 크기가 너무 큽니다.");
-                    }
+    const FileUploder =(e) =>{
+    e.preventDefault();
+    let data = e.target;
+    if(data.files[0].type === "image/jpeg" ||data.files[0].type ===  "image/png" ||data.files[0].type ===  "image/jpg"||data.files[0].type ===  "image/gif"){
+        if (data.files) {
+        for (let i = 0; i < data.files.length; i++) {
+            let file = data.files[i];           
+                let fileSize = file.size;
+                fileSize *= 1;
+                if(fileSize <= 10000000){
+                    setCurrentImg(window.URL.createObjectURL(file));
+                    setImgFile(data.files[0]);
+                }else{
+                    alert("파일 크기가 너무 큽니다.");
                 }
-                }
+            }
+            }
+    }
+    else{
+        alert("해당 파일은 사용할 수 없습니다.");
+    } 
+    //input 내부 값 초기화
+    e.target.value = "";
+    }
+
+    const nickNameCheck =(str)=>{
+        var pattern_num = /[0-9]/;	// 숫자 
+    	var pattern_spc = /[~!@#$%^&*()_+|<>?:{}]/; // 특수문자
+
+    	if(pattern_num.test(str)){
+            console.log("숫자");
+            setNickCheck(true);
+    	}else if(pattern_spc.test(str)){
+            console.log("특수문자");
+            setNickCheck(true);
+    	}else{
+            setNickCheck(false);
         }
-        else{
-            alert("해당 파일은 사용할 수 없습니다.");
-        } 
-        //input 내부 값 초기화
-        e.target.value = "";
-        }
+    }
+    
+    useEffect(()=>{
+        nickNameCheck(currentUserInfo.nick);
+    },[currentUserInfo])
 
         window.history.pushState(null,"",window.location.href);
 
@@ -406,12 +426,15 @@ const SignUp = ()=>{
             window.history.go(1);
             setHistoryBack(true);
         }
+
+
   return(
       <>
       {renderState&&
         <div style={{
             backgroundColor:"#F9F9F9",
             display:"flex",
+            height: "100%",
             flexDirection:"column",
             alignItems:"center",
             position: "relative",
@@ -451,7 +474,10 @@ const SignUp = ()=>{
                             </div>
                         </div>
                         <div style={{textAlign:"left"}}>
-                            <div style={{fontWeight:"bold",fontSize:'14px',height:'14px',lineHeight:"14px",marginBottom:"10px",textAlign:"left"}}>닉네임</div>
+                            <div style={{display:"flex",alignItems:"center",marginBottom:"10px"}}>
+                                <div style={{fontWeight:"bold",fontSize:'14px',height:'14px',lineHeight:"14px",textAlign:"left"}}>닉네임</div>
+                                {nickCheck&&<div style={{marginLeft:"8px",fontSize:13,height:"14px",lineHeight:"14px",color:"#EA4335",fontWeight:500}}>닉네임은 한글 또는 알파벳으로 입력해 주세요</div>}
+                            </div>
                             <input name="nick" placeholder="입력하지 않으면 구글 계정명으로 표시됩니다." value={currentUserInfo.nick} onChange={inputLogic}
 
 
@@ -504,10 +530,11 @@ const SignUp = ()=>{
                     </div>
                 </div>
 
-                <div style={{width:"100%",display:"flex",justifyContent:"center",position:"relative"}}>
-                    <div className="btn_one" style={{width:"104px",height:'32px',marginBottom:'24px'}}
+                <div style={{width:"100%",display:"flex",flexDirection:"column",alignItems:"center",position:"relative"}}>
+                    <div className="btn_one" style={{width:"104px",height:'32px',marginBottom:"32px"}}
                     onClick={(e)=>{userInfoApi();}}>가입 완료</div>
-                    {(currentUserInfo.position===""||!checkState1)&&<div className="btn_one_disible" style={{width:"104px",height:'32px',top:"0px",position:'absolute'}}>가입 완료</div>}
+                    {(currentUserInfo.position===""||!checkState1||nickCheck)&&<div className="btn_one_disible" style={{width:"104px",height:'32px',bottom:"0px",position:'absolute'}}>가입 완료</div>}
+                    
                 </div>
                 {(privacyWindow||termsOfServiceWindow)&&<div style={{width:"100%",height:"100%",position:'absolute',top:"0px",left:"0px",backgroundColor:"rgba(80,80,80,0.8)",display:"flex",flexDirection:"column",alignItems:"center",paddingTop:"80px"}} onClick={()=>{setPrivacyWindow(false);setTermsOfService(false)}}>
                     <div style={{width:"1040px",height:"80vh",backgroundColor:"#fff",overflow:"scroll",overflowX:"hidden"}}>

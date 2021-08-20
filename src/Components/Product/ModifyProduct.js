@@ -1,18 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect,useState } from 'react';
 
-import icon_logo from '../../image/logo.svg';
 import icon_like from '../../image/likeIcon.svg';
 import icon_comment from '../../image/commentIcon.svg';
 import icon_checked from '../../image/icon_checked.svg';
 import icon_dropBox from '../../image/icon_dropBox.svg';
 import icon_radioChecked from '../../image/icon_radioChecked.svg';
 import icon_radioUnChecked from '../../image/icon_radioUnChecked.svg';
-import icon_upBtn from '../../image/icon_upBtn.svg';
 import icon_noneimg from '../../image/icon_noneimg.svg';
 import icon_imgRemoveBtn from '../../image/icon_imgRemoveBtn.svg';
-import icon_likeBtn from '../../image/icon_likeBtn.svg';
 import ReactQuill from 'react-quill';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../Common/Header';
 
@@ -380,7 +376,7 @@ const Body=()=>{
     const FileUploder =(e) =>{
     e.preventDefault();
     let data = e.target;
-    if(data.files[0].type === "image/jpeg" ||data.files[0].type ===  "image/png" ||data.files[0].type ===  "image/jpg"){
+    if(data.files[0].type === "image/jpeg" ||data.files[0].type ===  "image/png" ||data.files[0].type ===  "image/jpg"||data.files[0].type ===  "image/gif"){
         if (data.files) {
         for (let i = 0; i < data.files.length; i++) {
             let file = data.files[i];           

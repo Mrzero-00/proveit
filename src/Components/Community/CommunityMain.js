@@ -9,8 +9,8 @@ import RightBar from '../Common/RightBar';
 import SignupWindow from '../Common/SignupWindow';
 
 import icon_like from '../../image/likeIcon.svg';
-import icon_like_m from '../../image/likeIcon_m.svg';
 import icon_community_title_icon from '../../image/icon_community_title_icon.png';
+import icon_community_category_1 from '../../image/icon_community_category_1.png';
 import icon_community_category_2 from '../../image/icon_community_category_2.png';
 import icon_community_category_3 from '../../image/icon_community_category_3.png';
 import icon_community_category_4 from '../../image/icon_community_category_4.png';
@@ -19,6 +19,13 @@ import ReactQuill from 'react-quill';
 const Body =({setLoginWindow})=>{
   const [sortState,setSortState] = useState(true);
   const [categoryState,setCategoryState] = useState(0);
+  const [categoryWindow,setCategoryWindow] =useState(false);
+  const categoryList =[
+    {id:0,text:"전체보기",icon:icon_community_category_1},
+    {id:1,text:"궁금합니다",icon:icon_community_category_2},
+    {id:2,text:"피드백 요청",icon:icon_community_category_3},
+    {id:3,text:"기타",icon:icon_community_category_4},
+  ]
   const [community,setCommunity] = useState([
     {
       id:0,
@@ -31,6 +38,30 @@ const Body =({setLoginWindow})=>{
       ago_time:""}
   ]);
 
+  const popularLogic =(array)=>{
+    const currentArray = array;
+    const length = array.length;
+    let tmp = null;
+    for (let i = 0; i < length; i++) {
+      for (let j = 0; j < length-1; j++) {
+        if (currentArray[j].like_count*1 < currentArray[j+1].like_count*1) {
+          tmp = currentArray[j];
+          currentArray[j] = currentArray[j + 1];
+          currentArray[j + 1] = tmp;
+          tmp = null;
+        }else if(currentArray[j].like_count*1===currentArray[j+1].like_count*1){
+          tmp = currentArray[j];
+          currentArray[j] = currentArray[j + 1];
+          currentArray[j + 1] = tmp;
+          tmp = null;
+        }
+      }
+      if(i+1 === length){
+        setCommunity(currentArray);
+      }
+    }
+  }
+
   const communityListGetApi = async()=>{
     let data = new FormData();
     data.append("type","list");
@@ -41,7 +72,7 @@ const Body =({setLoginWindow})=>{
               data
           }).then((e)=>{
               if(e.data.ret_code === "0000"){
-                setCommunity(e.data.list);
+                popularLogic(e.data.list);
               }
           })
       }catch{
@@ -54,14 +85,13 @@ const Body =({setLoginWindow})=>{
       let iconImg;
       if(item.category ==="궁금합니다"){
         iconImg= icon_community_category_2;
-      }else if(item.category ==="피드백을 부탁드립니다"){
+      }else if(item.category ==="피드백 요청"){
         iconImg= icon_community_category_3;
-      }else if(item.category ==="도와주세요"){
+      }else if(item.category ==="기타"){
         iconImg= icon_community_category_4;
       }
       return iconImg;
     }
-    const [categoryRender,setCategoryRender] = useState("");
 
     let icon = iconImg(item);
     useEffect(()=>{
@@ -69,7 +99,6 @@ const Body =({setLoginWindow})=>{
 
       }
     },[categoryState])
-
     return(
       <div style={{width:"100%"}}>
         {categoryState===0&&<Link to={`/communityitem?id=${item.id}`}>
@@ -83,14 +112,14 @@ const Body =({setLoginWindow})=>{
               backgroundImage:`url(${item.thumbnail})`,
               backgroundRepeat:"no-repeat",
               backgroundPosition:"center",
+              backgroundSize:"cover",
               borderRadius:"50%",
               backgroundColor:"#000",
               }}></div>
-            <div>{item.nick}</div>
+            <div style={{color:"#A5A5A5",fontSize:"14px"}}>{item.nick}</div>
           </div>
           <div className="community_item_title">{item.title}</div>
           <ReactQuill className="community_item_text"
-              placeholder="내용을 입력해주세요."
               value={item.contents}
               readOnly
               style={{height:"32px",backgroundColor:"transparent"}} theme=""></ReactQuill>
@@ -100,7 +129,7 @@ const Body =({setLoginWindow})=>{
             <div style={{width:'12px',height:'12px',backgroundImage:`url(${icon})`,marginRight:'8px',backgroundSize:"cover"}}></div>
             <div style={{marginRight:"4px"}}>{item.category}</div>
             <div style={{marginRight:"4px"}}>·</div>
-            <div style={{marginRight:"4px"}}>{item.ago_time}</div>
+            <div style={{marginRight:"4px"}}>{item.ago_time} {item.updated}</div>
             <div style={{marginRight:"4px"}}>·</div>
             <div style={{color:"#9C31C6"}}>{`${item.reply_count}개의 댓글`}</div>
           </div>
@@ -118,6 +147,7 @@ const Body =({setLoginWindow})=>{
               backgroundImage:`url(${item.thumbnail})`,
               backgroundRepeat:"no-repeat",
               backgroundPosition:"center",
+              backgroundSize:"cover",
               borderRadius:"50%",
               backgroundColor:"#000",
               }}></div>
@@ -142,7 +172,7 @@ const Body =({setLoginWindow})=>{
         </div>
       </Link>
         }
-        {(categoryState===2&&item.category ==="피드백을 부탁드립니다")&&<Link to={`/communityitem?id=${item.id}`}>
+        {(categoryState===2&&item.category ==="피드백 요청")&&<Link to={`/communityitem?id=${item.id}`}>
         <div className="community_item">
           <div className="community_item_header"
           >
@@ -177,7 +207,7 @@ const Body =({setLoginWindow})=>{
         </div>
       </Link>
         }
-        {(categoryState===3&&item.category ==="도와주세요")&&<Link to={`/communityitem?id=${item.id}`}>
+        {(categoryState===3&&item.category ==="기타")&&<Link to={`/communityitem?id=${item.id}`}>
         <div className="community_item">
           <div className="community_item_header"
           >
@@ -216,23 +246,102 @@ const Body =({setLoginWindow})=>{
     )
   }
 
+  const fastestLogic =(array)=>{
+    const currentArray = array;
+    const length = array.length;
+    let tmp = null;
+    for (let i = 0; i < length; i++) {
+      for (let j = 0; j < length-1; j++) {
+        if (currentArray[j].id*1 < currentArray[j+1].id*1) {
+          tmp = currentArray[j];
+          currentArray[j] = currentArray[j + 1];
+          currentArray[j + 1] = tmp;
+          tmp = null;
+        }
+      }
+      if(i+1 === length){
+        setCommunity(currentArray);
+      }
+    }
+  }
+
+  const CategoryWindowRender =({item,setCategoryState,categoryState,setCategoryWindow})=>{
+    return(
+      <div 
+        style={{
+          display:"flex",
+          alignItems:"center",
+          backgroundColor:categoryState===item.id?"#FAF3F9":"#fff",
+          height:"40px",
+          lineHeight:"40px",
+          paddingLeft:"16px"
+          }}
+          onClick={()=>{setCategoryState(item.id);setCategoryWindow(false);}} 
+          >
+        <div style={{width:"16px",height:"16px",minWidth:'16px',minHeight:"16px",backgroundImage:`url(${item.icon})`,backgroundSize:"cover",marginRight:"8px"}}></div>
+        <div style={{fontSize:"13px"}}>{item.text}</div>
+      </div>
+    )
+  }
+
+
     useEffect(()=>{
       communityListGetApi();
-    },[])
+    },[]);
+
   return(
-      <div id="pageBody" className="blogMain_body">
-          <div className="community_header">
-              <div className="community_title">커뮤니티<div className="blogMain_title_icon" style={{backgroundImage:`url(${icon_community_title_icon})`}}></div></div>
+      <div id="pageBody" className="blogMain_body" style={{paddingBottom:"56px"}}
+      onTouchMove={()=>{setCategoryWindow(false)}}>
+          <div className="community_header_main">
+              <div className="community_title">토론-토<div className="blogMain_title_icon" style={{backgroundImage:`url(${icon_community_title_icon})`}}></div>
+              </div>
+              <div className="comuunity_header_phone">
+              <div className="comuunity_header_text">
+                자신이 만든 서비스에 관해 질문을 하거나 받거나, 
+                스타트업/서비스 관련 노하우와 정보를 공유하거나 토론할 수 있습니다. 
+                커뮤니티 내에서는 상대방을 배려하는 태도를 보여주세요. 👍
+              </div>
+              <div className="btn_one_big" style={{width:"152px",height:"40px",borderRadius:"8px",fontSize:"14px"}}
+                onClick={()=>{
+                  if(localStorage.getItem("hash")){
+                    const alink = document.createElement("a");
+                    alink.href = "/community_add";
+                    alink.click();
+                  }else{
+                      setLoginWindow(true);
+                  }
+                }}>새로운 토론 생성</div>
+                </div>
           </div>
           <div className="community_contents">
-            <div style={{position:"absolute",top:"-30px",left:"0px",display:"flex",fontSize:"14px",height:"14px",alignItems:"center"}}>
-              <div style={{cursor:"pointer",fontWeight:sortState&&"bold"}}
-              onClick={()=>{setSortState(true)}}>추천순</div>
-              <div style={{marginLeft:"4px",marginRight:"4px"}}>|</div>
-              <div style={{cursor:"pointer",fontWeight:!sortState&&"bold"}}
-              onClick={()=>{setSortState(false)}}>최신순</div>
-            </div>
             <div>
+              <div className="community_contents_sort">
+                <div style={{display:"flex"}}>
+                  <div style={{cursor:"pointer",fontWeight:sortState&&"bold"}}
+                  onClick={()=>{setSortState(true);popularLogic(community);}}>추천순</div>
+                  <div style={{marginLeft:"4px",marginRight:"4px"}}>|</div>
+                  <div style={{cursor:"pointer",fontWeight:!sortState&&"bold"}}
+                  onClick={()=>{setSortState(false);fastestLogic(community);}}>최신순</div>
+                </div>
+                <div className="community_contetns_category">
+                  <div style={{width:"100%",position:"relative",display:"flex",flexDirection:"row-reverse",alignItems:"center"}}>
+                    <div style={{width:"20px",height:"20px",backgroundImage:`url(${icon_like})`,transform:"rotate(180deg)",backgroundSize:"cover"}}
+                     onClick={(e)=>{setCategoryWindow(!categoryWindow);}}></div>
+                    {categoryWindow&&<div style={{
+                      position:"absolute",
+                      top:"40px",
+                      right:"0px",
+                      width:"100%",
+                      boxShadow:"0px 4px 4px rgba(0,0,0,.25)",
+                      borderRadius:"4px",
+                      border:"1px solid #f1f1f1"}}>
+                      {categoryList.map((item)=>(<CategoryWindowRender item={item} key={item.id} setCategoryState={setCategoryState}
+                      categoryState={categoryState} setCategoryWindow={setCategoryWindow}></CategoryWindowRender>))}
+                    </div>}
+                    <div style={{marginRight:"8px"}}  onClick={(e)=>{setCategoryWindow(!categoryWindow);}}>{categoryList[categoryState].text}</div>
+                  </div>
+                  </div>
+              </div>
               {community.map((item)=>(<CommunityRender item={item} categoryState={categoryState}></CommunityRender>))}
             </div>
               <RightBar setLoginWindow={setLoginWindow} setCategoryState={setCategoryState} categoryState={categoryState}></RightBar>

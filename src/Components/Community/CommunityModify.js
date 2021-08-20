@@ -4,12 +4,9 @@ import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import Header from '../Common/Header';
 import LoginWindow from '../Common/LoginWindow';
-import RightBar from '../Common/RightBar';
 import SignupWindow from '../Common/SignupWindow';
 
 import icon_like from '../../image/likeIcon.svg';
-import icon_like_m from '../../image/likeIcon_m.svg';
-import icon_community_qa from '../../image/icon_community_qa.png';
 import icon_community_category_1 from '../../image/icon_community_category_1.png';
 import icon_community_category_2 from '../../image/icon_community_category_2.png';
 import icon_community_category_3 from '../../image/icon_community_category_3.png';
@@ -34,8 +31,8 @@ const Body =()=>{
     const categoryList = [
         {id:0,text:"선택해주세요",icon:icon_community_category_1},
         {id:1,text:"궁금합니다",icon:icon_community_category_2},
-        {id:2,text:"피드백을 부탁드립니다",icon:icon_community_category_3},
-        {id:3,text:"도와주세요",icon:icon_community_category_4}
+        {id:2,text:"피드백 요청",icon:icon_community_category_3},
+        {id:3,text:"기타",icon:icon_community_category_4}
     ]
     const communityItemGetApi = async()=>{
         let data = new FormData();
@@ -54,10 +51,10 @@ const Body =()=>{
                             case "궁금합니다":
                                 setCategoryNum(1);
                                 break;
-                            case "피드백을 부탁드립니다":
+                            case "피드백 요청":
                                 setCategoryNum(2);
                                 break;
-                            case "도와주세요":
+                            case "기타":
                                 setCategoryNum(3);
                                 break;
                             default:
@@ -115,7 +112,6 @@ const Body =()=>{
                 data
         
             }).then((e)=>{
-                console.log(e);
                 if(e.data.ret_code === "0000"){
                     const alink = document.createElement("a");
                     alink.href = '/community';
@@ -131,16 +127,17 @@ const Body =()=>{
         communityItemGetApi();
     },[])
   return(
+
       <>
-      {render&&<div id="pageBody" className="blogMain_body"
+      {render&&<div id="pageBody" className="blogMain_body" style={{paddingBottom:"56px"}}
       onClick={()=>{setCategoryModal(false)}}>
-          <div className="community_header">
+          <div className="community_header_write">
               <div className="community_title">커뮤니티<div className="blogMain_title_icon" style={{backgroundImage:`url(${icon_community_title_icon})`}}></div></div>
           </div>
           <div className="community_body">
-            <div>
+            <div className="community_add_body">
                 <div className="community_add_window">
-                    <div className="community_item_header"
+                    <div className="community_add_header"
                     style={{marginBottom:"18px"}}>
                         <div style={{
                         width:"40px",
@@ -194,8 +191,8 @@ const Body =()=>{
                             </div>}
                     </div>
                 </div>
-                <div style={{marginTop:'16px',display:"flex",width:"688px",justifyContent:"space-between",alignItems:"center"}}>
-                    <div className="btn_three" style={{width:"104px",height:'40px',minWidth:"104px",maxWidth:"104px"}}>취소</div>
+                <div style={{marginTop:'16px',display:"flex",width:"100%",justifyContent:"space-between",alignItems:"center"}}>
+                <Link to="/community"><div className="btn_three" style={{width:"104px",height:'40px',minWidth:"104px",maxWidth:"104px"}}>취소</div></Link>
                     {addState&&<div style={{width:"100%",textAlign:"right",marginRight:"16px",color:"#ea4335",fontSize:'13px'}}>항목을 빠짐없이 입력해 주세요.</div>}
                     <div className="btn_one" style={{width:"104px",height:'40px',minWidth:"104px",maxWidth:"104px"}}
                     onClick={()=>{

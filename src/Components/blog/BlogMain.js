@@ -79,7 +79,7 @@ const Body =()=>{
     return(
         <div id="pageBody" className="blogMain_body">
             <div className="blogMain_header">
-                <div className="blogMain_title">리뷰 중독자 <div className="blogMain_title_icon" style={{backgroundImage:`url(${icon_review_title})`}}></div></div>
+                <div className="blogMain_title">매거진 <div className="blogMain_title_icon" style={{backgroundImage:`url(${icon_review_title})`}}></div></div>
                 <div className="blogMain_subtitle">새로 업로드 된 서비스 리뷰부터 인터뷰, 스타트업에 유용한 칼럼까지 다양한 정보를 공유합니다.</div>
             </div>
             <div className="blogMain_contents">

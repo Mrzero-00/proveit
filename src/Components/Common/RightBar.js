@@ -3,7 +3,6 @@ import axios from 'axios';
 import intro from '../../image/intro.pdf';
 import icon_reviewer from '../../image/icon_reviewer.svg';
 import icon_fire from '../../image/icon_fire.svg';
-import icon_rightbar_likecount from '../../image/icon_rightbar_likecount.svg';
 
 import icon_community_1 from '../../image/icon_community_1.png';
 import icon_community_2 from '../../image/icon_community_2.png';
@@ -43,7 +42,6 @@ const WeekServiceRender =({item})=>{
 const RightBar = ({setLoginWindow,categoryState,setCategoryState})=>{
     const [header,setHeader] = useState(false);
     const [pageNum,setPageNum] = useState(0);
-    const [communityCategoryNum,setCommunityCategoryNum] =useState(0)
     const [reviewList,setReviewList] = useState([
         {id:0,thumbnail:"",title:"",like_count:0}
       ])
@@ -135,9 +133,9 @@ const RightBar = ({setLoginWindow,categoryState,setCategoryState})=>{
           <div>
             <div style={{width:"100%"}}></div>
             <div style={{width:"336px",marginBottom:"32px"}}>
-            <div style={{fontWeight:"bold",marginBottom:"16px",color:"#505050",fontSize:'14px',lineHeight:"30px",height:"30px",display:"flex",alignItems:"center"}}>
+            <div style={{fontWeight:"bold",marginBottom:"16px",color:"#505050",fontSize:'14px',lineHeight:"20px",height:"20px",display:"flex",alignItems:"center"}}>
               <div style={{width:"14px",minWidth:"14px",minHeight:'14px',height:"14px",backgroundImage:`url(${icon_reviewer})`,marginRight:"4px",backgroundPosition:"center",backgroundSize:"cover"}}></div>
-              <Link to="/proreviewer">리뷰 중독자</Link>
+              <Link to="/proreviewer">매거진</Link>
             </div>
             {reviewList.map((item,index)=>(<ReviewRender item={item} index={index} key={item.id}></ReviewRender>))}
             </div>
@@ -148,7 +146,7 @@ const RightBar = ({setLoginWindow,categoryState,setCategoryState})=>{
             {weekRanking.map((item)=>(<WeekServiceRender item={item} key={item.id}></WeekServiceRender>))}
             <div style={{marginLeft:"20px",marginTop:"32px"}}>
               <div style={{display:"flex"}}>
-                <div><a href={intro} target="_blank">소개</a></div>
+                <div><Link to="/introduce">소개</Link></div>
                 <div style={{marginLeft:"4px",marginRight:'4px'}}>·</div>
                 <div><Link to="/guideline">커뮤니티 가이드라인</Link></div>
               </div>
@@ -169,11 +167,19 @@ const RightBar = ({setLoginWindow,categoryState,setCategoryState})=>{
         position:header&&"fixed",
         margin:"0 auto",
         transition:"0s",
+        marginTop:"40px",
         display:"flex",
         marginLeft:"16px"}}>
           <div style={{width:"100%"}}>
           <div className="community_item_category"
-          onClick={()=>{setCategoryState(0)}}>
+            onClick={()=>{
+              if(window.location.pathname==="/communityitem"){
+                const alink = document.createElement("a");
+                alink.href = '/community';
+                alink.click();
+              }else{
+                setCategoryState(0)
+              }}}>
             <div style={{width:"16px",height:'16px',backgroundImage:`url(${icon_community_1})`,marginRight:"8px"}}></div>
             <div style={{color:categoryState===0&&"#9C31C6",fontWeight:categoryState===0&&"bold"}}>전체보기</div>
           </div>
@@ -199,7 +205,7 @@ const RightBar = ({setLoginWindow,categoryState,setCategoryState})=>{
                 setCategoryState(2)
               }}}>
             <div style={{width:"16px",height:'16px',backgroundImage:`url(${icon_community_3})`,marginRight:"8px"}}></div>
-            <div style={{color:categoryState===2&&"#9C31C6",fontWeight:categoryState===2&&"bold"}}>피드백을 부탁드립니다</div>
+            <div style={{color:categoryState===2&&"#9C31C6",fontWeight:categoryState===2&&"bold"}}>피드백 요청</div>
           </div>
           <div className="community_item_category"
             onClick={()=>{
@@ -211,7 +217,7 @@ const RightBar = ({setLoginWindow,categoryState,setCategoryState})=>{
                 setCategoryState(3)
               }}}>
             <div style={{width:"16px",height:'16px',backgroundImage:`url(${icon_community_4})`,marginRight:"8px"}}></div>
-            <div style={{color:categoryState===3&&"#9C31C6",fontWeight:categoryState===3&&"bold"}}>도와주세요</div>
+            <div style={{color:categoryState===3&&"#9C31C6",fontWeight:categoryState===3&&"bold"}}>기타</div>
           </div>
           <div style={{width:"336px",padding:"16px",border:"1px solid #f1f1f1",borderRadius:"8px",color:"#9C31C6",marginBottom:"16px"}}>
             자신이 만든 서비스에 관해 질문을 하거나 받거나, 
@@ -230,7 +236,7 @@ const RightBar = ({setLoginWindow,categoryState,setCategoryState})=>{
           }}>새로운 토론 생성</div>
           <div style={{marginLeft:"20px",marginTop:"16px"}}>
               <div style={{display:"flex"}}>
-                <div><a href={intro} target="_blank">소개</a></div>
+                <div><Link to="/introduce">소개</Link></div>
                 <div style={{marginLeft:"4px",marginRight:'4px'}}>·</div>
                 <div><Link to="/guideline">커뮤니티 가이드라인</Link></div>
               </div>

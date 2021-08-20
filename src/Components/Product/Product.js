@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import icon_commentModify from '../../image/icon_commentModify.png';
 import icon_like_off from '../../image/icon_like_off.svg';
 import icon_like_on from '../../image/icon_like_on.svg';
@@ -29,7 +29,6 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
     const [currentComment,setCurrentComment] = useState("");
     const [rerender,setRerender] =useState(false);
     const [copyState,setCopyState] =useState(false);
-    const [touchState,setTouchState] = useState(false);
     const [deviceWidth,setDeviceWidth] = useState(0);
     const [product,setProduct] =useState({
         id:0,
@@ -117,7 +116,6 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
     }
 
     const ImageMainArray =({item,product,imgNum,phoneState,deviceWidth})=>{
-        const url = item.imageUrl;
         const height = (deviceWidth/1280)*720;
         return(
             <div>
@@ -265,7 +263,7 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                     >
                 </div>
                 </Link>
-                <div>
+                <div style={{width:"100%"}}>
                     <div style={{display:"flex"}}>
                     <Link to={item.user_email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${item.user_id}`}><div style={{fontWeight:"bold",marginBottom:'8px',height:"14px",lineHeight:"14px",marginRight:"4px",fontSize:'14px',color:"#505050"}}>{item.nick}</div></Link>
                         {(item.user_email ===product.email&&product.make_by==="true")&&<div style={{color:'#9c31c6',lineHeight:"16px",height:"16px",fontSize:'10px',textAlign:"center",width:"48px",borderRadius:"8px",backgroundColor:"#f1f1f1"}}>제작자</div>}
@@ -277,22 +275,22 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                         value={item.reply} style={{textAlign:"left",color:"#505050",fontSize:'14px',width:"100%"}}
                         ></ReactQuill>
                     </div>}
-                    {modifyState&&<div style={{width:"100%",display:"flex",marginBottom:"16px"}}>
+                    {modifyState&&<div className="comment_modify">
                        <ReactQuill className="quillInput" theme=""
                         value={modifyText} style={{
                             textAlign:"left",
                             color:"#505050",
                             fontSize:'14px',
-                            width:"474px",
+                            width:"100%",
                             minHeight:"84px",
                             borderRadius:"2px",
                             marginRight:"8px",
                             padding:"16px"}}
                         onChange={(e)=>{setModifyText(e)}}></ReactQuill>
-                        <div>
+                        <div className="comment_modify_btn">
                             <div className="btn_one" style={{width:"78px",height:"40px",marginBottom:"8px"}}
                             onClick={()=>{depthReplyModifyApi()}}>확인</div>
-                            <div className="btn_four" style={{width:"78px",height:"40px"}}
+                            <div className="btn_four" style={{width:"78px",height:"40px",marginRight:"8px"}}
                             onClick={()=>{setModifyState(false)}}>취소</div>
                         </div>
                     </div>}
@@ -326,23 +324,11 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                             </div>}    
                         </div>}
                     </div>}
-                    {replyWindow&&<div style={{display:"flex",paddingBottom:"16px"}}>
-                        <ReactQuill className="quillInput product_item_comment_submitbtn" theme="" placeholder="의견이나 궁금한 점을 남겨보세요"
-                            value={replyText} style={{
-                                textAlign:"left",
-                                color:"#505050",
-                                fontSize:'14px',
-                                width:item.depth==="0"?"474px":"418px",
-                                marginTop:"19px",
-                                borderRadius:"2px",
-                                padding:"6px 6px 6px 6px",
-                                boxSizing:"border-box",
-                                display:"flex",
-                                flexDirection:"column",
-                                justifyContent:"center",
-                                minHeight:"48px"}}
+                    {replyWindow&&<div className="replay_window">
+                        <ReactQuill className="quillInput blog_item_comment_submitbtn" theme="" placeholder="의견이나 궁금한 점을 남겨보세요"
+                            value={replyText}
                             onChange={(e)=>{setReplyText(e)}}></ReactQuill>
-                        <div className="btn_one" style={{width:"78px",height:"48px",marginLeft:"8px",marginTop:"19px"}}
+                        <div className="btn_one community_btn_phone" style={{width:"78px",height:"48px"}}
                         onClick={()=>{
                             if(localStorage.getItem("hash")){
                                 depthReplyApi();
@@ -542,18 +528,6 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
         setRerender(false);
     },[rerender,localStorage.getItem("hash")])
 
-
-    const replyNavi = ()=>{
-        if(localStorage.getItem("replyId")){
-            
-            const navi = document.getElementById("replyNavi");
-            if(navi){
-                navi.click();
-                localStorage.removeItem("replyId");
-            }
-        }
-    }
-
     const clip=()=>{
         var url = '';
         var textarea = document.createElement("textarea");
@@ -623,6 +597,18 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
         }
     },[])
 
+
+    const replyNavi = ()=>{
+        if(localStorage.getItem("replyId")){
+            
+            const navi = document.getElementById("replyNavi");
+            if(navi){
+                navi.click();
+                localStorage.removeItem("replyId");
+            }
+        }
+    }
+
     useEffect(()=>{
         setTimeout(() => {
             replyNavi();
@@ -654,7 +640,6 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
 
     const touchEndEvent = (e)=>{
         e.stopPropagation();
-        setTouchState(false);
         const imgArray = document.querySelector(".mainImgArray");
         if(((currentX.current-start.current)/(deviceWidth/2))*100>55){
            if(product.youtube!=="undefined"&&product.youtube!==""){
@@ -839,6 +824,8 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                                 <div style={{
                                     width:"40px",
                                     height:"40px",
+                                    minWidth:"40px",
+                                    minHeight:"40px",
                                     marginRight:"16px",
                                     borderRadius:"50%",
                                     backgroundColor:"#c4c4c4",
@@ -849,13 +836,13 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                                 }}
                                     >
                                 </div>
-                                    <div>
+                                    <div style={{width:"100%"}}>
                                         {/* <textarea onChange={(e)=>{setCurrentComment(e.target.value);}}></textarea> */}
                                         <ReactQuill className="quillInput product_item_comment_input" theme="" placeholder="의견이나 궁금한 점을 남겨보세요"
                                         value={currentComment}
                                         onChange={(e)=>{setCurrentComment(e)}}></ReactQuill>
-                                        {replyState&&<div style={{marginBottom:"24px"}}></div>}
-                                        {!replyState&&<div style={{color:"#ea4335",fontSize:'14px',marginTop:"8px",marginBottom:'16px',height:'14px',lineHeight:"14px"}}>내용을 입력해 주세요.</div>}
+                                        {replyState&&<div className="review_profile_state" style={{marginBottom:"24px"}}></div>}
+                                        {!replyState&&<div className="review_profile_state" style={{color:"#ea4335",fontSize:'14px',marginTop:"8px",marginBottom:'16px',height:'14px',lineHeight:"14px"}}>내용을 입력해 주세요.</div>}
                                 </div>
                                 <div className="btn_one product_item_comment_submitbtn"
                                 onClick={()=>{

@@ -2,7 +2,10 @@ import React from 'react';
 import { Route,Prompt } from 'react-router-dom';
 import BlogMain from '../Components/blog/BlogMain';
 import Review from '../Components/blog/Review';
+import Guideline from '../Components/Common/Guideline';
 import HelpUs from '../Components/Common/HelpUs';
+import Introduce from '../Components/Common/Introduce';
+import StartQA from '../Components/Common/StartQA';
 import CommunityAdd from '../Components/Community/CommunityAdd';
 import CommunityItem from '../Components/Community/CommunityItem';
 import CommunityMain from '../Components/Community/CommunityMain';
@@ -22,7 +25,7 @@ const Root = ()=>{
   });
 
   return(
-  <div style={{width:"100vw",height:"100vh",color:"#505050"}}>
+  <div style={{width:"100vw",height:"100vh",color:"#505050",backgroundColor:"#FFFEFC"}}>
       <Route exact path="/" component={MainPage}></Route>
       <Route exact path="/signup" component={SignUp}></Route>
       <Route exact path="/profile" component={Profile}></Route>
@@ -34,7 +37,7 @@ const Root = ()=>{
       {localStorage.getItem("token")!==null?<Route exact path="/modifyProduct" component={ModifyProduct}></Route>:<Route exact path="/modifyProduct" component={MainPage}></Route>} */}
       <Route exact path="/anotheruserinfo" component={AnotherUser}></Route>
       <Route exact path="/product" component={Product}></Route>
-      <Route exact path="/guideline" component={HelpUs}></Route>
+      <Route exact path="/guideline" component={Guideline}></Route>
       <Route exact path="/tos" component={HelpUs}></Route>
       <Route exact path="/privacy_policy" component={HelpUs}></Route>
       <Route exact path="/proreviewer" component={BlogMain}></Route>
@@ -43,6 +46,8 @@ const Root = ()=>{
       <Route exact path="/communityitem" component={CommunityItem}></Route>
       <Route exact path="/community_add" component={CommunityAdd}></Route>
       <Route exact path="/community_modify" component={CommunityModify}></Route>
+      <Route exact path="/introduce" component={Introduce}></Route>
+      <Route exact path="/startQuestion" component={StartQA}></Route>
   </div>  
   )
 }

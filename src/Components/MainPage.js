@@ -5,7 +5,6 @@ import icon_like_m from '../image/likeIcon_m.svg';
 import icon_comment from '../image/commentIcon.svg';
 import icon_mainTitle_hand from '../image/icon_mainTitle_hand.svg';
 import intro from '../image/intro.pdf';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Header from './Common/Header';
 import SignupWindow from './Common/SignupWindow';
@@ -33,11 +32,14 @@ import icon_category17 from '../image/icon_category17.png';
 import icon_category18 from '../image/icon_category18.png';
 import icon_category19 from '../image/icon_category19.png';
 import icon_category20 from '../image/icon_category20.png';
+import { Link } from 'react-router-dom';
 
 
 const Body=({productOrderState,setProductOrderState,setLoginWindow})=>{
   const [renderState,setRenderState] = useState(true);
   const [fullProject,setFullProject] = useState([]);
+  // const currentScroll=useRef(0);
+  // const [scrollState,setScrollState] =useState(1);
   const [project,setProject] = useState(
     [
     {
@@ -67,19 +69,11 @@ const Body=({productOrderState,setProductOrderState,setLoginWindow})=>{
     }
   ])
 
-  const ProjectRender = ({item,productOrderState,setProductOrderState,setRenderState,index,setLoginWindow})=>{
-    const currentDate = new Date();
-    const now = new Date();
-    const yesterdayDate = new Date(now.setDate(now.getDate()-1));
-    const month = (currentDate.getMonth()+1)/10;
-    const date = (currentDate.getDate())/10;
-    const today = `${currentDate.getFullYear()}-${month<1?`0${currentDate.getMonth()+1}`:currentDate.getMonth()+1}-${date<1?`0${currentDate.getDate()}`:currentDate.getDate()}`
-    const yesterday = `${yesterdayDate.getFullYear()}-${month<1?`0${yesterdayDate.getMonth()+1}`:yesterdayDate.getMonth()+1}-${date<=1?`0${yesterdayDate.getDate()}`:yesterdayDate.getDate()}`
+  const ProjectRender = ({item,productOrderState,setProductOrderState,setRenderState,index,scrollState,setLoginWindow})=>{
     const length = item.product.length;
     const [popularArray,setPopularArray] =useState(item.product);
     const [fastestArray,setFastestArray] =useState(item.product);
-    const [renderDate,setRenderDate] = useState("");
-
+    const [redering,setRendering] = useState(false);
     const RenderList =({item,index,length,setRenderState,setLoginWindow})=>{
       const [hover,setHover] = useState(false);
       const [likeState,setLikeState] = useState(item.like_m==="0"?false:true);
@@ -190,8 +184,6 @@ const Body=({productOrderState,setProductOrderState,setLoginWindow})=>{
       
         }
       }
-
-      
       return( 
         <>
         <div id={item.id} 
@@ -224,7 +216,7 @@ const Body=({productOrderState,setProductOrderState,setLoginWindow})=>{
           onMouseEnter={()=>{setHover(true);}}
           onMouseLeave={()=>{setHover(false);}}
           onClick={(e)=>{likeApi();e.stopPropagation();}}>
-            <div style={{height:"24px",width:"24px",backgroundImage:(likeState||hover)?`url(${icon_like_m})`:`url(${icon_like})`,backgroundRepeat:"no-repeat",backgroundPosition:"center",marginTop:'16px',marginBottom:"4px"}}></div>
+            <div style={{height:"24px",width:"24px",backgroundImage:(likeState||hover)?`url(${icon_like_m})`:`url(${icon_like})`,backgroundRepeat:"no-repeat",backgroundPosition:"center"}}></div>
             <div style={{height:"16px",lineHeight:"16px",width:"100%",fontSize:"14px",fontWeight:"bold",color:(likeState||hover)?"#9C31C6":"#505050",textAlign:"center"}}>{likeCount*1/1000>=1?`${likeCount*1/1000}k`:likeCount}</div>
           </div>
         </div>
@@ -271,23 +263,13 @@ const Body=({productOrderState,setProductOrderState,setLoginWindow})=>{
     }
 
     const setDate = ()=>{
-      if(item.date ===today){
-        setRenderDate("오늘")
-      }else if(item.date ===yesterday){
-        setRenderDate("어제")
-      }else{
-        if(item.date){
-          const year = item.date.slice(0,4);
-          const month = (item.date.slice(5,7)/10) >=1?item.date.slice(5,7):item.date.slice(5,7)%10;
-          const date = (item.date.slice(8,10)/10)>=1?item.date.slice(8,10):item.date.slice(8,10)%10;
-          setRenderDate(`${month}월 ${date}일, ${year}년`);
-        }
-      }
+      setTimeout(() => {
+        setRendering(true);
+      }, 100);
     }
 
     useEffect(()=>{
       setFastestArray(item.product);
-      // setProductOrderState("popular");
       setDate();
     },[])
 
@@ -298,10 +280,11 @@ const Body=({productOrderState,setProductOrderState,setLoginWindow})=>{
         fastestLogic(fastestArray);
       }
     },[productOrderState])
-    return(
+
+    return(   
       <div style={{marginBottom:"40px"}}>
         <div className="main_body_product_date">
-          <div style={{fontWeight:"bold"}}>{renderDate}</div>
+          <div style={{fontWeight:"bold"}}>{item.date}</div>
           {index ===0&&<div style={{display:"flex"}}>
             <div style={{
               fontSize:"14px",
@@ -318,10 +301,11 @@ const Body=({productOrderState,setProductOrderState,setLoginWindow})=>{
               onClick={()=>{setProductOrderState("fastest")}}>최신순</div>
           </div>}
         </div>
+       
         {productOrderState==="fastest"&&<div>{fastestArray.map((item,index)=>(<RenderList index={index} setLoginWindow={setLoginWindow} setRenderState={setRenderState} length={length} key={item.id} item={item}></RenderList>))}</div>}
-        {productOrderState==="popular"&&<div>{popularArray.map((item,index)=>(<RenderList index={index} setLoginWindow={setLoginWindow} setRenderState={setRenderState} length={length} key={item.id} item={item}></RenderList>))}</div>}
+        {productOrderState==="popular"&&<div>{popularArray.map((item,index)=>(<RenderList index={index} setLoginWindow={setLoginWindow} setRenderState={setRenderState} length={length} key={item.id} item={item}></RenderList>))}</div>}   
       </div>
-    )
+      )
   }
 
   const productListApi = async()=>{
@@ -331,7 +315,7 @@ const Body=({productOrderState,setProductOrderState,setLoginWindow})=>{
     try{
         await axios({
             method:"post",
-            url : "https://www.proveit.co.kr/api/productList.php",
+            url : "https://proveit.co.kr/api/productList.php",
             data:data
 
         }).then((e)=>{
@@ -347,8 +331,24 @@ const Body=({productOrderState,setProductOrderState,setLoginWindow})=>{
     }
   }
 
+  // const upBtnMount = ()=>{
+  //   window.addEventListener("scroll",()=>{    
+  //       const scrollPosition = window.scrollY;
+  //       const body = document.getElementById("pageBody");
+  //       if(currentScroll.current<scrollPosition){
+  //           currentScroll.current=scrollPosition;
+  //           if(body.scrollHeight+48-window.innerHeight-10<scrollPosition){
+  //               setScrollState(scrollState+1);
+  //           }else{
+  //               setScrollState(scrollState);
+  //           }
+  //       }
+  //   })
+  // }
+
   useEffect(()=>{
     productListApi();
+    // upBtnMount();
     if(renderState){
       let array=[];
       for(let i =0;i<project.length;i++){
@@ -361,23 +361,27 @@ const Body=({productOrderState,setProductOrderState,setLoginWindow})=>{
       }
     }
   },[])
-
   useEffect(()=>{
     productListApi();
   },[localStorage.getItem("email"),renderState])
 
   return(
     <div id="pageBody" style={{width:"100%",height:"100%",backgroundColor:"#fffefc",display:"flex",alignItems:"center",flexDirection:"column"}}> 
-        <div className="hompage_title_box">
+
           <div className="homepage_title">
-            <p className="hompage_title_main">되는 서비스들의 런칭 플랫폼, 프루브잇</p>
-            <p className="hompage_title_sub">잘 되고 있는 서비스, 잘 되고 싶은 서비스를 소개해 주세요.</p>
-            <div><a href={intro} className="btn_five" target="_blank" style={{width:"124px",height:"48px",color:"#fff"}}>소개<span style={{width:"20px",height:"20px",marginLeft:"5px",backgroundImage:`url(${icon_mainTitle_hand})`}}></span></a></div>
+            <p className="hompage_title_main">
+              안녕하세요?<br/>
+              혹시 서비스를 만들고 계신가요?
+            </p>
+            <div style={{display:"flex",alignItems:"center",width:"100%"}}>
+              <Link to="/startQuestion?yes"><button className="homepage_main_btn1">네</button></Link>
+              <Link to="/startQuestion?no"><button className="homepage_main_btn2">아니오</button></Link>
+            </div>
           </div>
-        </div>
+
       {renderState&&<div className="main_body">
         <div className="main_body_product_list">
-          {project.map((item,index)=>(<ProjectRender key={index} setLoginWindow={setLoginWindow} setRenderState={setRenderState} fullProject={fullProject} setFullProject={setFullProject} index={index} productOrderState={productOrderState} setProductOrderState={setProductOrderState} item={item}></ProjectRender>))}
+          {project.map((item,index)=>(<ProjectRender key={index} index={index} setLoginWindow={setLoginWindow} setRenderState={setRenderState} fullProject={fullProject} setFullProject={setFullProject} index={index} productOrderState={productOrderState} setProductOrderState={setProductOrderState} item={item}></ProjectRender>))}
           <div style={{width:"100%",height:"19px",fontSize:'13px',color:"#828282",textAlign:"center",marginBottom:"32px"}}>여기가 끝이에요</div>
         </div>
         <RightBar></RightBar>

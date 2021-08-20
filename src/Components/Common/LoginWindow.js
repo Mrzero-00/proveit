@@ -11,24 +11,25 @@ const LoginWindow = ({setLoginWindow,responseGoogle})=>{
     onClick={()=>{setLoginWindow(false)}}>
     <div className="modal_login"
       onClick={(e)=>{setLoginWindow(true);e.stopPropagation();}}>
-        <div style={{width:"90px",height:"16px",minHeight:"16px",minWidth:"90px",backgroundImage:`url(${icon_logo})`,marginBottom:"32px"}}></div>
-        <div style={{height:'23px',lineHeight:"23px",fontSize:"20px",fontWeight:'bold',marginBottom:"40px"}}>로그인</div>
-        <div style={{lineHeight:"28.8px",textAlign:"left",marginBottom:"40px"}}>
-          <li>서비스를 프루브잇에 소개하고 커뮤니티 피드백을 받아보세요.</li>
-          <li>랜딩페이지만 있으면 아이디어만으로도 충분히 검증해 볼 수 있어요.</li>
-          <li>지금 어떤 서비스들이 만들어지고 있는지 확인하세요</li>
-        </div>
-        <div style={{position:"relative",width:"256px",height:"56px",display:"flex",justifyContent:"center",alignItems:"center"}}>
-                  <GoogleLogin
-                      clientId='148840721751-8otnv8h8pcuabmilq8mdv9ungtmohatc.apps.googleusercontent.com'
-                      buttonText=""
-                      onSuccess={responseGoogle}
-                      onFailure={responseGoogle}
-                      cookiePolicy={'single_host_origin'}
-                  />
-                  <div style={{position:"absolute",width:"100%",height:"100%",left:0,top:0,backgroundImage:`url(${googleLogin})`,cursor:"pointer"}}
-                  onClick={(e)=>{e.target.parentNode.childNodes[0].click();}}></div>
-        </div>
+          <div style={{height:'23px',lineHeight:"23px",fontSize:"32px",fontWeight:'bold',marginBottom:"40px"}}>시작하기</div>
+          <div style={{lineHeight:"32.4px",textAlign:"center",marginBottom:"25px",fontSize:18}}>
+            내가 만든 서비스에 관해 더 많은 사람들과 이야기를 나누세요.<br/>
+            구글 아이디로 간단하게 가입 할 수 있습니다.
+          </div>
+          <div style={{position:"relative",width:"256px",height:"56px",display:"flex",justifyContent:"center",alignItems:"center",marginBottom:"24px"}}>
+                    <GoogleLogin
+                        clientId='148840721751-8otnv8h8pcuabmilq8mdv9ungtmohatc.apps.googleusercontent.com'
+                        buttonText=""
+                        onSuccess={responseGoogle}
+                        onFailure={responseGoogle}
+                        cookiePolicy={'single_host_origin'}
+                    />
+                    <div style={{position:"absolute",width:"100%",height:"100%",left:0,top:0,backgroundImage:`url(${googleLogin})`,cursor:"pointer"}}
+                    onClick={(e)=>{e.target.parentNode.childNodes[0].click();}}></div>
+          </div>
+          <div style={{textAlign:"center",fontSize:14,color:"#a0a0a0"}}>
+          네이버, 카카오톡 로그인은 곧 지원됩니다.
+          </div>
     </div>
   </div>
   )
