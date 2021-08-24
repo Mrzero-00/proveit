@@ -8,6 +8,7 @@ import icon_community_1 from '../../image/icon_community_1.png';
 import icon_community_2 from '../../image/icon_community_2.png';
 import icon_community_3 from '../../image/icon_community_3.png';
 import icon_community_4 from '../../image/icon_community_4.png';
+import icon_feedback from '../../image/icon_feedback.png';
 import { Link } from 'react-router-dom';
 
 const ReviewRender=({item,index})=>{
@@ -39,7 +40,7 @@ const WeekServiceRender =({item})=>{
 
 
 
-const RightBar = ({setLoginWindow,categoryState,setCategoryState})=>{
+const RightBar = ({setLoginWindow,categoryState,setCategoryState,scrollY})=>{
     const [header,setHeader] = useState(false);
     const [pageNum,setPageNum] = useState(0);
     const [reviewList,setReviewList] = useState([
@@ -72,17 +73,33 @@ const RightBar = ({setLoginWindow,categoryState,setCategoryState})=>{
         window.addEventListener("scroll",()=>{    
           const scrollPosition = window.scrollY;
           if(window.location.pathname==="/review"){
-            if(scrollPosition>=471){
+            if(scrollPosition>=500){
                 setHeader(true);
-            }else if(scrollPosition<=471){
+            }else if(scrollPosition<=500){
+                setHeader(false);
+            }else{
+                setHeader(false);
+            }
+          }else if(window.location.pathname==="/community"){
+            if(scrollPosition>=166){
+              setHeader(true);
+            }else if(scrollPosition<=166){
+                setHeader(false);
+            }else{
+                setHeader(false);
+            }
+          }else if(window.location.pathname==="/communityitem"){
+            if(scrollPosition>=166){
+              setHeader(true);
+            }else if(scrollPosition<=166){
                 setHeader(false);
             }else{
                 setHeader(false);
             }
           }else{
-            if(scrollPosition>=270){
+            if(scrollPosition>=368){
               setHeader(true);
-            }else if(scrollPosition<=270){
+            }else if(scrollPosition<=368){
                 setHeader(false);
             }else{
                 setHeader(false);
@@ -111,15 +128,19 @@ const RightBar = ({setLoginWindow,categoryState,setCategoryState})=>{
     }
   
     useEffect(()=>{
+      upBtnMount();
       if(window.location.pathname==="/community"||window.location.pathname==="/communityitem"){
         setPageNum(1);
       }else{
         setPageNum(0);
-        upBtnMount();
         weekRankingApi();
         reviewListApi();
       }
     },[]);
+
+    // useEffect(()=>{
+    //   upBtnMount(scrollY);
+    // },[scrollY])
   return(
     <>
       {pageNum===0&&<div>
@@ -144,6 +165,12 @@ const RightBar = ({setLoginWindow,categoryState,setCategoryState})=>{
               주간 트렌딩
             </div>
             {weekRanking.map((item)=>(<WeekServiceRender item={item} key={item.id}></WeekServiceRender>))}
+            <Link to="/product?productnum=58">
+              <div className="btn_feedBack">
+                <div style={{width:"16px",height:"16px",backgroundImage:`url(${icon_feedback})`,marginRight:"8px"}}></div>
+                <div>서비스 피드백 및 문의</div>
+              </div>
+            </Link>
             <div style={{marginLeft:"20px",marginTop:"32px"}}>
               <div style={{display:"flex"}}>
                 <div><Link to="/introduce">소개</Link></div>

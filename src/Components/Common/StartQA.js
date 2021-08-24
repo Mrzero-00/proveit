@@ -18,7 +18,7 @@ const Body = ({setLoginWindow})=>{
             <div style={{display:"flex",flexDirection:"column",justifyContent:"center",width:"100%",alignItems:"center",padding:"0px 20px "}}>
                 {window.location.search.substring(1)==="yes"&&<div className="QA_page">
                     <div className="QA_title">
-                        제대로 찾아오셨습니다<br/>
+                        잘 오셨습니다<br/>
                         더 많은 사람들에게 서비스를 소개해주세요
                     </div>
                     <div className="QA_contents">
@@ -189,22 +189,17 @@ const StartQA = ()=>{
     }
   }
 
+  const scrollEvent=(e)=>{
+  }
+
   return(
-  <div style={{
-      width:"100%",
-      display:"flex",
-      flexDirection:"column",
-      overflow:(loginWindow||signupWindow)&&"hidden"
-    }}
-  onClick={()=>{setModal(false)}}>
-    {/* <Helmet>
-        <title>이용 약관 및 가이드라인  | 프루브잇 - 되는 서비스들의 런칭 플랫폼</title>
-        <meta
-          name="description"
-          content="잘 되고 있는 서비스, 잘 되고 싶은 서비스를 소개해주세요."
-          data-react-helmet="true"
-        />
-    </Helmet> */}
+    <div className="contentsBody" style={{
+        width:"100%",
+        height:window.innerHeight,
+      }}
+  onClick={()=>{setModal(false);}}
+  onScroll={scrollEvent}>
+
     <Header 
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}

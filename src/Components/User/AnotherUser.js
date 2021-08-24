@@ -271,9 +271,16 @@ const Body =()=>{
 const AnotherUser = ()=>{
     const [loginWindow,setLoginWindow] = useState(false);
     const [modal,setModal] = useState(false);
-  return(
-    <div style={{width:"100%",display:"flex",flexDirection:"column"}}
-    onClick={()=>{setModal(false)}}>
+    const scrollEvent=(e)=>{
+      }
+    
+      return(
+        <div className="contentsBody" style={{
+            width:"100%",
+            height:window.innerHeight,
+          }}
+      onClick={()=>{setModal(false)}}
+      onScroll={scrollEvent}>
     <Header 
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}

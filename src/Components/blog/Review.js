@@ -11,7 +11,7 @@ import icon_commentModify from '../../image/icon_commentModify.png';
 import icon_like from '../../image/likeIcon.svg';
 
 
-const Body =({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
+const Body =({setModal,modal,setLoginWindow,linkWindow,setLinkWindow,scrollY})=>{
     const [date,setDate] =useState({
         year:0,
         month:0,
@@ -446,7 +446,7 @@ const Body =({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                         }}>남기기</div>
                     </div>
                 </div>
-                <RightBar></RightBar>
+                <RightBar scrollY={scrollY}></RightBar>
             </div>
         </div>
     )
@@ -456,6 +456,7 @@ const Review = ()=>{
     const [loginWindow,setLoginWindow] = useState(false);
     const [signupWindow,setSignUpWindow] = useState(false);
     const [modal,setModal] = useState(false);
+    const [scrollY,setScrollY]=useState(0);
 
     const submitGoogleData= async(name,id,token)=>{
         var data = new FormData();
@@ -523,15 +524,19 @@ const Review = ()=>{
       }
     }
 
-  return(
-    <div id="renderPage" style={{
-        width:"100%",
-        display:"flex",
-        flexDirection:"column",
-        position:"relative"
-    }}
-    onClick={()=>{setModal(false)}}>
+    const scrollEvent=(e)=>{
+        // setScrollY(e.target.scrollTop);
+      }
+    
+      return(
+        <div className="contentsBody" style={{
+            width:"100%",
+            height:window.innerHeight,
+          }}
+      onClick={()=>{setModal(false);}}
+      onScroll={scrollEvent}>
     <Header 
+    scrollY={scrollY}
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}
     signupWindow={signupWindow}
@@ -540,6 +545,7 @@ const Review = ()=>{
     setModal={setModal}
     ></Header>
     <Body
+    scrollY={scrollY}
     modal={modal}
     setModal={setModal}
     setLoginWindow={setLoginWindow}

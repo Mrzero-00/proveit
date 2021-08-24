@@ -1,4 +1,5 @@
 import React from 'react';
+import { useEffect } from 'react';
 import { Route,Prompt } from 'react-router-dom';
 import BlogMain from '../Components/blog/BlogMain';
 import Review from '../Components/blog/Review';
@@ -31,10 +32,6 @@ const Root = ()=>{
       <Route exact path="/profile" component={Profile}></Route>
       <Route exact path="/registerproduct" component={RegisterProduct}></Route>
       <Route exact path="/modifyProduct" component={ModifyProduct}></Route>
-      {/* {localStorage.getItem("token")?<Route exact path="/signup" component={SignUp}></Route>:<Route exact path="/signup" component={MainPage}></Route>}
-      {localStorage.getItem("token")!==null?<Route exact path="/profile" component={Profile}></Route>:<Route exact path="/profile" component={MainPage}></Route>}
-      {localStorage.getItem("token")!==null?<Route exact path="/registerproduct" component={RegisterProduct}></Route>:<Route exact path="/registerproduct" component={MainPage}></Route>}
-      {localStorage.getItem("token")!==null?<Route exact path="/modifyProduct" component={ModifyProduct}></Route>:<Route exact path="/modifyProduct" component={MainPage}></Route>} */}
       <Route exact path="/anotheruserinfo" component={AnotherUser}></Route>
       <Route exact path="/product" component={Product}></Route>
       <Route exact path="/guideline" component={Guideline}></Route>

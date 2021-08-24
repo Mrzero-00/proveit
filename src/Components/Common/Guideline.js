@@ -13,10 +13,10 @@ const Body = ()=>{
         window.scrollTo(0,0);
     },[])
     return(
-        <div id="pageBody" style={{backgroundColor:"#000",height:"100%",minHeight:window.innerHeight-96}}>
+        <div id="pageBody" style={{backgroundColor:"#000"}}>
             <div style={{display:"flex",flexDirection:"column",justifyContent:"center",width:"100%",alignItems:"center",padding:"96px 20px 96px 20px"}}>
                 <div className="guideline_page">
-                    <div style={{backgroundImage:`url(${logo2})`,width:"196px",height:"34px",backgroundRepeat:"no-repeat",backgroundSize:"cover",marginBottom:"76px"}}></div>
+                    <div style={{backgroundImage:`url(${logo2})`,width:"160px",height:"66px",backgroundRepeat:"no-repeat",backgroundSize:"cover",marginBottom:"76px"}}></div>
                     <div className="guideline_page_text" style={{marginBottom:"104px"}}>
                         <div className="guideline_page_highlight">커뮤니티 가이드라인</div>
                         프루브잇 커뮤니티에서 지켜야 할 사항들을 안내합니다.<br/>
@@ -149,22 +149,17 @@ const Guideline = ()=>{
     }
   }
 
+  const scrollEvent=(e)=>{
+    // console.dir(e.target);
+  }
+
   return(
-  <div style={{
-      width:"100%",
-      display:"flex",
-      flexDirection:"column",
-      overflow:(loginWindow||signupWindow)&&"hidden"
-    }}
-  onClick={()=>{setModal(false)}}>
-    {/* <Helmet>
-        <title>이용 약관 및 가이드라인  | 프루브잇 - 되는 서비스들의 런칭 플랫폼</title>
-        <meta
-          name="description"
-          content="잘 되고 있는 서비스, 잘 되고 싶은 서비스를 소개해주세요."
-          data-react-helmet="true"
-        />
-    </Helmet> */}
+    <div className="contentsBody" style={{
+        width:"100%",
+        height:window.innerHeight,
+      }}
+  onClick={()=>{setModal(false);}}
+  onScroll={scrollEvent}>
     <Header 
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}

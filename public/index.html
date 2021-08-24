@@ -2,7 +2,8 @@
 <html lang="ko">
   <head>
     <meta charset="utf-8" />
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.png" />
+
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta
@@ -14,6 +15,14 @@
           name="description"
           content="잘 되고 있는 서비스, 잘 되고 싶은 서비스를 소개해주세요."
     />
+
+    <meta property="og:url" content="https://www.proveit.co.kr"/>
+    <meta property="og:title" content="프루브잇 - 되는 서비스들의 런칭 플랫폼"/>
+    <meta property="og:image" content="%PUBLIC_URL%/og_img.png"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:description" content="잘 되고 있는 서비스, 잘 되고 싶은 서비스를 소개해주세요."/>
+
+
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
@@ -74,7 +83,7 @@
 
 
   </head>
-  <body style="overflow-x:hidden">
+  <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!--

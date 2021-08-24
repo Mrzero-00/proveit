@@ -13,10 +13,10 @@ const Body = ()=>{
         window.scrollTo(0,0);
     },[])
     return(
-        <div id="pageBody" style={{backgroundColor:"#000",height:"100%",minHeight:window.innerHeight-96}}>
+        <div id="pageBody" style={{backgroundColor:"#000"}}>
             <div style={{display:"flex",flexDirection:"column",justifyContent:"center",width:"100%",alignItems:"center",padding:"96px 20px 96px 20px"}}>
                 <div className="introduce_page">
-                    <div style={{backgroundImage:`url(${logo2})`,width:"196px",height:"34px",backgroundRepeat:"no-repeat",backgroundSize:"cover",marginBottom:"76px"}}></div>
+                    <div style={{backgroundImage:`url(${logo2})`,width:"160px",height:"66px",backgroundRepeat:"no-repeat",backgroundSize:"cover",marginBottom:"76px"}}></div>
                     <div className="introduce_page_text">
                     프루브잇은 이제 막 세상에 나온, 혹은 곧 세상에 나올 제품과 서비스를 소개하고 공유하는 온라인 커뮤니티입니다. <br/><br/>
 
@@ -122,22 +122,16 @@ const Introduce = ()=>{
     }
   }
 
+  const scrollEvent=(e)=>{
+  }
+
   return(
-  <div style={{
-      width:"100%",
-      display:"flex",
-      flexDirection:"column",
-      overflow:(loginWindow||signupWindow)&&"hidden"
-    }}
-  onClick={()=>{setModal(false)}}>
-    {/* <Helmet>
-        <title>이용 약관 및 가이드라인  | 프루브잇 - 되는 서비스들의 런칭 플랫폼</title>
-        <meta
-          name="description"
-          content="잘 되고 있는 서비스, 잘 되고 싶은 서비스를 소개해주세요."
-          data-react-helmet="true"
-        />
-    </Helmet> */}
+    <div className="contentsBody" style={{
+        width:"100%",
+        height:window.innerHeight,
+      }}
+  onClick={()=>{setModal(false);}}
+  onScroll={scrollEvent}>
     <Header 
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}

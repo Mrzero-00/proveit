@@ -134,11 +134,12 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
 
         const [hover,setHover] =useState(0);    
         const [modal,setModal] = useState(false);
-        const [replyText,setReplyText] =useState(`<p><div style="display:inline-block;">@${item.nick}</div></br></p>`);
+        const [replyText,setReplyText] =useState(`<p>@${item.nick}&nbsp;&nbsp;</p>`);
         const [modifyText,setModifyText] = useState(item.reply);
         const [replyWindow,setReplyWindow] = useState(false);
         const [modifyState,setModifyState] = useState(false);
         const [listHover,setListHover] = useState(0);
+        const commentRef = useRef(0);
 
         const depthReplyApi = async()=>{
             var data = new FormData();
@@ -240,9 +241,6 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
             }
         }
 
-        // useEffect(()=>{
-        //     setModifyText(item.reply);
-        // },[])
         return(
             <div id={item.id} style={{position:"relative"}}
              className={item.depth==="0"?"product_item_reply":"product_item_reply_depth"}>
@@ -286,7 +284,7 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                             borderRadius:"2px",
                             marginRight:"8px",
                             padding:"16px"}}
-                        onChange={(e)=>{setModifyText(e)}}></ReactQuill>
+                        onChange={(e)=>{setModifyText(e);console.log(e);}}></ReactQuill>
                         <div className="comment_modify_btn">
                             <div className="btn_one" style={{width:"78px",height:"40px",marginBottom:"8px"}}
                             onClick={()=>{depthReplyModifyApi()}}>확인</div>
@@ -327,7 +325,16 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                     {replyWindow&&<div className="replay_window">
                         <ReactQuill className="quillInput blog_item_comment_submitbtn" theme="" placeholder="의견이나 궁금한 점을 남겨보세요"
                             value={replyText}
-                            onChange={(e)=>{setReplyText(e)}}></ReactQuill>
+                            ref={commentRef}
+                            onChange={(e)=>{
+                                if(e===`<p>@${item.nick}</p>`){
+                                    setReplyText(`<p>@${item.nick}&nbsp;&nbsp;</p>`);
+                                }else if(e==="<p><br></p>"){
+                                    setReplyText(`<p>@${item.nick}&nbsp;&nbsp;</p>`);
+                                }else{
+                                    setReplyText(e);
+                                }
+                            }}></ReactQuill>
                         <div className="btn_one community_btn_phone" style={{width:"78px",height:"48px"}}
                         onClick={()=>{
                             if(localStorage.getItem("hash")){
@@ -682,7 +689,7 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
 
     return(
     <>
-        {renderState&&<div id="pageBody" style={{width:'100%',minHeight:window.innerHeight-48,backgroundColor:"#f9f9f9",display:"flex",alignItems:"center",flexDirection:"column"}}
+        {renderState&&<div id="pageBody" style={{width:'100%',backgroundColor:"#f9f9f9",display:"flex",alignItems:"center",flexDirection:"column"}}
         onClick={(e)=>{setBigImgWindow(false);setModal(false);setLinkWindow(false);e.stopPropagation();}}>
                 <a id="replyNavi" style={{display:"none"}} href={`#${localStorage.getItem("replyId")}`}></a>
                 <div style={{textAlign:"left",marginTop:"48px",marginBottom:"32px"}}>
@@ -1146,20 +1153,14 @@ const Product = ()=>{
             alink.click();
         }
     },[])
-  return(
-    <div id="renderPage" style={{
-        width:"100%",
-        display:"flex",
-        flexDirection:"column",
-        position:"relative"
-    }}
-    onClick={(e)=>{setModal(false);setLinkWindow(false)}}>
-    {/* <Helmet>
-        <meta
-          name="description"
-          content="잘 되고 있는 서비스, 잘 되고 싶은 서비스를 소개해주세요."
-        />
-    </Helmet> */}
+    
+      return(
+        <div className="contentsBody" style={{
+            width:"100%",
+            height:window.innerHeight,
+          }}
+      onClick={()=>{setModal(false);setLinkWindow(false);}}
+      >
     <Header 
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}

@@ -406,10 +406,8 @@ const SignUp = ()=>{
     	var pattern_spc = /[~!@#$%^&*()_+|<>?:{}]/; // 특수문자
 
     	if(pattern_num.test(str)){
-            console.log("숫자");
             setNickCheck(true);
     	}else if(pattern_spc.test(str)){
-            console.log("특수문자");
             setNickCheck(true);
     	}else{
             setNickCheck(false);

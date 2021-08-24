@@ -758,8 +758,16 @@ const RegisterProduct = ()=>{
         userInfoGetApi();
 
     },[])
-    return(
-    <div style={{width:"100%",height:"100%",display:"flex",flexDirection:"column"}}>
+    const scrollEvent=(e)=>{
+      }
+    
+      return(
+        <div className="contentsBody" style={{
+            width:"100%",
+            height:window.innerHeight,
+          }}
+      onClick={()=>{setModal(false)}}
+      onScroll={scrollEvent}>
     <Header 
     setLoginWindow={setLoginWindow}
     loginWindow={loginWindow}

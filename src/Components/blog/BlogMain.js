@@ -9,7 +9,7 @@ import icon_review_title from '../../image/icon_review_title.svg';
 import icon_writer from '../../image/icon_writer.svg';
 import { Helmet } from "react-helmet";
 
-const Body =()=>{
+const Body =({scrollY})=>{
     const [blogList,setBlogList] = useState([]);
     const [blogPageNum,setBlogPageNum] = useState(1);
     const [maxPageNum,setMaxPageNum] = useState(1);
@@ -97,7 +97,7 @@ const BlogMain = ()=>{
     const [loginWindow,setLoginWindow] = useState(false);
     const [signupWindow,setSignUpWindow] = useState(false);
     const [modal,setModal] = useState(false);
-
+    const [scrollY,setScrollY]=useState(0);
 
     const submitGoogleData= async(name,id,token)=>{
         //유효성 검사
@@ -171,23 +171,19 @@ const BlogMain = ()=>{
       }
     }
 
-  return(
-    <div id="renderPage" style={{
+    const scrollEvent=(e)=>{
+      // setScrollY(e.target.scrollTop);
+    }
+  
+    return(
+      <div className="contentsBody" style={{
         width:"100%",
-        display:"flex",
-        flexDirection:"column",
-        position:"relative"
-    }}
-    onClick={()=>{setModal(false)}}>
-      {/* <Helmet>
-        <title>리뷰 중독자 | 프루브잇 - 되는 서비스들의 런칭 플랫폼</title>
-        <meta
-          name="description"
-          content="좋은 서비스는 직접 써보고 리뷰합니다."
-          data-react-helmet="true"
-        />
-      </Helmet> */}
+        height:window.innerHeight,
+      }}
+    onClick={()=>{setModal(false);}}
+    onScroll={scrollEvent}>
     <Header 
+    scrollY={scrollY}
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}
     signupWindow={signupWindow}
@@ -196,6 +192,7 @@ const BlogMain = ()=>{
     setModal={setModal}
     ></Header>
     <Body
+    scrollY={scrollY}
     modal={modal}
     setModal={setModal}
     setLoginWindow={setLoginWindow}

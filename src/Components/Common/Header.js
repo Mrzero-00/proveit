@@ -4,25 +4,75 @@ import icon_logo from '../../image/logo.svg';
 import icon_upBtn from '../../image/icon_upBtn.svg';
 import icon_x from '../../image/icon_x.svg';
 import icon_registerIcon from '../../image/icon_registerIcon.svg';
+import icon_notice from '../../image/icon_notice.svg';
 import intro from '../../image/intro.pdf';
 
 import { Link } from 'react-router-dom';
 import { useRef } from 'react';
 
-const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpWindow})=>{
+const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpWindow,scrollY})=>{
     const [hover,setHover] = useState(0);
     const [header,setHeader] = useState(0);
     const [hambug,setHambug] =useState(false);
     const [height,setHeight] = useState(96);
+    const [rendering,setRendering] = useState(false); 
     const currentScroll=useRef(0);
     const [scrollState,setScrollState] =useState(false);
 
-    const upBtnMount = ()=>{
+    const upBtnMount = (scrollY)=>{
+        if(scrollY>767){
+            const scrollPosition = scrollY;
+            const body = document.getElementById("pageBody");
+            if(currentScroll.current<scrollPosition){
+                currentScroll.current=scrollPosition;
+                if(body.scrollHeight+96-window.innerHeight-10<scrollPosition){
+                    setScrollState(true)
+                }else{
+                    setScrollState(false);
+                }
+            }else{
+                currentScroll.current=scrollPosition;
+                setScrollState(true);
+            }
+            
+            if(scrollPosition>=96&&scrollPosition<=192){
+                setHeader(scrollPosition-96);
+            }else if(scrollPosition>192){
+                setHeader(96);
+            }else{
+                setHeader(0);
+            }      
+        }else{
+            const scrollPosition = scrollY;
+            const body = document.getElementById("pageBody");
+            if(currentScroll.current<scrollPosition){
+                currentScroll.current=scrollPosition;
+                if(body.scrollHeight+64-window.innerHeight-10<scrollPosition){
+                    setScrollState(true)
+                }else{
+                    setScrollState(false);
+                }
+            }else{
+                currentScroll.current=scrollPosition;
+                setScrollState(true);
+            }
+            
+            if(scrollPosition>=64&&scrollPosition<=128){
+                setHeader(scrollPosition-64);
+            }else if(scrollPosition>128){
+                setHeader(96);
+            }else{
+                setHeader(0);
+            }
+            
+        }
+    }
+
+    const upBtnMount_phone = ()=>{
         if(window.innerWidth>767){
-            window.addEventListener("scroll",()=>{    
+            window.addEventListener("scroll",()=>{
                 const scrollPosition = window.scrollY;
                 const body = document.getElementById("pageBody");
-                console.dir(currentScroll.current<scrollPosition);
                 if(currentScroll.current<scrollPosition){
                     currentScroll.current=scrollPosition;
                     if(body.scrollHeight+96-window.innerHeight-10<scrollPosition){
@@ -37,14 +87,14 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
                 
                 if(scrollPosition>=96&&scrollPosition<=192){
                     setHeader(scrollPosition-96);
-                }else if(scrollPosition>192){
-                    setHeader(95);
+                }else if(scrollPosition>96){
+                    setHeader(96);
                 }else{
                     setHeader(0);
-                }
+                }      
             })
         }else{
-            window.addEventListener("scroll",()=>{    
+            window.addEventListener("scroll",()=>{
                 const scrollPosition = window.scrollY;
                 const body = document.getElementById("pageBody");
                 if(currentScroll.current<scrollPosition){
@@ -61,23 +111,31 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
                 
                 if(scrollPosition>=64&&scrollPosition<=128){
                     setHeader(scrollPosition-64);
-                }else if(scrollPosition>128){
-                    setHeader(95);
+                }else if(scrollPosition>64){
+                    setHeader(96);
                 }else{
                     setHeader(0);
                 }
-            })
+        })
+            
         }
     }
   
     useEffect(()=>{
-        upBtnMount();
-        if(window.innerWidth>767){
-            setHeight(96);
-        }else{
-            setHeight(64);
-        }
+        upBtnMount_phone();
+        setTimeout(() => {
+            if(window.innerWidth>767){
+                setHeight(96);
+            }else{
+                setHeight(64);
+            }
+            setRendering(true);
+        }, 100);
     },[])
+
+    // useEffect(()=>{
+    //     upBtnMount(scrollY);
+    // },[scrollY])
   
     const upEvt = ()=>{
         window.scroll({
@@ -88,35 +146,54 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
     }
     return(
         <>
-            <div id="header" style={{width:"100%",height:height,backgroundColor:"#fff",display:"flex",justifyContent:"center",alignItems:"center",minHeight:height,zIndex:"9999"}}>
+        {rendering&&<>
+            <div id="header">
                 <div className="header_bar">  
-                        <Link to="/"><h1 className="header_logo" style={{backgroundImage:`url(${icon_logo})`}}><div style={{width:"1px",height:"1px",margin:"-1px",overflow:"hidden"}}>프루브잇</div></h1></Link>
-                        <div className="header_usermenu">
-                            {localStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"9999"}}>
-                            <div className="btn_textBtn" style={{marginRight:"16px"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
-                            <div className="btn_one" style={{width:"72px",height:"32px",backgroundColor:"#000"}} onClick={()=>{setLoginWindow(true);}}>로그인</div>
-                            </div>
-                            }
-                            {localStorage.getItem("hash")!==null&&<div className="header_icon_web">
+                    <Link to="/"><h1 className="header_logo" style={{backgroundImage:`url(${icon_logo})`}}><div style={{width:"1px",height:"1px",margin:"-1px",overflow:"hidden"}}>프루브잇</div></h1></Link>
+                    <div className="header_usermenu">
+                        {localStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"9999"}}>
+                        <div className="btn_textBtn" style={{marginRight:"16px"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
+                        <div className="btn_one" style={{width:"72px",height:"32px",backgroundColor:"#000"}} onClick={()=>{setLoginWindow(true);}}>로그인</div>
+                        </div>
+                        }
+                        {localStorage.getItem("hash")!==null&&
+                            <div className="header_icon_web">
                                 <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px",fontWeight:"700",fontSize:"20px"}}>
                                     <div style={{width:"20px",height:'20px',minWidth:"20px",minHeight:"20px",backgroundImage:`url(${icon_registerIcon})`,marginRight:"4px"}}>
                                     </div>
                                     서비스 등록하기
                                     </div>
                                 </Link>
+                                {/* <div className="btn_one" style={{
+                                    width:"40px",
+                                    height:"40px",
+                                    minWidth:"40px",
+                                    minHeight:"40px",
+                                    borderRadius:"50%",
+                                    backgroundImage:`url(${icon_notice})`,
+                                    backgroundColor:"#c5c5c5",
+                                    backgroundPosition:"center",
+                                    backgroundRepeat:'no-repeat',
+                                    marginRight:"8px"}} 
+                                    onClick={(e)=>{setModal(!modal);e.stopPropagation()}}>  
+                                </div> */}
                                 <div className="btn_one" style={{
                                     width:"40px",
                                     height:"40px",
+                                    minWidth:"40px",
+                                    minHeight:"40px",
                                     borderRadius:"50%",
                                     backgroundImage:localStorage.getItem("userInfo")&&`url(${JSON.parse(localStorage.getItem("userInfo")).thumbnail})`,
-                                    backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
+                                    backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} 
+                                    onClick={(e)=>{setModal(!modal);e.stopPropagation()}}> 
                                 </div>
-                            }  
-                            {localStorage.getItem("hash")!==null&&<div className="header_icon_phone"onClick={()=>{setHambug(true)}}></div>
-                            } 
-                        </div>
+                            </div>
+                        }  
+                        {localStorage.getItem("hash")!==null&&<div className="header_icon_phone"onClick={()=>{setHambug(true)}}></div>
+                        } 
+                    </div>
                 </div>
-                <div className="review_btn" style={{width:"100vw",height:"100%",minHeight:height,position:"absolute",top:0,left:0}}>
+                <div className="review_btn" style={{width:"100%",height:"100%",minHeight:height,position:"absolute",top:0,left:0}}>
                     <div style={{width:"100%",height:"100%",minHeight:height,position:"relative",top:0,left:0}}></div>
                     <div style={{position:"absolute",width:"100%",height:"100%",top:0,left:0,display:"flex",justifyContent:"center",alignItems:"center"}}>
                         <div className="header_bar_menu">
@@ -133,10 +210,10 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
             
             
             {(!loginWindow&&!signupWindow)&&
-            <div id="header" style={{width:"100vw",height:height,backgroundColor:"#fff",display:"flex",position:"fixed",transform:`translate(0,${header}px)`,top:"-96px",justifyContent:"center",alignItems:"center",minHeight:height,zIndex:"9999"}}>
+            <div id="header_fixed" style={{transform:`translate(0,${header}px)`}}>
                 <div className="header_bar">  
                     <Link to="/"><div className="header_logo" style={{backgroundImage:`url(${icon_logo})`}}></div></Link>
-                    <div className="header_usermenu">
+                    <div className="header_usermenu_fix" >
                             {localStorage.getItem("hash")===null&&<div style={{display:"flex",alignItems:"center",zIndex:"999"}}>
                             <div className="btn_textBtn" style={{marginRight:"16px"}} onClick={()=>{setSignUpWindow(true);}}>회원가입</div>
                             <div className="btn_one" style={{width:"72px",height:"32px",backgroundColor:"#000"}} onClick={()=>{setLoginWindow(true);}}>로그인</div>
@@ -149,7 +226,26 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
                                     서비스 등록하기
                                     </div>
                                 </Link>
-                                <div className="btn_one" style={{width:"40px",height:"40px",borderRadius:"50%",backgroundImage:localStorage.getItem("userInfo")&&`url(${JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
+                                {/* <div className="btn_one" style={{
+                                        width:"40px",
+                                        height:"40px",
+                                        minWidth:"40px",
+                                        minHeight:"40px",
+                                        borderRadius:"50%",
+                                        backgroundImage:`url(${icon_notice})`,
+                                        backgroundColor:"#c5c5c5",
+                                        backgroundPosition:"center",
+                                        backgroundRepeat:'no-repeat',
+                                        marginRight:"8px"}} 
+                                        onClick={(e)=>{setModal(!modal);e.stopPropagation()}}>  
+                                </div> */}
+                                <div className="btn_one" style={{
+                                    width:"40px",
+                                    height:"40px",
+                                    minWidth:"40px",
+                                    minHeight:"40px",
+                                    borderRadius:"50%",
+                                    backgroundImage:localStorage.getItem("userInfo")&&`url(${JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
                                 ,backgroundColor:"#c5c5c5",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:'no-repeat'}} onClick={(e)=>{setModal(!modal);e.stopPropagation()}}></div>
                                 </div>
                             }  
@@ -187,8 +283,8 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
             
             
             {hambug&&<div style={{position:"fixed",left:0,top:0,width:"100vw",height:"100vh",fontSize:'14px',color:"#505050",backgroundColor:"#fff",padding:"16px 20px 16px 20px",zIndex:9999}}>
-                <div style={{display:"flex",justifyContent:"space-between",height:height,alignItems:"center"}}>
-                    <Link to="/"><div style={{width:"102px",height:"18px",backgroundImage:`url(${icon_logo})`,backgroundSize:"cover"}}></div></Link>
+                <div style={{display:"flex",justifyContent:"space-between",height:height,alignItems:"center",marginBottom:"16px"}}>
+                    <Link to="/"><div style={{width:"79px",height:"32px",backgroundImage:`url(${icon_logo})`,backgroundSize:"cover"}}></div></Link>
                     <div style={{width:'24px',height:'24px',backgroundImage:`url(${icon_x})`}}
                     onClick={()=>{setHambug(false)}}></div>
                 </div>
@@ -222,9 +318,11 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
                     <div style={{height:"40px",lineHeight:"40px"}}>© 2021 oneonezero Inc.</div>
                 </div>
             </div>}
-            {window.innerWidth>767&&<div className="btn_up" style={{backgroundImage:`url(${icon_upBtn})`,display:header!==95&&"none",transform:scrollState&&`translate(0,${-104}px)`}}
+            {window.innerWidth>767&&<div className="btn_up" style={{backgroundImage:`url(${icon_upBtn})`,display:header!==96&&"none",transform:scrollState&&`translate(0,${-104}px)`}}
                 onClick={upEvt}></div>}
+                
         </>
+        }</>
     )
   }
 

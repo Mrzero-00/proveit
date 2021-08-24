@@ -274,10 +274,8 @@ const Body =()=>{
     	var pattern_spc = /[~!@#$%^&*()_+|<>?:{}]/; // 특수문자
 
     	if(pattern_num.test(str)){
-            console.log("숫자");
             setNickCheck(true);
     	}else if(pattern_spc.test(str)){
-            console.log("특수문자");
             setNickCheck(true);
     	}else{
             setNickCheck(false);
@@ -631,9 +629,18 @@ const Body =()=>{
 const Profile = ()=>{
     const [loginWindow,setLoginWindow] = useState(false);
     const [modal,setModal] = useState(false);
-  return(
-    <div style={{width:"100%",display:"flex",flexDirection:"column"}}
-    onClick={()=>{setModal(false)}}>
+
+    const scrollEvent=(e)=>{
+        
+      }
+    
+      return(
+        <div className="contentsBody" style={{
+            width:"100%",
+            height:window.innerHeight,
+          }}
+      onClick={()=>{setModal(false)}}
+      onScroll={scrollEvent}>
     <Header 
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}

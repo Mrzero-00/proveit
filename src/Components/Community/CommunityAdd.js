@@ -92,7 +92,6 @@ const Body =()=>{
             </>
         )
     }
-    console.log(communityState);
   return(
       <div id="pageBody" className="blogMain_body" style={{paddingBottom:"56px"}}
       onClick={()=>{setCategoryModal(false)}}>
@@ -261,22 +260,17 @@ const CommunityAdd = ()=>{
       }
     }
 
-  return(
-    <div id="renderPage" style={{
-        width:"100%",
-        display:"flex",
-        flexDirection:"column",
-        position:"relative"
-    }}
-    onClick={()=>{setModal(false)}}>
-      {/* <Helmet>
-        <title>리뷰 중독자 | 프루브잇 - 되는 서비스들의 런칭 플랫폼</title>
-        <meta
-          name="description"
-          content="좋은 서비스는 직접 써보고 리뷰합니다."
-          data-react-helmet="true"
-        />
-      </Helmet> */}
+    const scrollEvent=(e)=>{
+      }
+    
+      return(
+        <div className="contentsBody" style={{
+            width:"100%",
+            height:window.innerHeight,
+          }}
+      onClick={()=>{setModal(false);}}
+      onScroll={scrollEvent}>
+
     <Header 
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}

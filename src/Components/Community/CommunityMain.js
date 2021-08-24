@@ -16,8 +16,8 @@ import icon_community_category_3 from '../../image/icon_community_category_3.png
 import icon_community_category_4 from '../../image/icon_community_category_4.png';
 import ReactQuill from 'react-quill';
 
-const Body =({setLoginWindow})=>{
-  const [sortState,setSortState] = useState(true);
+const Body =({setLoginWindow,scrollY})=>{
+  const [sortState,setSortState] = useState(false);
   const [categoryState,setCategoryState] = useState(0);
   const [categoryWindow,setCategoryWindow] =useState(false);
   const categoryList =[
@@ -72,7 +72,7 @@ const Body =({setLoginWindow})=>{
               data
           }).then((e)=>{
               if(e.data.ret_code === "0000"){
-                popularLogic(e.data.list);
+                fastestLogic(e.data.list);
               }
           })
       }catch{
@@ -344,7 +344,7 @@ const Body =({setLoginWindow})=>{
               </div>
               {community.map((item)=>(<CommunityRender item={item} categoryState={categoryState}></CommunityRender>))}
             </div>
-              <RightBar setLoginWindow={setLoginWindow} setCategoryState={setCategoryState} categoryState={categoryState}></RightBar>
+              <RightBar setLoginWindow={setLoginWindow} setCategoryState={setCategoryState} categoryState={categoryState} scrollY={scrollY}></RightBar>
           </div>
       </div>
   )
@@ -354,7 +354,7 @@ const CommunityMain = ()=>{
     const [loginWindow,setLoginWindow] = useState(false);
     const [signupWindow,setSignUpWindow] = useState(false);
     const [modal,setModal] = useState(false);
-
+    const [scrollY,setScrollY]=useState(0);
 
     const submitGoogleData= async(name,id,token)=>{
         //유효성 검사
@@ -428,23 +428,20 @@ const CommunityMain = ()=>{
       }
     }
 
-  return(
-    <div id="renderPage" style={{
+    const scrollEvent=(e)=>{
+      // setScrollY(e.target.scrollTop);
+    }
+  
+    return(
+      <div className="contentsBody" style={{
         width:"100%",
-        display:"flex",
-        flexDirection:"column",
-        position:"relative"
-    }}
-    onClick={()=>{setModal(false)}}>
-      <Helmet>
-        <title>리뷰 중독자 | 프루브잇 - 되는 서비스들의 런칭 플랫폼</title>
-        <meta
-          name="description"
-          content="좋은 서비스는 직접 써보고 리뷰합니다."
-          data-react-helmet="true"
-        />
-      </Helmet>
+        height:window.innerHeight,
+      }}
+    onClick={()=>{setModal(false);}}
+    onScroll={scrollEvent}>
+
     <Header 
+    scrollY={scrollY}
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}
     signupWindow={signupWindow}
@@ -453,6 +450,7 @@ const CommunityMain = ()=>{
     setModal={setModal}
     ></Header>
     <Body
+    scrollY={scrollY}
     modal={modal}
     setModal={setModal}
     setLoginWindow={setLoginWindow}

@@ -2,6 +2,23 @@
 @font-face { font-family: 'Noto_Sans'; src: url(./Noto_Sans/NotoSansKR-Medium.otf); font-weight: 500 format('opentype'); }
 @font-face { font-family: 'Noto_Sans'; src: url(./Noto_Sans/NotoSansKR-Regular.otf); font-weight:normal format('opentype'); }
 
+
+::-webkit-scrollbar {
+  width: 10px;  /* 세로축 스크롤바 길이 */
+  z-index: 9999;
+}
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+::-webkit-scrollbar-track-piece {
+  background-color: transparent;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: black;
+  border:1px solid #f5f5f5;
+}
+
 .ql-editor>p>img{
   max-width:100%;
 }
@@ -24,6 +41,52 @@
     font-weight: bold;
     cursor: pointer;
 }
+
+.btn_feedBack{
+  width: 100%;
+  height: 56px;
+  left: 0px;
+  top: 560px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F5EAF9;
+  border-radius: 2px;
+  margin-top: 20px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #000;
+  cursor: pointer;
+}
+
+.btn_feedBack:hover{
+  background: #EDBDFF;
+}
+.btn_google{
+  position: absolute;
+  width: 160px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  background: #FFFFFF;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 32px;
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 19px;
+  letter-spacing: 0em;
+  text-align: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* .btn_google:hover{
+  background-color:#9120BD;
+  color:#fff;
+  font-weight: 700;
+} */
 
 .btn_one:hover{
     background-color:#9120BD;
@@ -258,6 +321,10 @@ input:focus{
 
   @media screen and (max-width:320px){
     .iphone{
+      height:10px;
+      font-size: 10px;
+      line-height: 10px;
+      position:absolute;
       margin-left: -72px;
     }
     .register_payment{
@@ -268,12 +335,56 @@ input:focus{
     .register_payment_item_sort{
       margin-bottom: 16px;
     }
+
+    .main_body_product_likecount{
+      width:64px;
+      min-width:64px;
+      height:64px;
+      display:flex;
+      justify-content: center;
+      flex-direction:column;
+      align-items:center;
+      border:1px solid #e0e0e0;
+      border-radius:50%;
+    }
   }
 
 @media screen  and (max-width:767px){
 
+  body{
+    overflow-x: hidden;
+  }
+
+  .contentsBody{
+    display:flex;
+    flex-direction:column;
+  }
+
   #header{
     position: relative;
+    height:64px;
+    min-height:64px;
+    background-color:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+    width:100vw;
+    position: relative;
+    z-index: 99999;
+  }
+
+  #header_fixed{
+    width:100vw;
+    height:65px;
+    background-color:#fff;
+    display:flex;
+    position:fixed;
+    top:-96px;
+    justify-content:center;
+    align-items:center;
+    min-height:65px;
+    z-index:9999;
   }
 
   .review_btn{
@@ -281,15 +392,11 @@ input:focus{
   }
 
   .header_logo{
-    top:23px;
-    left:0px;
-    margin-left: 20px;
-    position: absolute;
-    width:102px;
-    height:18px;
+    width:79px;
+    height:32px;
     z-index:9999;
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: contain;
     background-position: center;
   }
 
@@ -368,8 +475,9 @@ input:focus{
       align-items:center;
       font-size: 16px;
       height: 16px;
-      padding:0px 20px 16px 20px;
-      border-bottom: 1px solid #e5e5e5;
+      line-height: 16px;
+      font-weight: 700;
+      margin-bottom:16px;
     }
   
     .main_body_product_thumbnail{
@@ -388,18 +496,21 @@ input:focus{
     .main_body_product_list{
       width:100%;
       height:100%;
+      padding: 0px 20px;
     }
   
     .main_body_product_item{
       width:100%;
+      height: 106px;
       display:flex;
-      padding:16px;
+      padding:12px;
       justify-content:space-between;
       background-color:#fff;
-      align-items: center;
       position:relative;
       cursor:pointer;
-      border-bottom:1px solid #e5e5e5;
+      border:1px solid #e5e5e5;
+      border-radius: 8px;
+      margin-bottom: 4px;
       z-index: 999;
     }
   
@@ -419,21 +530,29 @@ input:focus{
       font-size:12px;
       max-height: 32px;
       overflow: hidden;
-      margin-bottom:12px;
       line-height:17.38px;
       margin-right: 16px;
     }
 
     .main_body_product_likecount{
-      width:56px;
-      min-width:56px;
-      height:80px;
+      width:64px;
+      min-width:64px;
+      height:64px;
       display:flex;
       justify-content: center;
       flex-direction:column;
       align-items:center;
       border:1px solid #e0e0e0;
-      border-radius:2px;
+      border-radius:50%;
+    }
+
+    .iphone{
+      height: 11px;
+      line-height: 11px;
+      font-size: 11px;
+      position:absolute;
+      bottom: 15px;
+      margin-left: -72px;
     }
   
     .signup_input{
@@ -1481,11 +1600,13 @@ input:focus{
     width: 144px;
     height: 48px;
     margin-right: 8px;
+    border-radius: 58px;
   }
 
   .homepage_main_btn2{
     width: 116px;
     height: 48px;
+    border-radius: 32px;
   }
 
   .homepage_main_btn1:hover,.homepage_main_btn2:hover{
@@ -1688,17 +1809,24 @@ input:focus{
 
 /* 웹 min-width:1080px */
 @media screen and (min-width:768px){
+  body{
+    overflow-x: hidden;
+  }
 
+  .contentsBody{
+    display:flex;
+    flex-direction:column;
+  }
   .introduce_page{
     width:688px;
   }
+
   .header_logo{
-    top:39px;
-    left:0px;
     margin-left: 32px;
+    top:22px;
     position: absolute;
-    width:102px;
-    height:18px;
+    width:126px;
+    height:52px;
     z-index:9999;
     background-size:cover ;
     background-repeat: no-repeat;
@@ -1719,12 +1847,16 @@ input:focus{
   }
 
   .header_usermenu{
-    width:232px;
     display:flex;
     flex-direction:row-reverse;
     margin-right: 32px;
   }
 
+  .header_usermenu_fix{
+    display:flex;
+    flex-direction:row-reverse;
+    margin-right: 42px;
+  }
   .homepage_title{
     width: 1040px;
     height: 100%;
@@ -1756,7 +1888,6 @@ input:focus{
 
   .main_proveit{
     width:336px;
-    height:115px;
     color:#505050;
     font-size:13px;
     line-height:23.4px;
@@ -1797,9 +1928,29 @@ input:focus{
       }
 
       #header{
-        width: 100vw;
+        height:96px;
+        min-height:96px;
+        background-color:#fff;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        z-index:9999;
+        width:100vw;
         position: relative;
         z-index: 99999;
+      }
+
+      #header_fixed{
+        width:100vw;
+        height:97px;
+        background-color:#fff;
+        display:flex;
+        position:fixed;
+        top:-96px;
+        justify-content:center;
+        align-items:center;
+        min-height:97px;
+        z-index:9999;
       }
     
       .header_bar{    
@@ -1815,7 +1966,7 @@ input:focus{
       .header_bar_menu{
         width: 1040px;
         font-weight: 700;
-        font-size: 15px;
+        font-size: 20px;
         display: flex;
         color:#000;
       }
@@ -2664,7 +2815,7 @@ input:focus{
    }
 
    .blog_item_reply_list{
-    width:100%;
+    width:688px;
     height: 100%;
     background-color:#fff;
     box-sizing:border-box;
@@ -2733,14 +2884,12 @@ input:focus{
   .community_contents{
     position: relative;
     display: flex;
-    justify-content: space-between;
     width: 1040px;
   }
 
   .community_contents_item{
     position: relative;
     display: flex;
-    justify-content: space-between;
     width: 1040px;
   }
 
@@ -2955,7 +3104,7 @@ input:focus{
   }
 
   .community_item_comment{
-    width:100%;
+    width:688px;
     background-color:#fff;
     box-sizing:border-box;
     border: 1px solid #f1f1f1;
@@ -3096,11 +3245,13 @@ input:focus{
     width: 216px;
     height: 64px;
     margin-right: 8px;
+    border-radius: 82px;
   }
 
   .homepage_main_btn2{
     width: 116px;
     height: 64px;
+    border-radius: 74px;
   }
 
   .homepage_main_btn1:hover,.homepage_main_btn2:hover{
@@ -3261,6 +3412,11 @@ input:focus{
     background-color:#fff;
     font-size:13px;
     margin-bottom:16px;
+  }
+  .iphone{
+    height: 13px;
+    line-height: 13px;
+    font-size: 13px;
   }
 }
 
