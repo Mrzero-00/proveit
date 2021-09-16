@@ -20,7 +20,230 @@ import ReactPlayer from 'react-player';
 import Header from '../Common/Header';
 import LoginWindow from '../Common/LoginWindow';
 import SignupWindow from '../Common/SignupWindow';
-import { Helmet } from 'react-helmet';
+
+
+const CommentRender =({item,product,rerenderLogic,setLoginWindow})=>{
+
+    const [hover,setHover] =useState(0);    
+    const [modal,setModal] = useState(false);
+    const [replyText,setReplyText] =useState(`<p>@${item.nick}&nbsp;&nbsp;</p>`);
+    const [modifyText,setModifyText] = useState(item.reply);
+    const [replyWindow,setReplyWindow] = useState(false);
+    const [modifyState,setModifyState] = useState(false);
+    const [listHover,setListHover] = useState(0);
+    const commentRef = useRef(0);
+
+    const depthReplyApi = async()=>{
+        var data = new FormData();
+        data.append('parent_id', item.depth==="1"?item.parent_id:item.id);
+        data.append('reply', replyText);
+        data.append('user_email',localStorage.getItem("email"));
+        data.append('hash', localStorage.getItem("hash"));
+        data.append("product_id",window.location.search.substring(12));
+        try{
+            await axios({
+                method:"post",
+                url : "https://www.proveit.co.kr/api/replySubmit.php",
+                data:data
+      
+            }).then((e)=>{
+                if(e.data.ret_code === "0000"){
+                    localStorage.setItem("replyId",e.data.reply_id);
+                    setReplyWindow(false);
+                    rerenderLogic();
+                }else{
+                    alert("로그인 해쉬가 만료되었습니다. 다시 로그인해주세요");
+                    const alink = document.createElement("a");
+                    alink.href="/";
+                    setTimeout(() => {
+                        localStorage.clear();
+                        alink.click();
+                    }, 1000);
+                }
+            })
+        }catch{
+      
+        }
+    }
+
+    const depthReplyModifyApi = async()=>{
+        var data = new FormData();
+        data.append('parent_id', item.depth==="1"?item.parent_id:item.id);
+        data.append('reply', modifyText);
+        data.append('user_email',localStorage.getItem("email"));
+        data.append("reply_id",item.id);
+        data.append('hash', localStorage.getItem("hash"));
+        data.append("product_id",window.location.search.substring(12));
+        data.append("type","update");
+        try{
+            await axios({
+                method:"post",
+                url : "https://www.proveit.co.kr/api/replySubmit.php",
+                data:data
+      
+            }).then((e)=>{
+                if(e.data.ret_code === "0000"){
+                    setModifyState(false);
+                    rerenderLogic();
+                }else{
+                    alert("로그인 해쉬가 만료되었습니다. 다시 로그인해주세요");
+                    const alink = document.createElement("a");
+                    alink.href="/";
+                    setTimeout(() => {
+                        localStorage.clear();
+                        alink.click();
+                    }, 1000);
+                }
+            })
+        }catch{
+      
+        }
+    }
+    
+    const depthReplyDeleteApi = async()=>{
+        var data = new FormData();
+        data.append('parent_id', item.depth==="1"?item.parent_id:item.id);
+        data.append('reply', replyText);
+        data.append('user_email',localStorage.getItem("email"));
+        data.append("reply_id",item.id);
+        data.append('nick',JSON.parse(localStorage.getItem("userInfo")).nick);
+        data.append('hash', localStorage.getItem("hash"));
+        data.append("product_id",window.location.search.substring(12));
+        data.append("type","delete");
+        try{
+            await axios({
+                method:"post",
+                url : "https://www.proveit.co.kr/api/replySubmit.php",
+                data:data
+      
+            }).then((e)=>{
+                if(e.data.ret_code === "0000"){
+                    rerenderLogic();
+                }else{
+                    alert("로그인 해쉬가 만료되었습니다. 다시 로그인해주세요");
+                    const alink = document.createElement("a");
+                    alink.href="/";
+                    setTimeout(() => {
+                        localStorage.clear();
+                        alink.click();
+                    }, 1000);
+      
+                }
+            })
+        }catch{
+      
+        }
+    }
+
+    return(
+        <div id={item.id} style={{position:"relative"}}
+         className={item.depth==="0"?"product_item_reply":"product_item_reply_depth"}>
+            {item.first==="Y"&&<div style={{position:"absolute",width:"14px",height:"18px",right:"20px",top:"-px",backgroundImage:`url(${icon_comment_first})`}}></div>}
+            <Link to={item.user_email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${item.user_id}`}><div style={{
+                width:"40px",
+                height:"40px",
+                minHeight:"40px",
+                minWidth:"40px",
+                borderRadius:"50%",
+                marginRight:'16px',
+                backgroundColor:"#c4c4c4",
+                backgroundImage:`url(${item.thumbnail})`,
+                backgroundSize:"cover",
+                backgroundPosition:"center",
+                backgroundRepeat:"no-repeat"
+                }}
+                >
+            </div>
+            </Link>
+            <div style={{width:"100%"}}>
+                <div style={{display:"flex"}}>
+                <Link to={item.user_email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${item.user_id}`}><div style={{fontWeight:"bold",marginBottom:'8px',height:"14px",lineHeight:"14px",marginRight:"4px",fontSize:'14px',color:"#505050"}}>{item.nick}</div></Link>
+                    {(item.user_email ===product.email&&product.make_by==="true")&&<div style={{color:'#9c31c6',lineHeight:"16px",height:"16px",fontSize:'10px',textAlign:"center",width:"48px",borderRadius:"8px",backgroundColor:"#f1f1f1"}}>제작자</div>}
+                </div>
+                <div style={{color:"#a5a5a5",marginBottom:'7px',height:"13px",lineHeight:"13px",fontSize:'13px'}}>{item.position}{item.department!==""&&`,${item.department}`}</div>
+                {!modifyState&&<div style={{width:"100%",position:"relative",marginBottom:"8px"}}>
+                   {/* <textarea value={item.reply} readOnly></textarea> */}
+                   <ReactQuill theme="" readOnly
+                    value={item.reply} style={{textAlign:"left",color:"#505050",fontSize:'14px',width:"100%"}}
+                    ></ReactQuill>
+                </div>}
+                {modifyState&&<div className="comment_modify">
+                   <ReactQuill className="quillInput" theme=""
+                    value={modifyText} style={{
+                        textAlign:"left",
+                        color:"#505050",
+                        fontSize:'14px',
+                        width:"100%",
+                        minHeight:"84px",
+                        borderRadius:"2px",
+                        marginRight:"8px",
+                        padding:"16px"}}
+                    onChange={(e)=>{setModifyText(e);}}></ReactQuill>
+                    <div className="comment_modify_btn">
+                        <div className="btn_one" style={{width:"78px",height:"40px",marginBottom:"8px"}}
+                        onClick={()=>{depthReplyModifyApi()}}>확인</div>
+                        <div className="btn_four" style={{width:"78px",height:"40px",marginRight:"8px"}}
+                        onClick={()=>{setModifyState(false)}}>취소</div>
+                    </div>
+                </div>}
+                {!modifyState&&<div style={{display:"flex",height:"32px"}}>
+                    <div style={{width:"42px",cursor:"pointer",height:"100%",marginRight:"8px",
+                    backgroundColor:listHover===1&&"#f1f1f1",color:"#a5a5a5",
+                    textAlign:"center",lineHeight:"32px",fontSize:'14px'}}
+                    onMouseLeave={()=>{setListHover(0)}}
+                    onMouseOver={()=>{setListHover(1)}}
+                    onClick={()=>{setReplyWindow(!replyWindow);}}>답글</div>
+                    {/* <div style={{width:"88px",cursor:"pointer",height:"100%",marginRight:"8px",backgroundColor:"#f1f1f1",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                        <div style={{width:"14px",height:"14px",backgroundImage:`url(${icon_likeBtn})`,marginRight:"4px",backgroundPosition:"center",backgroundSize:"100% 100%"}}></div>
+                        <div>추천({item.like_count})</div>
+                    </div> */}
+                    {item.user_email===localStorage.getItem("email")&& <div style={{width:"32px",cursor:"pointer",height:"100%",marginRight:"8px",
+                    backgroundPosition:"center",backgroundRepeat:"no-repeat",
+                    backgroundColor:listHover===2&&"#f1f1f1",textAlign:"center",position:"relative",lineHeight:"32px",backgroundImage:`url(${icon_commentModify})`}}
+                    onMouseLeave={()=>{setListHover(0)}}
+                    onMouseOver={()=>{setListHover(2)}}
+                    onClick={(e)=>{setModal(!modal);e.stopPropagation()}}
+                    >
+                        {modal&&<div style={{position:"absolute",zIndex:"999",width:"64px",height:"72px",padding:"4px0px4px0px",backgroundColor:"#fff",bottom:-76,left:0,boxShadow:"0px 4px 8px 2px rgba(0,0,0,0.1)",display:"flex",flexDirection:"column",justifyContent:"center"}}>
+                            <div style={{width:"100%",height:"32px",display:"flex",justifyContent:"center",alignItems:"center",backgroundColor:hover===1&&"rgba(156, 49, 198, 0.1)"}}
+                            onMouseLeave={()=>{setHover(0)}}
+                            onMouseOver={()=>{setHover(1)}}
+                            onClick={()=>{setModifyState(true)}}>수정</div>
+                            <div style={{width:"100%",height:"32px",display:"flex",justifyContent:"center",alignItems:"center",backgroundColor:hover===2&&"rgba(156, 49, 198, 0.1)"}}
+                            onMouseLeave={()=>{setHover(0)}}
+                            onMouseOver={()=>{setHover(2)}}
+                            onClick={depthReplyDeleteApi}>삭제</div>
+                        </div>}    
+                    </div>}
+                </div>}
+                {replyWindow&&<div className="replay_window">
+                    <ReactQuill className="quillInput blog_item_comment_submitbtn" theme="" placeholder="의견이나 궁금한 점을 남겨보세요"
+                        value={replyText}
+                        ref={commentRef}
+                        onChange={(e)=>{
+                            if(e===`<p>@${item.nick}</p>`){
+                                setReplyText(`<p>@${item.nick}&nbsp;&nbsp;</p>`);
+                            }else if(e==="<p><br></p>"){
+                                setReplyText(`<p>@${item.nick}&nbsp;&nbsp;</p>`);
+                            }else{
+                                setReplyText(e);
+                            }
+                        }}></ReactQuill>
+                    <div className="btn_one community_btn_phone" style={{width:"78px",height:"48px"}}
+                    onClick={()=>{
+                        if(localStorage.getItem("hash")){
+                            depthReplyApi();
+                            setReplyText(`${item.nick}`);
+                        }else{
+                            setLoginWindow(true);
+                        }
+                    }}>남기기</div>
+                </div>}
+            </div>
+
+        </div>
+    )
+}
 
 const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
 
@@ -130,227 +353,6 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
         )
     }
 
-    const CommentRender =({item,product})=>{
-
-        const [hover,setHover] =useState(0);    
-        const [modal,setModal] = useState(false);
-        const [replyText,setReplyText] =useState(`<p>@${item.nick}&nbsp;&nbsp;</p>`);
-        const [modifyText,setModifyText] = useState(item.reply);
-        const [replyWindow,setReplyWindow] = useState(false);
-        const [modifyState,setModifyState] = useState(false);
-        const [listHover,setListHover] = useState(0);
-        const commentRef = useRef(0);
-
-        const depthReplyApi = async()=>{
-            var data = new FormData();
-            data.append('parent_id', item.depth==="1"?item.parent_id:item.id);
-            data.append('reply', replyText);
-            data.append('user_email',localStorage.getItem("email"));
-            data.append('hash', localStorage.getItem("hash"));
-            data.append("product_id",window.location.search.substring(12));
-            try{
-                await axios({
-                    method:"post",
-                    url : "https://www.proveit.co.kr/api/replySubmit.php",
-                    data:data
-          
-                }).then((e)=>{
-                    if(e.data.ret_code === "0000"){
-                        localStorage.setItem("replyId",e.data.reply_id);
-                        setRerender(true);
-                    }else{
-                        alert("로그인 해쉬가 만료되었습니다. 다시 로그인해주세요");
-                        const alink = document.createElement("a");
-                        alink.href="/";
-                        setTimeout(() => {
-                            localStorage.clear();
-                            alink.click();
-                        }, 1000);
-                    }
-                })
-            }catch{
-          
-            }
-        }
-
-        const depthReplyModifyApi = async()=>{
-            var data = new FormData();
-            data.append('parent_id', item.depth==="1"?item.parent_id:item.id);
-            data.append('reply', modifyText);
-            data.append('user_email',localStorage.getItem("email"));
-            data.append("reply_id",item.id);
-            data.append('hash', localStorage.getItem("hash"));
-            data.append("product_id",window.location.search.substring(12));
-            data.append("type","update");
-            try{
-                await axios({
-                    method:"post",
-                    url : "https://www.proveit.co.kr/api/replySubmit.php",
-                    data:data
-          
-                }).then((e)=>{
-                    if(e.data.ret_code === "0000"){
-                        setRerender(true);
-                    }else{
-                        alert("로그인 해쉬가 만료되었습니다. 다시 로그인해주세요");
-                        const alink = document.createElement("a");
-                        alink.href="/";
-                        setTimeout(() => {
-                            localStorage.clear();
-                            alink.click();
-                        }, 1000);
-                    }
-                })
-            }catch{
-          
-            }
-        }
-        
-        const depthReplyDeleteApi = async()=>{
-            var data = new FormData();
-            data.append('parent_id', item.depth==="1"?item.parent_id:item.id);
-            data.append('reply', replyText);
-            data.append('user_email',localStorage.getItem("email"));
-            data.append("reply_id",item.id);
-            data.append('nick',JSON.parse(localStorage.getItem("userInfo")).nick);
-            data.append('hash', localStorage.getItem("hash"));
-            data.append("product_id",window.location.search.substring(12));
-            data.append("type","delete");
-            try{
-                await axios({
-                    method:"post",
-                    url : "https://www.proveit.co.kr/api/replySubmit.php",
-                    data:data
-          
-                }).then((e)=>{
-                    if(e.data.ret_code === "0000"){
-                        setRerender(true);
-                    }else{
-                        alert("로그인 해쉬가 만료되었습니다. 다시 로그인해주세요");
-                        const alink = document.createElement("a");
-                        alink.href="/";
-                        setTimeout(() => {
-                            localStorage.clear();
-                            alink.click();
-                        }, 1000);
-          
-                    }
-                })
-            }catch{
-          
-            }
-        }
-
-        return(
-            <div id={item.id} style={{position:"relative"}}
-             className={item.depth==="0"?"product_item_reply":"product_item_reply_depth"}>
-                {item.first==="Y"&&<div style={{position:"absolute",width:"14px",height:"18px",right:"20px",top:"-px",backgroundImage:`url(${icon_comment_first})`}}></div>}
-                <Link to={item.user_email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${item.user_id}`}><div style={{
-                    width:"40px",
-                    height:"40px",
-                    minHeight:"40px",
-                    minWidth:"40px",
-                    borderRadius:"50%",
-                    marginRight:'16px',
-                    backgroundColor:"#c4c4c4",
-                    backgroundImage:`url(${item.thumbnail})`,
-                    backgroundSize:"cover",
-                    backgroundPosition:"center",
-                    backgroundRepeat:"no-repeat"
-                    }}
-                    >
-                </div>
-                </Link>
-                <div style={{width:"100%"}}>
-                    <div style={{display:"flex"}}>
-                    <Link to={item.user_email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${item.user_id}`}><div style={{fontWeight:"bold",marginBottom:'8px',height:"14px",lineHeight:"14px",marginRight:"4px",fontSize:'14px',color:"#505050"}}>{item.nick}</div></Link>
-                        {(item.user_email ===product.email&&product.make_by==="true")&&<div style={{color:'#9c31c6',lineHeight:"16px",height:"16px",fontSize:'10px',textAlign:"center",width:"48px",borderRadius:"8px",backgroundColor:"#f1f1f1"}}>제작자</div>}
-                    </div>
-                    <div style={{color:"#a5a5a5",marginBottom:'7px',height:"13px",lineHeight:"13px",fontSize:'13px'}}>{item.position}{item.department!==""&&`,${item.department}`}</div>
-                    {!modifyState&&<div style={{width:"100%",position:"relative",marginBottom:"8px"}}>
-                       {/* <textarea value={item.reply} readOnly></textarea> */}
-                       <ReactQuill theme="" readOnly
-                        value={item.reply} style={{textAlign:"left",color:"#505050",fontSize:'14px',width:"100%"}}
-                        ></ReactQuill>
-                    </div>}
-                    {modifyState&&<div className="comment_modify">
-                       <ReactQuill className="quillInput" theme=""
-                        value={modifyText} style={{
-                            textAlign:"left",
-                            color:"#505050",
-                            fontSize:'14px',
-                            width:"100%",
-                            minHeight:"84px",
-                            borderRadius:"2px",
-                            marginRight:"8px",
-                            padding:"16px"}}
-                        onChange={(e)=>{setModifyText(e);console.log(e);}}></ReactQuill>
-                        <div className="comment_modify_btn">
-                            <div className="btn_one" style={{width:"78px",height:"40px",marginBottom:"8px"}}
-                            onClick={()=>{depthReplyModifyApi()}}>확인</div>
-                            <div className="btn_four" style={{width:"78px",height:"40px",marginRight:"8px"}}
-                            onClick={()=>{setModifyState(false)}}>취소</div>
-                        </div>
-                    </div>}
-                    {!modifyState&&<div style={{display:"flex",height:"32px"}}>
-                        <div style={{width:"42px",cursor:"pointer",height:"100%",marginRight:"8px",
-                        backgroundColor:listHover===1&&"#f1f1f1",color:"#a5a5a5",
-                        textAlign:"center",lineHeight:"32px",fontSize:'14px'}}
-                        onMouseLeave={()=>{setListHover(0)}}
-                        onMouseOver={()=>{setListHover(1)}}
-                        onClick={()=>{setReplyWindow(!replyWindow);}}>답글</div>
-                        {/* <div style={{width:"88px",cursor:"pointer",height:"100%",marginRight:"8px",backgroundColor:"#f1f1f1",display:"flex",alignItems:"center",justifyContent:"center"}}>
-                            <div style={{width:"14px",height:"14px",backgroundImage:`url(${icon_likeBtn})`,marginRight:"4px",backgroundPosition:"center",backgroundSize:"100% 100%"}}></div>
-                            <div>추천({item.like_count})</div>
-                        </div> */}
-                        {item.user_email===localStorage.getItem("email")&& <div style={{width:"32px",cursor:"pointer",height:"100%",marginRight:"8px",
-                        backgroundPosition:"center",backgroundRepeat:"no-repeat",
-                        backgroundColor:listHover===2&&"#f1f1f1",textAlign:"center",position:"relative",lineHeight:"32px",backgroundImage:`url(${icon_commentModify})`}}
-                        onMouseLeave={()=>{setListHover(0)}}
-                        onMouseOver={()=>{setListHover(2)}}
-                        onClick={(e)=>{setModal(!modal);e.stopPropagation()}}
-                        >
-                            {modal&&<div style={{position:"absolute",zIndex:"999",width:"64px",height:"72px",padding:"4px0px4px0px",backgroundColor:"#fff",bottom:-76,left:0,boxShadow:"0px 4px 8px 2px rgba(0,0,0,0.1)",display:"flex",flexDirection:"column",justifyContent:"center"}}>
-                                <div style={{width:"100%",height:"32px",display:"flex",justifyContent:"center",alignItems:"center",backgroundColor:hover===1&&"rgba(156, 49, 198, 0.1)"}}
-                                onMouseLeave={()=>{setHover(0)}}
-                                onMouseOver={()=>{setHover(1)}}
-                                onClick={()=>{setModifyState(true)}}>수정</div>
-                                <div style={{width:"100%",height:"32px",display:"flex",justifyContent:"center",alignItems:"center",backgroundColor:hover===2&&"rgba(156, 49, 198, 0.1)"}}
-                                onMouseLeave={()=>{setHover(0)}}
-                                onMouseOver={()=>{setHover(2)}}
-                                onClick={depthReplyDeleteApi}>삭제</div>
-                            </div>}    
-                        </div>}
-                    </div>}
-                    {replyWindow&&<div className="replay_window">
-                        <ReactQuill className="quillInput blog_item_comment_submitbtn" theme="" placeholder="의견이나 궁금한 점을 남겨보세요"
-                            value={replyText}
-                            ref={commentRef}
-                            onChange={(e)=>{
-                                if(e===`<p>@${item.nick}</p>`){
-                                    setReplyText(`<p>@${item.nick}&nbsp;&nbsp;</p>`);
-                                }else if(e==="<p><br></p>"){
-                                    setReplyText(`<p>@${item.nick}&nbsp;&nbsp;</p>`);
-                                }else{
-                                    setReplyText(e);
-                                }
-                            }}></ReactQuill>
-                        <div className="btn_one community_btn_phone" style={{width:"78px",height:"48px"}}
-                        onClick={()=>{
-                            if(localStorage.getItem("hash")){
-                                depthReplyApi();
-                                setReplyText(`${item.nick}`);
-                            }else{
-                                setLoginWindow(true);
-                            }
-                        }}>남기기</div>
-                    </div>}
-                </div>
-
-            </div>
-        )
-    }
-
     const userInfoApi =async(id)=>{
         var data = new FormData();
         data.append("user_id",id);
@@ -368,7 +370,7 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
         }catch{
     
         }
-        }
+    }
 
     const productListApi = async()=>{
     var data = new FormData();
@@ -459,8 +461,8 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
       
             }).then((e)=>{
                 if(e.data.ret_code === "0000"){
+                    rerenderLogic();
                     localStorage.setItem("replyId",e.data.reply_id);
-                    setRerender(true);
                     setReplyState(true);
                 }else if(e.data.ret_code ==="400"){
                     setReplyState(false);
@@ -513,7 +515,7 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
       
             }).then((e)=>{
                 if(e.data.ret_code === "0000"){
-                    setRerender(true);
+                    rerenderLogic();
                 }else{
                     alert("로그인 해쉬가 만료되었습니다. 다시 로그인해주세요");
                     const alink = document.createElement("a");
@@ -533,7 +535,7 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
         productListApi();
         replayListApi();
         setRerender(false);
-    },[rerender,localStorage.getItem("hash")])
+    },[]);
 
     const clip=()=>{
         var url = '';
@@ -604,6 +606,10 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
         }
     },[])
 
+    const rerenderLogic=()=>{
+        productListApi();
+        replayListApi();
+    }
 
     const replyNavi = ()=>{
         if(localStorage.getItem("replyId")){
@@ -692,7 +698,7 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
         {renderState&&<div id="pageBody" style={{width:'100%',backgroundColor:"#f9f9f9",display:"flex",alignItems:"center",flexDirection:"column"}}
         onClick={(e)=>{setBigImgWindow(false);setModal(false);setLinkWindow(false);e.stopPropagation();}}>
                 <a id="replyNavi" style={{display:"none"}} href={`#${localStorage.getItem("replyId")}`}></a>
-                <div style={{textAlign:"left",marginTop:"48px",marginBottom:"32px"}}>
+                <div style={{textAlign:"left",marginTop:"48px",marginBottom:"23px"}}>
                 <div className="product_item">
                     <div className="product_thumbnail" style={{backgroundImage:`url(${product.thumbnail})`}}></div>
                     
@@ -700,9 +706,10 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                         <h1 className="product_item_title">{product.title}</h1>
                         <h2 className="product_item_subtitle" >{product.sub_title}</h2>
                         <div style={{display:"flex",height:"24px",alignItems:"center"}}>
-                        <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>{product.payment_type}</div>
-                        <div style={{height:"14px",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px",width:"1px",backgroundColor:"#e5e5e5"}}></div>
-                        <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>{product.category}</div>
+                            <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282"}}>{product.payment_type}</div>
+                            <div style={{width:"4px",margin:"0px 4px",color:"#7b7b7b"}}>·</div>
+                            <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282"}}>{product.category}</div>
+                            <div style={{width:"4px",margin:"0px 4px",color:"#7b7b7b"}}>·</div>
                         </div>
                     </div>
                     
@@ -724,7 +731,7 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                             alink.click();
                         }}>써보러 가기</div>
                         }
-                        {product.like_m==="0"&&<div className="btn_one_big" style={{width:"100%",height:"56px"}}
+                        {product.like_m==="0"&&<div className="btn_one_big" style={{width:"100%",height:"56px",marginBottom:"8px"}}
                         onClick={()=>{
                             if(localStorage.getItem("hash")){
                                 likeApi();
@@ -734,10 +741,10 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                             }}
                             >
                             <div style={{width:'24px',height:"24px",backgroundImage:`url(${icon_like_off})`,marginRight:"4px"}}></div>
-                            <div>추천해요</div>
+                            <div>추천하기</div>
                                 <div style={{width:"48px",height:"16px",lineHeight:"16px",textAlign:"center"}}>{product.like_count}</div>
                             </div>}
-                        {product.like_m==="1"&&<div className="btn_one_big2" style={{width:"100%",height:"56px"}}
+                        {product.like_m==="1"&&<div className="btn_one_big2" style={{width:"100%",height:"56px",marginBottom:"8px"}}
                         onClick={()=>{
                             if(localStorage.getItem("hash")){
                                 likeApi();
@@ -747,7 +754,7 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                             }}
                         >
                             <div style={{width:'24px',height:"24px",backgroundImage:`url(${icon_like_on})`,marginRight:"4px"}}></div>
-                            <div>추천했음</div>
+                            <div>추천 취소</div>
                                 <div style={{width:"48px",height:"16px",lineHeight:"16px",textAlign:"center"}}>{product.like_count}</div>
                             </div>}
                     </div>
@@ -862,14 +869,14 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                                 }}>남기기</div>
                             </div>
                             <div className="product_item_reply_list">
-                                {replyList.map((item)=>(<CommentRender key={item.id} product={product} modal={modal} setModal={setModal} item={item}></CommentRender>))}
+                                {replyList.map((item)=>(<CommentRender key={item.id}  setLoginWindow={setLoginWindow} rerenderLogic={rerenderLogic} product={product} modal={modal} setModal={setModal} item={item}></CommentRender>))}
                             </div>
                             {replyList.length>=10&&<div className="product_item_comment_submit_under">
                             <div style={{
                                 width:"40px",
                                 height:"40px",
-                                marginTop:"32px",
-                                marginLeft:"24px",
+                                minWidth:"40px",
+                                minHeight:"40px",
                                 marginRight:"16px",
                                 borderRadius:"50%",
                                 backgroundColor:"#c4c4c4",
@@ -879,8 +886,9 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                                 backgroundPosition:"center"
                                 }}>
                             </div>
-                            <div><ReactQuill className="quillInput" theme="" placeholder="의견이나 궁금한 점을 남겨보세요"
-                                value={currentComment} style={{textAlign:"left",color:"#505050",fontSize:'14px',width:"474px",marginTop:"32px",borderRadius:"2px",
+                            <div style={{width:"100%"}}>
+                                <ReactQuill className="quillInput" theme="" placeholder="의견이나 궁금한 점을 남겨보세요"
+                                value={currentComment} style={{textAlign:"left",color:"#505050",fontSize:'14px',width:"100%",borderRadius:"2px",
                             padding:"6px 6px 6px 6px",boxSizing:"border-box",display:"flex",flexDirection:"column",justifyContent:"center",minHeight:"48px"}}
                                 onChange={(e)=>{setCurrentComment(e)}}></ReactQuill>
                                 {replyState&&<div style={{marginBottom:"24px"}}></div>}
@@ -899,10 +907,40 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                         </div>
                         </div>
                     </div>
-                    <div className="product_item_web">
-                        <div style={{display:"flex",marginBottom:"24px"}}>
+                    <div className="product_item_web" style={{width:"100%",marginLeft:"16px"}}>
+                        <div style={{marginBottom:"24px",width:"100%"}}>
+
+                            
+                        {product.like_m==="0"&&<div className="btn_one_big" style={{width:"100%",height:"56px",marginBottom:"8px"}}
+                            onClick={()=>{
+                                if(localStorage.getItem("hash")){
+                                    likeApi();
+                                }else{
+                                    setLoginWindow(true);
+                                }
+                                }}
+                                >
+                                <div style={{width:'24px',height:"24px",backgroundImage:`url(${icon_like_off})`,marginRight:"4px"}}></div>
+                                <div>추천하기</div>
+                                    <div style={{width:"40px",height:"16px",lineHeight:"16px",textAlign:"center"}}>{product.like_count}</div>
+                                </div>}
+                            {product.like_m==="1"&&<div className="btn_one_big2" style={{width:"100%",height:"56px",marginBottom:"8px"}}
+                            onClick={()=>{
+                                if(localStorage.getItem("hash")){
+                                    likeApi();
+                                }else{
+                                    setLoginWindow(true);
+                                }
+                                }}
+                            >
+                                <div style={{width:'24px',height:"24px",backgroundImage:`url(${icon_like_on})`,marginRight:"4px"}}></div>
+                                <div>추천 취소</div>
+                                    <div style={{width:"40px",height:"16px",lineHeight:"16px",textAlign:"center"}}>{product.like_count}</div>
+                                </div>}
+                        
+
                             {linkState.current===1?
-                            <div className="btn_two" style={{width:"114px",maxWidth:"144px",height:"56px",marginRight:"8px"}} onClick={()=>{
+                            <div className="btn_two" style={{width:"100%",height:"56px",marginRight:"8px"}} onClick={()=>{
                                 const alink = document.createElement("a");
                                 alink.target="blink";
                                 if(product.link!==""){
@@ -915,9 +953,41 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                                 alink.click();
                             }}>써보러 가기</div>
                             :
-                            <div className="btn_two" style={{width:"114px",maxWidth:"144px",height:"56px",marginRight:"8px",position:"relative"}}
+                            <div className="btn_two" style={{width:"100%",height:"56px",marginRight:"8px",position:"relative"}}
                              onClick={(e)=>{
                                 setLinkWindow(!linkWindow);
+                                if( /Android/i.test(navigator.userAgent)) {
+                                    if(product.android_link!==""){
+                                        const alink = document.createElement("a");
+                                        alink.target="blink";
+                                        alink.href = product.android_link;
+                                        alink.click();
+                                    }else if(product.link!==""){
+                                        const alink = document.createElement("a");
+                                        alink.target="blink";
+                                        alink.href = product.link;
+                                        alink.click();
+                                    }else{
+                                        
+                                    }
+                                }else if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                                    if(product.ios_link!==""){
+                                        const alink = document.createElement("a");
+                                        alink.target="blink";
+                                        alink.href = product.ios_link;
+                                        alink.click();
+                                    }else if(product.link!==""){
+                                        const alink = document.createElement("a");
+                                        alink.target="blink";
+                                        alink.href = product.link;
+                                        alink.click();
+                                    }else{
+
+                                    }
+                                }else {
+                                    // console.log(product.ios_link.search.substring(1));
+                                    setLinkWindow(!linkWindow);
+                                }
                                 e.stopPropagation();
                             }}
                             >
@@ -931,8 +1001,9 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                                 backgroundColor:"#fff",
                                 paddingTop:"4px",
                                 paddingBottom:"4px",
-                                top:"64px",
-                                left:"0px"}}>
+                                top:"54px",
+                                left:"50%",
+                                transform:"translate(-50%,0)"}}>
                                 {product.link&&<div className="product_linkitem"
                                 onClick={()=>{
                                     const alink = document.createElement("a");
@@ -970,35 +1041,8 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                             </div>
                             }
                             
-                            
-                            {product.like_m==="0"&&<div className="btn_one_big" style={{width:"216px",height:"56px"}}
-                            onClick={()=>{
-                                if(localStorage.getItem("hash")){
-                                    likeApi();
-                                }else{
-                                    setLoginWindow(true);
-                                }
-                                }}
-                                >
-                                <div style={{width:'24px',height:"24px",backgroundImage:`url(${icon_like_off})`,marginRight:"4px"}}></div>
-                                <div>추천해요</div>
-                                    <div style={{width:"40px",height:"16px",lineHeight:"16px",textAlign:"center"}}>{product.like_count}</div>
-                                </div>}
-                            {product.like_m==="1"&&<div className="btn_one_big2" style={{width:"216px",height:"56px"}}
-                            onClick={()=>{
-                                if(localStorage.getItem("hash")){
-                                    likeApi();
-                                }else{
-                                    setLoginWindow(true);
-                                }
-                                }}
-                            >
-                                <div style={{width:'24px',height:"24px",backgroundImage:`url(${icon_like_on})`,marginRight:"4px"}}></div>
-                                <div>추천했음</div>
-                                    <div style={{width:"40px",height:"16px",lineHeight:"16px",textAlign:"center"}}>{product.like_count}</div>
-                                </div>}
                         </div>
-                        <div style={{width:"336px",height:"108px",backgroundColor:"#fff",borderRadius:"2px",fontSize:"14px",padding:"16px 24px 24px 24px",textAlign:"left"}}>
+                        <div style={{width:"100%",height:"108px",backgroundColor:"#fff",borderRadius:"2px",fontSize:"14px",padding:"16px 24px 24px 24px",textAlign:"left"}}>
                             <div style={{color:"#a5a5a5",marginBottom:"16px"}}>{product.make_by==="true"?"제작자":"소개한 사람"}</div>
                             <div style={{display:"flex"}}>
                             <Link to={product.email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${product.user_id}`}>
@@ -1072,7 +1116,8 @@ const Product = ()=>{
     const [signupWindow,setSignUpWindow] = useState(false);
     const [modal,setModal] = useState(false);
     const [linkWindow,setLinkWindow] = useState(false);
-
+    const [scrollY,setScrollY]=useState(0);
+    const [alarmModal,setAlarmModal] = useState(false);
 
     const submitGoogleData= async(name,id,token)=>{
         //유효성 검사
@@ -1159,15 +1204,18 @@ const Product = ()=>{
             width:"100%",
             height:window.innerHeight,
           }}
-      onClick={()=>{setModal(false);setLinkWindow(false);}}
+      onClick={()=>{setModal(false);setLinkWindow(false);setAlarmModal(false);}}
       >
     <Header 
+    setScrollY={setScrollY}
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}
     signupWindow={signupWindow}
     setSignUpWindow={setSignUpWindow}
     modal={modal}
     setModal={setModal}
+    alarmModal={alarmModal}
+    setAlarmModal={setAlarmModal}
     ></Header>
     <Body
     modal={modal}

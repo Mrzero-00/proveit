@@ -414,9 +414,9 @@ const Body =()=>{
     }   
 
     return(
-        <div id="pageBody" style={{minHeight:window.innerHeight-48,backgroundColor:"#FFFEFC"}}>
+        <div id="pageBody" style={{minHeigth:window.innerHeight-48}}>
         {(render&&pageNum===0)&&
-        <div style={{width:"100%",backgroundColor:"#FFFEFC",display:"flex",alignItems:"center",flexDirection:"column"}}>
+        <div style={{width:"100%",display:"flex",alignItems:"center",flexDirection:"column"}}>
             <div className="profile_header_info">
                 <div className="profile_main_myinfo">
                     <div className="profile_main_thumbnail" style={{
@@ -629,7 +629,7 @@ const Body =()=>{
 const Profile = ()=>{
     const [loginWindow,setLoginWindow] = useState(false);
     const [modal,setModal] = useState(false);
-
+    const [alarmModal,setAlarmModal] = useState(false);
     const scrollEvent=(e)=>{
         
       }
@@ -637,15 +637,17 @@ const Profile = ()=>{
       return(
         <div className="contentsBody" style={{
             width:"100%",
-            height:window.innerHeight,
+            minHeight:window.innerHeight,
           }}
-      onClick={()=>{setModal(false)}}
+      onClick={()=>{setModal(false);setAlarmModal(false);}}
       onScroll={scrollEvent}>
     <Header 
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}
     modal={modal}
     setModal={setModal}
+    alarmModal={alarmModal}
+    setAlarmModal={setAlarmModal}
     ></Header>
     <Body
     ></Body>

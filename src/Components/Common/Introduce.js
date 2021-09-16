@@ -51,7 +51,8 @@ const Introduce = ()=>{
   const [loginWindow,setLoginWindow] = useState(false);
   const [signupWindow,setSignUpWindow] = useState(false);
   const [modal,setModal] = useState(false);
-
+  const [alarmModal,setAlarmModal] = useState(false);
+  const [scrollY,setScrollY]=useState(0);
   const submitGoogleData= async(name,id,token)=>{
     //유효성 검사
     //let crt = document.getElementById('crt');
@@ -122,23 +123,23 @@ const Introduce = ()=>{
     }
   }
 
-  const scrollEvent=(e)=>{
-  }
-
   return(
     <div className="contentsBody" style={{
         width:"100%",
         height:window.innerHeight,
       }}
-  onClick={()=>{setModal(false);}}
-  onScroll={scrollEvent}>
+  onClick={()=>{setModal(false);setAlarmModal(false);}}
+  >
     <Header 
+    setScrollY={setScrollY}
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}
     setSignUpWindow={setSignUpWindow}
     signupWindow={signupWindow}
     modal={modal}
     setModal={setModal}
+    alarmModal={alarmModal}
+    setAlarmModal={setAlarmModal}
     ></Header>
     <Body></Body>
     {loginWindow&&<LoginWindow 

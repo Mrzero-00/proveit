@@ -15,9 +15,9 @@ const ReviewRender=({item,index})=>{
   return(<>
     {index<3&&
       <Link to={`/review?id=${item.id}`}>
-        <div className={window.location.pathname==="/review"?"reveiw_preview review":"reveiw_preview"}>
-          <div style={{width:'240px',maxHeight:"40px",height:"100%",marginRight:"20px",fontSize:'14px',display:"flex",alignItems:"center",color:"#505050"}}>{item.title}</div>
-          <div style={{width:"40px",height:"40px",backgroundImage:`url(${item.thumb_m})`,backgroundPosition:"center",backgroundSize:"cover"}}></div>
+        <div className={window.location.pathname==="/review"?"reveiw_preview review":"reveiw_preview"} style={{borderBottom:index<3&&"1px solid #EFE5FD"}}>
+          <div style={{width:'216px',maxHeight:"32px",height:"100%",marginRight:"8px",fontSize:'13px',display:"flex",alignItems:"center",color:"#262626"}}>{item.title}</div>
+          <div style={{width:"32px",height:"32px",backgroundImage:`url(${item.thumb_m})`,backgroundPosition:"center",backgroundSize:"cover"}}></div>
         </div>
       </Link>
     }
@@ -146,31 +146,80 @@ const RightBar = ({setLoginWindow,categoryState,setCategoryState,scrollY})=>{
       {pageNum===0&&<div>
         {window.innerWidth>767&&<div className="main_proveit" style={{
         top:96,
-        position:header&&"fixed",
+        // position:header&&"fixed",
         margin:"0 auto",
         transition:"0s",
         flexDirection:"row-reverse",
         display:"flex",}}>
           <div>
-            <div style={{width:"100%"}}></div>
-            <div style={{width:"336px",marginBottom:"32px"}}>
-            <div style={{fontWeight:"bold",marginBottom:"16px",color:"#505050",fontSize:'14px',lineHeight:"20px",height:"20px",display:"flex",alignItems:"center"}}>
-              <div style={{width:"14px",minWidth:"14px",minHeight:'14px',height:"14px",backgroundImage:`url(${icon_reviewer})`,marginRight:"4px",backgroundPosition:"center",backgroundSize:"cover"}}></div>
-              <Link to="/proreviewer">매거진</Link>
+            <div style={{width:"288px",marginBottom:"24px"}}>
+              <div style={{
+                fontWeight:"bold",
+                marginBottom:"8px",
+                color:"#262626",
+                fontSize:'16px',
+                lineHeight:"16px",
+                height:"16px",
+                display:"flex",
+                justifyContent:"space-between",
+                alignItems:"center"}}>
+                {/* <div style={{width:"14px",minWidth:"14px",minHeight:'14px',height:"14px",backgroundImage:`url(${icon_reviewer})`,marginRight:"4px",backgroundPosition:"center",backgroundSize:"cover"}}></div> */}
+                <Link to="/proreviewer">매거진</Link>
+                <div style={{fontWeight:"400",fontSize:"12px",color:"#7b7b7b"}}>매거진에 관한 설명글</div>
+              </div>
+              <div style={{width:"288px",height:"168px",backgroundColor:"#fff",borderRadius:"4px",border:"1px solid #EFE5FD",padding:"0px 16px"}}>
+                {reviewList.map((item,index)=>(<ReviewRender item={item} index={index} key={item.id}></ReviewRender>))}
+              </div>
             </div>
-            {reviewList.map((item,index)=>(<ReviewRender item={item} index={index} key={item.id}></ReviewRender>))}
+            <div style={{width:"288px",marginBottom:"24px"}}>
+              <div style={{
+                fontWeight:"bold",
+                marginBottom:"8px",
+                color:"#262626",
+                fontSize:'16px',
+                lineHeight:"16px",
+                height:"16px",
+                display:"flex",
+                justifyContent:"space-between",
+                alignItems:"center"}}>
+                {/* <div style={{width:"14px",minWidth:"14px",minHeight:'14px',height:"14px",backgroundImage:`url(${icon_reviewer})`,marginRight:"4px",backgroundPosition:"center",backgroundSize:"cover"}}></div> */}
+                <Link to="/proreviewer">획득 포인트</Link>
+              </div>
+              <div style={{width:"288px",height:"168px",backgroundColor:"#fff",borderRadius:"4px",border:"1px solid #EFE5FD",padding:"0px 16px"}}>
+                {reviewList.map((item,index)=>(<ReviewRender item={item} index={index} key={item.id}></ReviewRender>))}
+              </div>
             </div>
-            <div style={{fontWeight:"bold",marginBottom:"16px",color:"#505050",fontSize:'14px',lineHeight:"30px",height:"30px",display:"flex",alignItems:"center"}}>
+            <div style={{width:"288px",marginBottom:"24px"}}>
+              <div style={{
+                fontWeight:"bold",
+                marginBottom:"8px",
+                color:"#262626",
+                fontSize:'16px',
+                lineHeight:"16px",
+                height:"16px",
+                display:"flex",
+                justifyContent:"space-between",
+                alignItems:"center"}}>
+                {/* <div style={{width:"14px",minWidth:"14px",minHeight:'14px',height:"14px",backgroundImage:`url(${icon_reviewer})`,marginRight:"4px",backgroundPosition:"center",backgroundSize:"cover"}}></div> */}
+                <Link to="/proreviewer">토론-토</Link>
+                <div style={{fontWeight:"400",fontSize:"12px",color:"#7b7b7b"}}>무엇이든 물어보고 토론해요</div>
+              </div>
+              <div style={{width:"288px",height:"168px",backgroundColor:"#fff",borderRadius:"4px",border:"1px solid #EFE5FD",padding:"0px 16px"}}>
+                {reviewList.map((item,index)=>(<ReviewRender item={item} index={index} key={item.id}></ReviewRender>))}
+              </div>
+            </div>
+            
+            {/* <div style={{fontWeight:"bold",marginBottom:"16px",color:"#505050",fontSize:'14px',lineHeight:"30px",height:"30px",display:"flex",alignItems:"center"}}>
               <div style={{width:"14px",minWidth:"14px",minHeight:'14px',height:"14px",backgroundImage:`url(${icon_fire})`,marginRight:"4px",backgroundPosition:"center",backgroundSize:"cover"}}></div>
               주간 트렌딩
             </div>
-            {weekRanking.map((item)=>(<WeekServiceRender item={item} key={item.id}></WeekServiceRender>))}
-            <Link to="/product?productnum=58">
+            {weekRanking.map((item)=>(<WeekServiceRender item={item} key={item.id}></WeekServiceRender>))} */}
+            {/* <Link to="/product?productnum=58">
               <div className="btn_feedBack">
                 <div style={{width:"16px",height:"16px",backgroundImage:`url(${icon_feedback})`,marginRight:"8px"}}></div>
                 <div>서비스 피드백 및 문의</div>
               </div>
-            </Link>
+            </Link> */}
             <div style={{marginLeft:"20px",marginTop:"32px"}}>
               <div style={{display:"flex"}}>
                 <div><Link to="/introduce">소개</Link></div>
@@ -191,7 +240,7 @@ const RightBar = ({setLoginWindow,categoryState,setCategoryState,scrollY})=>{
       {pageNum===1&&<div>
         {window.innerWidth>767&& <div className="main_proveit" style={{
         top:96,
-        position:header&&"fixed",
+        // position:header&&"fixed",
         margin:"0 auto",
         transition:"0s",
         marginTop:"40px",
@@ -246,7 +295,7 @@ const RightBar = ({setLoginWindow,categoryState,setCategoryState,scrollY})=>{
             <div style={{width:"16px",height:'16px',backgroundImage:`url(${icon_community_4})`,marginRight:"8px"}}></div>
             <div style={{color:categoryState===3&&"#9C31C6",fontWeight:categoryState===3&&"bold"}}>기타</div>
           </div>
-          <div style={{width:"336px",padding:"16px",border:"1px solid #f1f1f1",borderRadius:"8px",color:"#9C31C6",marginBottom:"16px"}}>
+          <div style={{width:"288px",padding:"16px",border:"1px solid #f1f1f1",borderRadius:"8px",color:"#9C31C6",marginBottom:"16px"}}>
             자신이 만든 서비스에 관해 질문을 하거나 받거나, 
             스타트업/서비스 관련 노하우와 정보를 공유하거나 토론할 수 있습니다. 
             커뮤니티 내에서는 상대방을 배려하는 태도를 보여주세요. 👍

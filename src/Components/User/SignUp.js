@@ -44,7 +44,7 @@ const SignUp = ()=>{
 
     const Privacy =()=>{
         return(
-            <div style={{textAlign:"left",padding:"0px 24px 24px 24px",color:"#505050"}}>
+            <div style={{textAlign:"left",padding:"0px 24px 24px 24px",color:"#262626"}}>
                 <div style={{fontSize:"24px",fontWeight:"bold",marginBottom:"45px",marginTop:"27px"}}>개인정보 처리방침</div>
                 <div style={{marginBottom:"40px",fontSize:"14px",lineHeight:'25px'}}>
                     <div style={{fontSize:'20px',marginBottom:"20px"}}>제1조 개인정보의 처리 목적</div>
@@ -160,7 +160,7 @@ const SignUp = ()=>{
     
     const TermsOfService = ()=>{
         return(
-            <div style={{textAlign:"left",padding:"0px 24px 24px 24px",color:"#505050"}}>
+            <div style={{textAlign:"left",padding:"0px 24px 24px 24px",color:"#262626"}}>
             <div style={{fontSize:"24px",fontWeight:"bold",marginBottom:"45px",marginTop:"27px"}}>이용약관</div>
             <div style={{marginBottom:"40px",fontSize:"14px",lineHeight:'25px'}}>
                 <div style={{fontSize:'20px',marginBottom:"20px"}}>제1조 목적</div>
@@ -430,15 +430,15 @@ const SignUp = ()=>{
       <>
       {renderState&&
         <div style={{
-            backgroundColor:"#F9F9F9",
+            backgroundColor:"#FAFAFC",
             display:"flex",
             height: "100%",
             flexDirection:"column",
             alignItems:"center",
             position: "relative",
-            color:"#505050"}}>
+            color:"#262626"}}>
             <div className="signup">
-                <div style={{width:"90px",height:"16px",backgroundImage:`url(${icon_logo})`,marginTop:'40px',marginBottom:'24px',cursor:"pointer"}}
+                <div style={{width:"78px",height:"24px",backgroundImage:`url(${icon_logo})`,marginTop:'40px',marginBottom:'16px',cursor:"pointer"}}
                 onClick={()=>{
                     localStorage.clear();
                     const alink = document.createElement("a");
@@ -449,16 +449,16 @@ const SignUp = ()=>{
                 <div style={{width:"100%",marginTop:"40px"}}>
                     <div className="signup_group_title">반갑습니다</div>
                     <div className="signup_group">
-                        <div style={{height:"14px",fontSize:"14px",lineHeight:'14px',fontWeight:'bold',color:"#505050",width:"100%",textAlign:"left"}}>이름</div>
-                        <div style={{width:"100%",fontSize:"13px",textAlign:"left",marginTop:"16px",color:"#a5a5a5"}}>{JSON.parse(localStorage.getItem("googleProfile")).name}</div>
-                        <div style={{height:"14px",fontSize:"14px",lineHeight:'14px',marginTop:"24px",fontWeight:'bold',color:"#505050",width:"100%",textAlign:"left"}}>이메일</div>
-                        <div style={{width:"100%",fontSize:"13px",textAlign:"left",marginTop:"16px",color:"#a5a5a5"}}>{JSON.parse(localStorage.getItem("googleProfile")).email}</div>
+                        <div style={{height:"14px",fontSize:"14px",lineHeight:'14px',fontWeight:'bold',color:"#262626",width:"100%",textAlign:"left"}}>이름</div>
+                        <div style={{width:"100%",fontSize:"13px",textAlign:"left",marginTop:"16px",color:"#7b7b7b"}}>{JSON.parse(localStorage.getItem("googleProfile")).name}</div>
+                        <div style={{height:"14px",fontSize:"14px",lineHeight:'14px',marginTop:"24px",fontWeight:'bold',color:"#262626",width:"100%",textAlign:"left"}}>이메일</div>
+                        <div style={{width:"100%",fontSize:"13px",textAlign:"left",marginTop:"16px",color:"#7b7b7b"}}>{JSON.parse(localStorage.getItem("googleProfile")).email}</div>
                     </div>
                 </div>
                 <div style={{marginTop:"40px",marginBottom:"24px",width:"100%"}}>
                     <div className="signup_group_title">간단한 프로필을 완성해주세요</div>
                     <div className="signup_group">
-                        <div style={{height:"14px",fontSize:"14px",lineHeight:'14px',fontWeight:'bold',color:"#505050",width:"90%",textAlign:"left"}}>프로필 이미지 변경</div>
+                        <div style={{height:"14px",fontSize:"14px",lineHeight:'14px',fontWeight:'bold',color:"#262626",width:"90%",textAlign:"left"}}>프로필 이미지 변경</div>
                         <div style={{marginTop:"18px",display:"flex"}}>
                             <div style={{width:"80px",height:"80px",minHeight:"80px",minWidth:"80px",borderRadius:"50%",backgroundColor:"#c4c4c4",marginRight:"20px",
                                         backgroundImage:`url(${currentImg})`,backgroundPosition:"center",backgroundRepeat:"no-repeat",backgroundSize:"cover"}}></div>
@@ -468,7 +468,7 @@ const SignUp = ()=>{
                                     <label for="thumbnailImg" className="btn_three" style={{fontSize:"13px",width:"112px",height:"32px",marginBottom:"16px"}}>이미지 업로드
                                     </label>
                                 </form>
-                                <div style={{color:"#a5a5a5",lineHeight:"18.82px"}}>추천 사이즈 : 240*240<br/>jpg,jpeg,png,gif,최대 파일크기 2MB</div>
+                                <div style={{color:"#7b7b7b",lineHeight:"18.82px"}}>추천 사이즈 : 240*240<br/>jpg,jpeg,png,gif,최대 파일크기 2MB</div>
                             </div>
                         </div>
                         <div style={{textAlign:"left"}}>
@@ -491,16 +491,21 @@ const SignUp = ()=>{
                             <input name="department" placeholder="소속을 알려주세요 - 회사명, 팀, 프리랜서 등" value={currentUserInfo.department} onChange={inputLogic}
                             className="signup_input"></input>
                         </div>  
+                        <div style={{textAlign:"left",marginTop:'16px'}}>
+                            <div style={{fontWeight:"bold",fontSize:'14px',height:'14px',lineHeight:"14px",marginBottom:"10px",textAlign:"left"}}>추천인 이메일</div>
+                            <input name="proposer" placeholder="추천인 이메일 입력시 1000포인트가 지급됩니다." value={currentUserInfo.department} onChange={inputLogic}
+                            className="signup_input"></input>
+                        </div>  
                         <div style={{display:"flex",marginTop:'24px'}}>
                             <div style={{width:"16px",minWidth:"16px",minHeight:'16px',height:'16px',marginRight:'8px',backgroundImage:checkState1?`url(${icon_checked})`:`url(${icon_nonChecked})`,cursor:"pointer"}}
                             onClick={()=>{setCheckeState1(!checkState1)}}></div>
-                            <div style={{fontSize:"13px",color:"#a5a5a5",lineHeight:"16px"}}>
+                            <div style={{fontSize:"13px",color:"#7b7b7b",lineHeight:"16px"}}>
                                 프루브잇의 
-                                <span style={{textDecoration:"underline",cursor:"pointer",marginLeft:"4px"}} 
+                                <span style={{textDecoration:"underline",cursor:"pointer",marginLeft:"4px",color:"#a5a5a5"}} 
                                 onClick={()=>{setTermsOfService(true);window.scrollTo(0,0);}}>
                                     이용약관
                                 </span>과 
-                                <span style={{textDecoration:"underline",cursor:"pointer",marginLeft:"4px"}} 
+                                <span style={{textDecoration:"underline",cursor:"pointer",marginLeft:"4px",color:"#a5a5a5"}} 
                                 onClick={()=>{setPrivacyWindow(true);window.scrollTo(0,0);}}>
                                     개인정보처리방침
                                     </span>
@@ -523,7 +528,7 @@ const SignUp = ()=>{
                                     setCheckeState2(true)
                                 }
                                 }}></div>
-                            <div style={{fontSize:"13px",color:"#a5a5a5",lineHeight:"16px"}}>프루브잇의 최신 소식과 관련 트렌드 뉴스레터를 받아볼게요.{"(선택)"}</div>
+                            <div style={{fontSize:"13px",color:"#7b7b7b",lineHeight:"16px"}}>프루브잇의 최신 소식과 관련 트렌드 뉴스레터를 받아볼게요. (선택시 100포인트)</div>
                         </div>
                     </div>
                 </div>
@@ -531,7 +536,7 @@ const SignUp = ()=>{
                 <div style={{width:"100%",display:"flex",flexDirection:"column",alignItems:"center",position:"relative"}}>
                     <div className="btn_one" style={{width:"104px",height:'32px',marginBottom:"32px"}}
                     onClick={(e)=>{userInfoApi();}}>가입 완료</div>
-                    {(currentUserInfo.position===""||!checkState1||nickCheck)&&<div className="btn_one_disible" style={{width:"104px",height:'32px',bottom:"0px",position:'absolute'}}>가입 완료</div>}
+                    {(currentUserInfo.position===""||!checkState1||nickCheck)&&<div className="btn_one_disible" style={{width:"104px",height:'32px',top:"0px",position:'absolute'}}>가입 완료</div>}
                     
                 </div>
                 {(privacyWindow||termsOfServiceWindow)&&<div style={{width:"100%",height:"100%",position:'absolute',top:"0px",left:"0px",backgroundColor:"rgba(80,80,80,0.8)",display:"flex",flexDirection:"column",alignItems:"center",paddingTop:"80px"}} onClick={()=>{setPrivacyWindow(false);setTermsOfService(false)}}>

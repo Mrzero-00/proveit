@@ -271,21 +271,25 @@ const Body =()=>{
 const AnotherUser = ()=>{
     const [loginWindow,setLoginWindow] = useState(false);
     const [modal,setModal] = useState(false);
+    const [alarmModal,setAlarmModal] = useState(false);
     const scrollEvent=(e)=>{
+        
       }
     
       return(
         <div className="contentsBody" style={{
             width:"100%",
-            height:window.innerHeight,
+            minHeight:window.innerHeight,
           }}
-      onClick={()=>{setModal(false)}}
+      onClick={()=>{setModal(false);setAlarmModal(false);}}
       onScroll={scrollEvent}>
     <Header 
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}
     modal={modal}
     setModal={setModal}
+    alarmModal={alarmModal}
+    setAlarmModal={setAlarmModal}
     ></Header>
     <Body
     ></Body>

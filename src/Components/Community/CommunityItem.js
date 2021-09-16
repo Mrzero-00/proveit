@@ -42,7 +42,7 @@ const CommentRender =({item,product,setLoginWindow,rerender})=>{
           }).then((e)=>{
               if(e.data.ret_code === "0000"){
                 rerender();
-                  localStorage.setItem("replyId",e.data.reply_id);
+                localStorage.setItem("replyId",e.data.reply_id);
               }else{
                   alert("로그인 해쉬가 만료되었습니다. 다시 로그인해주세요");
                   const alink = document.createElement("a");
@@ -317,6 +317,7 @@ const Body =({setLoginWindow,modal,setModal})=>{
     const [replyState,setReplyState] =useState(true);
     const [delWindow,setDelWindow] = useState(false);
     const [modifyWindow,setModifyWindow] = useState(false);
+
     const replyAddApi = async()=>{
         var data = new FormData();
         data.append('parent_id',"");
@@ -647,7 +648,7 @@ const Body =({setLoginWindow,modal,setModal})=>{
       <div id="pageBody" className="communityMain_body" style={{paddingBottom:"56px"}}>
           <a id="replyNavi" style={{display:"none"}} href={`#${localStorage.getItem("replyId")}`}></a>
           <div className="community_header_item">
-              <div className="community_title">커뮤니티<div className="blogMain_title_icon" style={{backgroundImage:`url(${icon_community_title_icon})`}}></div></div>
+              <div className="community_title">토론-토<div className="blogMain_title_icon" style={{backgroundImage:`url(${icon_community_title_icon})`}}></div></div>
               <div className="comuunity_header_phone">
               <div className="comuunity_header_text">
                 자신이 만든 서비스에 관해 질문을 하거나 받거나, 
@@ -678,6 +679,8 @@ const CommunityItem = ()=>{
     const [loginWindow,setLoginWindow] = useState(false);
     const [signupWindow,setSignUpWindow] = useState(false);
     const [modal,setModal] = useState(false);
+    const [alarmModal,setAlarmModal] = useState(false);
+    const [scrollY,setScrollY]=useState(0);
 
 
     const submitGoogleData= async(name,id,token)=>{
@@ -752,24 +755,25 @@ const CommunityItem = ()=>{
       }
     }
 
-    const scrollEvent=(e)=>{
-      }
     
       return(
         <div className="contentsBody" style={{
             width:"100%",
-            height:window.innerHeight,
+            minHeight:window.innerHeight,
           }}
-      onClick={()=>{setModal(false);}}
-      onScroll={scrollEvent}>
+      onClick={()=>{setModal(false);setAlarmModal(false);}}
+      >
 
     <Header 
+    setScrollY={setScrollY}
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}
     signupWindow={signupWindow}
     setSignUpWindow={setSignUpWindow}
     modal={modal}
     setModal={setModal}
+    alarmModal={alarmModal}
+    setAlarmModal={setAlarmModal}
     ></Header>
     <Body
     modal={modal}

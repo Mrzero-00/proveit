@@ -725,7 +725,8 @@ const Body=()=>{
 const RegisterProduct = ()=>{
     const [loginWindow,setLoginWindow] = useState(false);
     const [modal,setModal] = useState(false);
-
+    const [scrollY,setScrollY]=useState(0);
+    const [alarmModal,setAlarmModal] = useState(false);
     const userInfoGetApi = async()=>{
         var data = new FormData();
         data.append('email', localStorage.getItem("email"));
@@ -766,13 +767,16 @@ const RegisterProduct = ()=>{
             width:"100%",
             height:window.innerHeight,
           }}
-      onClick={()=>{setModal(false)}}
+      onClick={()=>{setModal(false);setAlarmModal(false);}}
       onScroll={scrollEvent}>
     <Header 
+    setScrollY={setScrollY}
     setLoginWindow={setLoginWindow}
     loginWindow={loginWindow}
     modal={modal}
     setModal={setModal}
+    alarmModal={alarmModal}
+    setAlarmModal={setAlarmModal}
     ></Header>
     <Body
     ></Body>

@@ -96,7 +96,7 @@ const Body =()=>{
       <div id="pageBody" className="blogMain_body" style={{paddingBottom:"56px"}}
       onClick={()=>{setCategoryModal(false)}}>
           <div className="community_header_write">
-              <div className="community_title">커뮤니티<div className="blogMain_title_icon" style={{backgroundImage:`url(${icon_community_title_icon})`}}></div></div>
+              <div className="community_title">토론-토<div className="blogMain_title_icon" style={{backgroundImage:`url(${icon_community_title_icon})`}}></div></div>
           </div>
           <div className="community_body">
             <div className="community_add_body">
@@ -186,7 +186,8 @@ const CommunityAdd = ()=>{
     const [loginWindow,setLoginWindow] = useState(false);
     const [signupWindow,setSignUpWindow] = useState(false);
     const [modal,setModal] = useState(false);
-
+    const [alarmModal,setAlarmModal] = useState(false);
+    const [scrollY,setScrollY]=useState(0);
 
     const submitGoogleData= async(name,id,token)=>{
         //유효성 검사
@@ -260,24 +261,24 @@ const CommunityAdd = ()=>{
       }
     }
 
-    const scrollEvent=(e)=>{
-      }
-    
       return(
         <div className="contentsBody" style={{
             width:"100%",
-            height:window.innerHeight,
+            minHeight:window.innerHeight,
           }}
-      onClick={()=>{setModal(false);}}
-      onScroll={scrollEvent}>
+      onClick={()=>{setModal(false);setAlarmModal(false);}}
+      >
 
     <Header 
+    setScrollY={setScrollY}
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}
     signupWindow={signupWindow}
     setSignUpWindow={setSignUpWindow}
     modal={modal}
     setModal={setModal}
+    alarmModal={alarmModal}
+    setAlarmModal={setAlarmModal}
     ></Header>
     <Body
     modal={modal}

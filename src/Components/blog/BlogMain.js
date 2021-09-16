@@ -98,6 +98,7 @@ const BlogMain = ()=>{
     const [signupWindow,setSignUpWindow] = useState(false);
     const [modal,setModal] = useState(false);
     const [scrollY,setScrollY]=useState(0);
+    const [alarmModal,setAlarmModal] = useState(false);
 
     const submitGoogleData= async(name,id,token)=>{
         //유효성 검사
@@ -171,25 +172,24 @@ const BlogMain = ()=>{
       }
     }
 
-    const scrollEvent=(e)=>{
-      // setScrollY(e.target.scrollTop);
-    }
   
     return(
       <div className="contentsBody" style={{
         width:"100%",
-        height:window.innerHeight,
+        minHeight:window.innerHeight,
       }}
-    onClick={()=>{setModal(false);}}
-    onScroll={scrollEvent}>
+    onClick={()=>{setModal(false);setAlarmModal(false);}}
+    >
     <Header 
-    scrollY={scrollY}
+    setScrollY={setScrollY}
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}
     signupWindow={signupWindow}
     setSignUpWindow={setSignUpWindow}
     modal={modal}
     setModal={setModal}
+    alarmModal={alarmModal}
+    setAlarmModal={setAlarmModal}
     ></Header>
     <Body
     scrollY={scrollY}

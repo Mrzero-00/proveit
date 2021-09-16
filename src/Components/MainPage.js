@@ -35,7 +35,7 @@ import icon_category20 from '../image/icon_category20.png';
 import { Link } from 'react-router-dom';
 
 
-const RenderList =({item,index,length,setRenderState,setLoginWindow})=>{
+const RenderList =({item,index,length,setRenderState,setLoginWindow,indexNum})=>{
   const [hover,setHover] = useState(false);
   const [likeState,setLikeState] = useState(item.like_m==="0"?false:true);
   const [likeCount,setLikeCount] = useState(item.like_count*1);
@@ -146,15 +146,61 @@ const RenderList =({item,index,length,setRenderState,setLoginWindow})=>{
     }
   }
 
-
   return( 
     <>
-    <Link to={`/product?productnum=${item.id}`}>
+    
     <div id={item.id} 
       className="main_body_product_item"
+      onClick={()=>{
+        const alink = document.createElement("a");
+        alink.href =`/product?productnum=${item.id}`;
+        alink.click();
+      }}
+      // style={{filter:(index>10&&window.localStorage.getItem("hash")===null)&&"blur(10px)"}}
     >
+     
       <div className="main_body_product_thumbnail" role="img" alt={`${item.title}_thumbnail`} style={{backgroundImage:`url(${item.thumbnail})`}}></div>
+      <div style={{width:"100%",textAlign:"left"}}>
+        <h3 className="main_body_product_title">{item.title}</h3>
+        <p className="main_body_product_subtitle">{item.sub_title}</p>
+        <div className="iphone" style={{display:"flex",alignItems:"center"}}>
+          <div style={{height:"100%",display:"flex",justifyContent:"center",alignItems:"center",color:"#7b7b7b"}}>{item.category}</div>
+          <div style={{width:"4px",margin:"0px 4px",color:"#7b7b7b"}}>·</div>
+          <div style={{height:"100%",display:"flex",justifyContent:"center",alignItems:"center",color:"#7b7b7b"}}>{item.payment_type}</div>
+          <div style={{width:"4px",margin:"0px 4px",color:"#7b7b7b"}}>·</div>
+          <div style={{height:"14px",display:"flex",justifyContent:"center",alignItems:"center",color:"#7b7b7b",width:"1px",backgroundColor:"#e5e5e5"}}></div>
+          <div style={{width:"4px",margin:"0px 4px",color:"#7b7b7b"}}>·</div>
+          <div style={{color:"#6200EE"}}>{item.review_count}개의 댓글</div>
+          {/* <div style={{height:"100%",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>
+            <div style={{width:"13px",height:"13px",marginRight:"4px",backgroundImage:`url(${categoryIcon})`,backgroundPosition:"center",backgroundSize:"cover"}}></div>
+            <div>{item.category}</div>
+            <div style={{width:"7px",margin:"0px 4px"}}>·</div>
+            <div style={{color:"#9c31c6"}}>{item.review_count}개의 댓글</div>
+          </div> */}
+        </div>
+      </div>
+      <div className="main_body_product_likecount" style={{border:(likeState||hover)&&"1px solid #6200EE",}}
+      onMouseEnter={()=>{setHover(true);}}
+      onMouseLeave={()=>{setHover(false);}}
+      onClick={(e)=>{likeApi();e.stopPropagation();}}>
+        <div style={{height:"24px",width:"24px",backgroundImage:(likeState||hover)?`url(${icon_like_m})`:`url(${icon_like})`,backgroundRepeat:"no-repeat",backgroundPosition:"center"}}></div>
+        <div style={{height:"16px",lineHeight:"16px",width:"100%",fontSize:"14px",fontWeight:"bold",color:(likeState||hover)?"#6200EE":"#262626",textAlign:"center"}}>{likeCount*1/1000>=1?`${likeCount*1/1000}k`:likeCount}</div>
+      </div>
       
+    </div>
+
+    {/* {indexNum*8>index&&
+    <div id={item.id} 
+      className="main_body_product_item"
+      onClick={()=>{
+        const alink = document.createElement("a");
+        alink.href =`/product?productnum=${item.id}`;
+        alink.click();
+      }}
+      // style={{filter:(index>10&&window.localStorage.getItem("hash")===null)&&"blur(10px)"}}
+    >
+     
+      <div className="main_body_product_thumbnail" role="img" alt={`${item.title}_thumbnail`} style={{backgroundImage:`url(${item.thumbnail})`}}></div>
       <div style={{width:"100%",textAlign:"left"}}>
         <h3 className="main_body_product_title">{item.title}</h3>
         <p className="main_body_product_subtitle">{item.sub_title}</p>
@@ -176,9 +222,10 @@ const RenderList =({item,index,length,setRenderState,setLoginWindow})=>{
         <div style={{height:"24px",width:"24px",backgroundImage:(likeState||hover)?`url(${icon_like_m})`:`url(${icon_like})`,backgroundRepeat:"no-repeat",backgroundPosition:"center"}}></div>
         <div style={{height:"16px",lineHeight:"16px",width:"100%",fontSize:"14px",fontWeight:"bold",color:(likeState||hover)?"#9C31C6":"#505050",textAlign:"center"}}>{likeCount*1/1000>=1?`${likeCount*1/1000}k`:likeCount}</div>
       </div>
-    </div>
-    </Link>
+      
+    </div>} */}
     </>
+
   )
 }
 
@@ -187,6 +234,7 @@ const Body=({productOrderState,setProductOrderState,setLoginWindow,scrollY})=>{
   const [fullProject,setFullProject] = useState([]);
   const [popularArray,setPopularArray] =useState([]);
   const [fastestArray,setFastestArray] =useState([]);
+  const [indexNum,setIndexNum] = useState(2);
   // const [scrollState,setScrollState] =useState(1);
   const [project,setProject] = useState(
     [
@@ -222,6 +270,7 @@ const Body=({productOrderState,setProductOrderState,setLoginWindow,scrollY})=>{
     const [popularArray,setPopularArray] =useState(item.product);
     const [fastestArray,setFastestArray] =useState(item.product);
     const [redering,setRendering] = useState(false);
+
 
     const popularLogic =(array)=>{
       const currentArray = array;
@@ -278,6 +327,7 @@ const Body=({productOrderState,setProductOrderState,setLoginWindow,scrollY})=>{
         fastestLogic(fastestArray);
       }
     },[productOrderState])
+
 
     return(   
       <div style={{marginBottom:"40px"}}>
@@ -390,8 +440,15 @@ const Body=({productOrderState,setProductOrderState,setLoginWindow,scrollY})=>{
   useEffect(()=>{
     productListApi();
   },[localStorage.getItem("email"),renderState])
+
+  useEffect(()=>{
+    if(indexNum<parseInt(scrollY/window.innerHeight)+2){
+      setIndexNum(parseInt(scrollY/window.innerHeight)+2);
+    }
+  },[scrollY])
+
   return(
-    <div id="pageBody" style={{width:"100%",backgroundColor:"#fffefc",display:"flex",alignItems:"center",flexDirection:"column"}}
+    <div id="pageBody" style={{width:"100%",backgroundColor:"#fafafc",display:"flex",alignItems:"center",flexDirection:"column"}}
     > 
 
           <div className="homepage_title">
@@ -428,27 +485,31 @@ const Body=({productOrderState,setProductOrderState,setLoginWindow,scrollY})=>{
               <div style={{fontWeight:"bold"}}>전체</div>
                 <div style={{display:"flex"}}>
                   <div style={{
-                    fontSize:"14px",
+                    fontSize:"16px",
+                    height: "16px",
+                    lineHeight:"16px",
                     marginRight:"8px",
                     cursor:"pointer",
-                    fontWeight:productOrderState==="popular"&&"bold",
-                    color:productOrderState==="popular"?"#323232":"#828282",
+                    fontWeight:productOrderState==="popular"&&"700",
+                    color:productOrderState==="popular"?"#262626":"#7b7b7b",
                 }} onClick={()=>{setProductOrderState("popular");fullPopularLogic(fastestArray);}}>인기순 |</div>
                   <div style={{
-                    fontSize:"14px",
+                    fontSize:"16px",
+                    height: "16px",
+                    lineHeight:"16px",
                     cursor:"pointer",
-                    fontWeight:productOrderState==="fastest"&&"bold",
-                    color:productOrderState==="fastest"?"#323232":"#828282",}} 
+                    fontWeight:productOrderState==="fastest"&&"700",
+                    color:productOrderState==="fastest"?"#262626":"#7b7b7b",}} 
                     onClick={()=>{setProductOrderState("fastest");fullFastestLogic(popularArray);}}>최신순</div>
                 </div>
             </div>
-            {productOrderState==="fastest"&&<div>{fastestArray.map((item,index)=>(<RenderList index={index} setLoginWindow={setLoginWindow} setRenderState={setRenderState}  key={item.id} item={item}></RenderList>))}</div>}
-            {productOrderState==="popular"&&<div>{popularArray.map((item,index)=>(<RenderList index={index} setLoginWindow={setLoginWindow} setRenderState={setRenderState}  key={item.id} item={item}></RenderList>))}</div>}   
+            {productOrderState==="fastest"&&<div>{fastestArray.map((item,index)=>(<RenderList indexNum={indexNum} index={index} setLoginWindow={setLoginWindow} setRenderState={setRenderState}  key={item.id} item={item}></RenderList>))}</div>}
+            {productOrderState==="popular"&&<div>{popularArray.map((item,index)=>(<RenderList indexNum={indexNum} index={index} setLoginWindow={setLoginWindow} setRenderState={setRenderState}  key={item.id} item={item}></RenderList>))}</div>}   
           </div>
           {/* 풀버전 */}
-          <div style={{width:"100%",height:"19px",fontSize:'13px',color:"#828282",textAlign:"center",paddingBo:"32px"}}>여기가 끝이에요</div>
+          <div style={{width:"100%",height:"19px",fontSize:'13px',color:"#7b7b7b",textAlign:"center",paddingBo:"32px"}}>더 이상 게시물이 없습니다.</div>
         </div>
-        <RightBar scrollY={scrollY}></RightBar>
+        <RightBar></RightBar>
       </div>}
     </div>
   )
@@ -458,8 +519,10 @@ const MainPage = ()=>{
   const [loginWindow,setLoginWindow] = useState(false);
   const [signupWindow,setSignUpWindow] = useState(false);
   const [modal,setModal] = useState(false);
+  const [alarmModal,setAlarmModal] = useState(false);
   const [productOrderState,setProductOrderState] = useState("fastest");
   const [scrollY,setScrollY]=useState(0);
+  
   const submitGoogleData= async(name,id,token)=>{
     //유효성 검사
     //let crt = document.getElementById('crt');
@@ -535,22 +598,35 @@ const MainPage = ()=>{
     // setScrollY(e.target.scrollTop);
   }
 
+ 
+
   return(
   <div className="contentsBody" style={{
     width:"100%",
-    height:window.innerHeight,
+    minHeight:window.innerHeight,
   }}
-  onClick={()=>{setModal(false)}}
+  onClick={()=>{
+    setModal(false);
+    setAlarmModal(false);
+  }}
   onScroll={scrollEvent}>
 
+
+    <Helmet>
+      <title>프루브잇 - 되는 서비스들의 런칭 플랫폼</title>
+      <meta name="description" content="잘 되고 있는 서비스, 잘 되고 싶은 서비스를 소개해주세요." />
+    </Helmet>
+
     <Header 
-    scrollY={scrollY}
+    setScrollY={setScrollY}
     setLoginWindow={setLoginWindow} 
     loginWindow={loginWindow}
     setSignUpWindow={setSignUpWindow}
     signupWindow={signupWindow}
     modal={modal}
     setModal={setModal}
+    alarmModal={alarmModal}
+    setAlarmModal={setAlarmModal}
     ></Header>
     <Body  
       scrollY={scrollY}
@@ -558,6 +634,8 @@ const MainPage = ()=>{
       setLoginWindow={setLoginWindow}
       setProductOrderState={setProductOrderState}
       ></Body>
+
+
 
     {loginWindow&&<LoginWindow 
     responseGoogle={responseGoogle}

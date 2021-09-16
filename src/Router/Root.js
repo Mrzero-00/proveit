@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { Route,Prompt } from 'react-router-dom';
 import BlogMain from '../Components/blog/BlogMain';
 import Review from '../Components/blog/Review';
+import Event from '../Components/Common/Event';
 import Guideline from '../Components/Common/Guideline';
 import HelpUs from '../Components/Common/HelpUs';
 import Introduce from '../Components/Common/Introduce';
@@ -26,8 +27,10 @@ const Root = ()=>{
   });
 
   return(
-  <div style={{width:"100vw",height:"100vh",color:"#505050",backgroundColor:"#FFFEFC"}}>
+  <div style={{backgroundColor:"#FAFAFC"}}>
+
       <Route exact path="/" component={MainPage}></Route>
+      <Route exact path="/event" component={Event}></Route>
       <Route exact path="/signup" component={SignUp}></Route>
       <Route exact path="/profile" component={Profile}></Route>
       <Route exact path="/registerproduct" component={RegisterProduct}></Route>
