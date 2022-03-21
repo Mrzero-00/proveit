@@ -122,7 +122,7 @@
 
 .btn_one_big{
     background-color: #6200EE;
-    border-radius: 2px;
+    border-radius: 4px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -151,7 +151,7 @@
 
 .btn_two{
     background-color: #fff;
-    border-radius: 2px;
+    border-radius: 4px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -295,7 +295,8 @@ input:focus{
 }
 
 .quillInput{
-    border:1px solid #e5e5e5;
+    border:1px solid #9965F4;
+    border-radius: 2px;
 }
 
 .quillInput:hover{
@@ -365,8 +366,79 @@ input:focus{
 
 @media screen  and (max-width:767px){
 
+/* #pageBody{
+  padding:0px 20px;
+} */
+
+  .homepage_title{
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #efe5fd;
+    margin-top: 24px;
+    background-color: #FFF;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding:16px 48px 32px 48px;
+  }
+
+  .homepage_title_textcontents{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .homepage_title_gif{
+    width: 104px;
+    height: 104px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url(../image/coffee_gif.gif);
+  }
+
+  .homepage_title_text{
+    font-family: Noto Sans KR;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.8;
+    text-align: center;
+    width: 190px;
+    margin-bottom: 16px;
+  }
+
+  .homepage_title_btn{
+    width: 120px;
+    height: 32px;
+    background: #6200EE;
+    border-radius: 4px;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
   body{
     overflow-x: hidden;
+  }
+
+  .reply_web{
+    display: none;
+  }
+
+  .reply_phone_profile{
+    margin-top: 8px;
+  }
+
+  .reply_profile{
+    margin-bottom: 8px;
   }
 
   .login_btn_list{
@@ -468,31 +540,11 @@ input:focus{
         align-items:center;
       }
 
-      .hompage_title_box{
-        padding:0px 20px 0px 20px;
-      }
-      
-  .homepage_title{
-    width: 100%;
-    padding: 24px 20px 40px 20px;
-    position: relative;
-    display: none;
-
-  }
-
-  .hompage_title_main{
-    color: #000;
-    font-size: 20px;
-    font-weight: 700;
-    text-align: left;
-    line-height: 32px;
-    margin-bottom: 24px;
-  }
 
     .main_body{
        /* 폰화면 */
        margin-top: 48px;
-      width:100vw;
+      width:100%;
       height:100%;
     }
 
@@ -523,7 +575,6 @@ input:focus{
     .main_body_product_list{
       width:100%;
       height:100%;
-      padding: 0px 20px;
     }
   
     .main_body_product_item{
@@ -535,9 +586,9 @@ input:focus{
       background-color:#fff;
       position:relative;
       cursor:pointer;
-      border:1px solid #e5e5e5;
-      border-radius: 8px;
-      margin-bottom: 8px;
+      border:1px solid #EFE5FD;
+      border-radius: 2px;
+      margin-bottom: 2px;
       z-index: 999;
     }
   
@@ -562,15 +613,15 @@ input:focus{
     }
 
     .main_body_product_likecount{
-      width:64px;
-      min-width:64px;
-      height:64px;
+      width:56px;
+      min-width:56px;
+      height:56px;
       display:flex;
       justify-content: center;
       flex-direction:column;
       align-items:center;
-      border:1px solid #e0e0e0;
-      border-radius:50%;
+      border:1px solid #EFE5FD;
+      border-radius:4px;
     }
 
     .iphone{
@@ -599,8 +650,6 @@ input:focus{
       height:20px;
       line-height:20px;
       text-align:left;
-      width:100%;
-      margin-bottom:24px;
     }
   
     .signup_group{
@@ -818,50 +867,34 @@ input:focus{
     }
 
     .kakao_share{
-      width:100%;
-      height:40px;
+      width:32px;
+      height:32px;
       margin-right:8px;
-      background-image:url("../image/icon_kakao_phone.svg");
-      background-position: center;
-      background-repeat: no-repeat;
-      background-color: #fee500;
-      border-radius: 2px;
+      background-image:url("../image/icon_kakao.svg");
       cursor:pointer;
     }
 
     .facebook_share{
-      width:100%;
-      height:40px;
+      width:32px;
+      height:32px;
       margin-right:8px;
-      background-image:url("../image/icon_facebook_phone.svg");
-      background-position: center;
-      background-repeat: no-repeat;
-      background-color: #4267B2;
-      border-radius: 2px;
+      background-image:url("../image/icon_facebook.svg");
       cursor:pointer;
     }
 
     .twitter_share{
-      width:100%;
-      height:40px;
+      width:32px;
+      height:32px;
       margin-right:8px;
-      background-image:url("../image/icon_twitter_phone.svg");
-      background-position: center;
-      background-repeat: no-repeat;
-      background-color:#1B95E0;
-      border-radius: 2px;
+      background-image:url("../image/icon_twitter.svg");
       cursor:pointer;
     }
 
     .link_share{
-      width:100%;
-      height:40px;
+      width:32px;
+      height:32px;
       margin-right:8px;
-      background-image:url("../image/icon_link_phone.svg");
-      background-position: center;
-      background-repeat: no-repeat;
-      border-radius: 2px;
-      border: 1px solid #e5e5e5;
+      background-image:url("../image/icon_link.svg");
       cursor:pointer;
     }
 
@@ -1888,32 +1921,57 @@ input:focus{
     margin-right: 42px;
   }
   .homepage_title{
-    width: 1040px;
-    height: 100%;
-    position: relative;
-    font-size: 32px;
-    font-weight: 700;
-    margin-top: 64px;
-    margin-bottom: 120px;
+    width: 896px;
+    height: 184px;
+    border-radius: 8px;
+    border: 1px solid #efe5fd;
+    margin-top: 24px;
+    background-color: #FFF;
     display: none;
+    align-items: center;
+    padding-left: 40px;
   }
 
-  .hompage_title_box{
-    width: 1040px;
-    margin-bottom: 40px;
-    margin-top: 48px;
+  .homepage_title_textcontents{
+    display: flex;
+    align-items: center;
   }
 
-  .hompage_title_main{
-    color: #000;
-    font-size: 32px;
-    height:80px;
-    line-height: 52px;
-    font-weight: 700;
+  .homepage_title_gif{
+    width: 136px;
+    height: 136px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url(../image/coffee_gif.gif);
+    margin-right: 32px;
+  }
+
+  .homepage_title_text{
+    font-family: Noto Sans KR;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 29px;
+    letter-spacing: 0em;
     text-align: left;
-    margin-bottom: 40px;
+    width: 270px;
+    margin-right:162px;
   }
 
+  .homepage_title_btn{
+    width: 184px;
+    height: 48px;
+    background: #6200EE;
+    border-radius: 8px;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    cursor: pointer;
+  }
+  
 
   
 
@@ -1959,8 +2017,8 @@ input:focus{
       }
 
       #header{
-        height:144px;
-        min-height:144px;
+        height:96px;
+        min-height:96px;
         background-color:#fff;
         display:flex;
         flex-direction: column;
@@ -1973,15 +2031,15 @@ input:focus{
 
       #header_fixed{
         width:100vw;
-        height:144px;
+        height:96px;
         background-color:#fff;
         display:flex;
         position:fixed;
-        top:-144px;
+        top:-96px;
         justify-content:center;
         flex-direction: column;
         align-items:center;
-        min-height:144px;
+        min-height:96px;
         z-index:9999;
       }
     
@@ -1995,9 +2053,10 @@ input:focus{
       }
 
       .header_coffe{
+
         width: 100%;
         height: 48px;
-        display: flex;
+        display: none;
         justify-content: center;
         align-items: center;
         background-color: #000;
@@ -2160,12 +2219,32 @@ input:focus{
       height:20px;
       line-height:20px;
       text-align:left;
-      width:100%;
-      margin-bottom:24px;
+      
     }
+
+    .signup_icon{
+      width: 20px;
+      height: 20px;
+      margin-left:8px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-image: url(../image/icon_signup.png);
+    }
+
+    .signup_icon_profile{
+      width: 20px;
+      height: 20px;
+      margin-left:8px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-image: url(../image/icon_signup_profile.png);
+    }
+    
   
     .signup_group{
-        padding:24px 19px 24px 19px;
+        padding:24px 24px 30px 24px;
         background-color:#fff;
         border-radius:2px;
         width:100%;
@@ -2242,6 +2321,7 @@ input:focus{
     }
     .product_item_comment{
         width:100%;
+        max-width: 752px;
         background-color:#fff;
         box-sizing:border-box;
         margin-right:16px;
@@ -2253,7 +2333,6 @@ input:focus{
         color:#262626;
         font-size:14px;
         width:100%;
-        border-radius:2px;
         padding:6px 6px 6px 6px;
         box-sizing:border-box;
         display:flex;
@@ -2621,7 +2700,7 @@ input:focus{
     .blogMain_item{
       width:100%;
       height:189px;
-      background-color:#fff;
+      background-color:#FAFAFC;
       display:flex;
       justify-content:center;
       margin-bottom: 64px;
@@ -2850,20 +2929,38 @@ input:focus{
 
     /* 오른쪽바 */
 
-    .rightbar_weekservice{
+    .rightbar_pointranking{
       background-color: #fff;
-      width:336px;
+      width:100%;
       height: 56px;
       display: flex;
       font-size: 14px;
-      margin-bottom: 4px;
-      border-radius: 8px;
-      border:1px solid #f1f1f1;
       align-items: center;
+      color:#262626;
+      position: relative;
     }
 
-    .rightbar_weekservice:hover{
+    .rightbar_pointranking:hover{
       background-color: #F5F5F5;
+    }
+
+    .rightbar_community_title{
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 17px;
+        max-height: 33px;
+        overflow: hidden;
+        color: #262626;
+        margin-bottom: 8px;
+    } 
+
+    .rightbar_community_text{
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 17px;
+      max-height: 33px;
+      overflow: hidden;
+      color: #7b7b7b;
     }
 
 
@@ -3699,6 +3796,16 @@ input:focus{
   .get_point_item_body_text>b{
     font-weight: 400;
     color: #7B7B7B;
+  }
+  .reply_phone{
+    display: none;
+  }
+
+  
+  .reply_profile{
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
   }
 }
 

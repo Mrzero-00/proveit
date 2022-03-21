@@ -447,7 +447,10 @@ const SignUp = ()=>{
                 }}></div>
                 <div style={{fontSize:"16px",height:"16px",lineHeight:'16px',fontWeight:"bold"}}>회원가입</div>
                 <div style={{width:"100%",marginTop:"40px"}}>
-                    <div className="signup_group_title">반갑습니다</div>
+                    <div style={{display:"flex",alignItems:"center",marginBottom:"24px"}}>
+                        <div className="signup_group_title">반갑습니다</div>
+                        <div className="signup_icon"></div>
+                    </div>
                     <div className="signup_group">
                         <div style={{height:"14px",fontSize:"14px",lineHeight:'14px',fontWeight:'bold',color:"#262626",width:"100%",textAlign:"left"}}>이름</div>
                         <div style={{width:"100%",fontSize:"13px",textAlign:"left",marginTop:"16px",color:"#7b7b7b"}}>{JSON.parse(localStorage.getItem("googleProfile")).name}</div>
@@ -456,7 +459,10 @@ const SignUp = ()=>{
                     </div>
                 </div>
                 <div style={{marginTop:"40px",marginBottom:"24px",width:"100%"}}>
-                    <div className="signup_group_title">간단한 프로필을 완성해주세요</div>
+                    <div style={{display:"flex",alignItems:"center",marginBottom:"24px"}}>
+                        <div className="signup_group_title">간단한 프로필을 완성해주세요</div>
+                        <div className="signup_icon_profile"></div>
+                    </div>
                     <div className="signup_group">
                         <div style={{height:"14px",fontSize:"14px",lineHeight:'14px',fontWeight:'bold',color:"#262626",width:"90%",textAlign:"left"}}>프로필 이미지 변경</div>
                         <div style={{marginTop:"18px",display:"flex"}}>
@@ -511,7 +517,7 @@ const SignUp = ()=>{
                                     </span>
                                 을 확인하였습니다.{"(필수)"}</div>
                         </div>
-                        <div style={{display:"flex",marginTop:"15px",marginBottom:"29px"}}>
+                        <div style={{display:"flex",marginTop:"15px"}}>
                             <div style={{width:"16px",minWidth:"16px",minHeight:'16px',height:'16px',marginRight:'8px',backgroundImage:checkState2?`url(${icon_checked})`:`url(${icon_nonChecked})`,cursor:"pointer"}}
                             onClick={()=>{
                                 if(checkState2){

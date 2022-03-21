@@ -579,7 +579,7 @@ const Body =({setLoginWindow,modal,setModal})=>{
                     }}
                         >
                     </div>
-                        <div>
+                        <div style={{width:"100%"}}>
                             <ReactQuill className="quillInput product_item_comment_input" theme="" placeholder="의견이나 궁금한 점을 남겨보세요"
                             value={currentComment.current}
                             onChange={(e)=>{currentComment.current=e;}}></ReactQuill>

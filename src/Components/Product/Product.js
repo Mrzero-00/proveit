@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import icon_commentModify from '../../image/icon_commentModify.png';
+import icon_commentModify from '../../image/icon_commentModify.svg';
 import icon_like_off from '../../image/icon_like_off.svg';
 import icon_like_on from '../../image/icon_like_on.svg';
+import icon_like_btn from '../../image/icon_likeBtn.svg';
 import icon_upBtn_black from '../../image/icon_upBtn_black.svg';
 import icon_comment_first from '../../image/icon_comment_first.svg';
 
@@ -9,6 +10,8 @@ import icon_product_adroid from '../../image/icon_product_adroid.svg';
 import icon_product_ios from '../../image/icon_product_ios.svg';
 import icon_product_link from '../../image/icon_product_link.svg';
 import icon_product_link_arrow from '../../image/icon_product_link_arrow.svg';
+import icon_maker from '../../image/icon_maker.svg';
+import icon_pointcoin from '../../image/icon_pointcoin.svg';
 
 import icon_links from '../../image/icon_links.svg';
 import icon_bigImg_off from '../../image/icon_bigImg_off.svg';
@@ -32,7 +35,6 @@ const CommentRender =({item,product,rerenderLogic,setLoginWindow})=>{
     const [modifyState,setModifyState] = useState(false);
     const [listHover,setListHover] = useState(0);
     const commentRef = useRef(0);
-
     const depthReplyApi = async()=>{
         var data = new FormData();
         data.append('parent_id', item.depth==="1"?item.parent_id:item.id);
@@ -135,6 +137,35 @@ const CommentRender =({item,product,rerenderLogic,setLoginWindow})=>{
         }
     }
 
+    const replylikeApi = async(id)=>{
+        var data = new FormData();
+        data.append("user_email",localStorage.getItem("email"));
+        data.append("hash",localStorage.getItem("hash"));
+        data.append("reply_id",id);
+        data.append("target","reply");
+        try{
+            await axios({
+                method:"post",
+                url : "https://www.proveit.co.kr/api/productLike.php",
+                data:data
+      
+            }).then((e)=>{
+                if(e.data.ret_code === "0000"){
+                    rerenderLogic();
+                }else{
+                    alert("로그인 해쉬가 만료되었습니다. 다시 로그인해주세요");
+                    const alink = document.createElement("a");
+                    alink.href="/";
+                    setTimeout(() => {
+                        localStorage.clear();
+                        alink.click();
+                    }, 1000);
+                }
+            })
+        }catch{
+      
+        }
+    }  
     return(
         <div id={item.id} style={{position:"relative"}}
          className={item.depth==="0"?"product_item_reply":"product_item_reply_depth"}>
@@ -156,11 +187,21 @@ const CommentRender =({item,product,rerenderLogic,setLoginWindow})=>{
             </div>
             </Link>
             <div style={{width:"100%"}}>
-                <div style={{display:"flex"}}>
-                <Link to={item.user_email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${item.user_id}`}><div style={{fontWeight:"bold",marginBottom:'8px',height:"14px",lineHeight:"14px",marginRight:"4px",fontSize:'14px',color:"#505050"}}>{item.nick}</div></Link>
-                    {(item.user_email ===product.email&&product.make_by==="true")&&<div style={{color:'#9c31c6',lineHeight:"16px",height:"16px",fontSize:'10px',textAlign:"center",width:"48px",borderRadius:"8px",backgroundColor:"#f1f1f1"}}>제작자</div>}
+                <div className="reply_profile">
+                    <div style={{display:"flex",alignItems:"center"}}>
+                        <Link to={item.user_email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${item.user_id}`}><div style={{fontWeight:"bold",height:"16px",lineHeight:"16px",fontSize:'16px',color:"#262626",marginRight:"8px"}}>{item.nick}</div></Link>
+                        {(item.user_email ===product.product.email&&product.product.make_by==="true")&&<div className="reply_phone" style={{height:"16px",width:"16px",backgroundImage:`url(${icon_maker})`,backgroundSize:"cover"}}></div>}
+                        <div className="reply_phone" style={{height:"16px",width:"16px",backgroundImage:`url(${icon_pointcoin})`,backgroundSize:"cover",margin:"0px 4px"}}></div>
+                        <div className="reply_phone" style={{height:"16px",lineHeight:"16px",fontSize:"12px",color:"#262626"}}>{item.point}</div>
+                        
+                    </div>
+                    <div className="reply_phone_profile" style={{color:"#7b7b7b",height:"13px",lineHeight:"13px",fontSize:'13px',marginRight:"8px"}}>{item.position}{item.department!==""&&`,${item.department}`}</div>
+                    <div style={{display:"flex",alignItems:"center"}}>
+                        {(item.user_email ===product.product.email&&product.product.make_by==="true")&&<div className="reply_web" style={{height:"16px",width:"16px",backgroundImage:`url(${icon_maker})`,backgroundSize:"cover",marginRight:"4px"}}></div>}
+                        <div className="reply_web" style={{height:"16px",width:"16px",backgroundImage:`url(${icon_pointcoin})`,backgroundSize:"cover",marginRight:"4px"}}></div>
+                        <div className="reply_web" style={{height:"16px",lineHeight:"16px",fontSize:"12px",color:"#262626"}}>{item.point}</div>
+                    </div>
                 </div>
-                <div style={{color:"#a5a5a5",marginBottom:'7px',height:"13px",lineHeight:"13px",fontSize:'13px'}}>{item.position}{item.department!==""&&`,${item.department}`}</div>
                 {!modifyState&&<div style={{width:"100%",position:"relative",marginBottom:"8px"}}>
                    {/* <textarea value={item.reply} readOnly></textarea> */}
                    <ReactQuill theme="" readOnly
@@ -187,23 +228,59 @@ const CommentRender =({item,product,rerenderLogic,setLoginWindow})=>{
                     </div>
                 </div>}
                 {!modifyState&&<div style={{display:"flex",height:"32px"}}>
-                    <div style={{width:"42px",cursor:"pointer",height:"100%",marginRight:"8px",
-                    backgroundColor:listHover===1&&"#f1f1f1",color:"#a5a5a5",
-                    textAlign:"center",lineHeight:"32px",fontSize:'14px'}}
+                    <div style={{
+                        width:"42px",
+                        cursor:"pointer",
+                        height:"100%",
+                        borderRadius:"8px",
+                        marginRight:"4px",
+                        backgroundColor:listHover===1&&"#ffffff",
+                        border:"1px solid #efe5fd",
+                        color:"#7b7b7b",
+                    textAlign:"center",lineHeight:"32px",fontSize:'12px'}}
                     onMouseLeave={()=>{setListHover(0)}}
                     onMouseOver={()=>{setListHover(1)}}
                     onClick={()=>{setReplyWindow(!replyWindow);}}>답글</div>
-                    {/* <div style={{width:"88px",cursor:"pointer",height:"100%",marginRight:"8px",backgroundColor:"#f1f1f1",display:"flex",alignItems:"center",justifyContent:"center"}}>
-                        <div style={{width:"14px",height:"14px",backgroundImage:`url(${icon_likeBtn})`,marginRight:"4px",backgroundPosition:"center",backgroundSize:"100% 100%"}}></div>
-                        <div>추천({item.like_count})</div>
-                    </div> */}
-                    {item.user_email===localStorage.getItem("email")&& <div style={{width:"32px",cursor:"pointer",height:"100%",marginRight:"8px",
-                    backgroundPosition:"center",backgroundRepeat:"no-repeat",
-                    backgroundColor:listHover===2&&"#f1f1f1",textAlign:"center",position:"relative",lineHeight:"32px",backgroundImage:`url(${icon_commentModify})`}}
+                    <div style={{
+                        width:"80px",
+                        cursor:"pointer",
+                        height:"100%",
+                        marginRight:"4px",
+                        backgroundColor:listHover===2&&"#efe5fd",
+                        display:"flex",
+                        alignItems:"center",
+                        justifyContent:"center",
+                        color:item.like_m==="1"?"#6200EE":"#7b7b7b",
+                        fontSize:"12px",
+                        borderRadius:"8px",
+                        border:item.like_m==="1"?"1px solid #6200EE":"1px solid #efe5fd",
+                        }}
                     onMouseLeave={()=>{setListHover(0)}}
                     onMouseOver={()=>{setListHover(2)}}
-                    onClick={(e)=>{setModal(!modal);e.stopPropagation()}}
+                    onClick={()=>{replylikeApi(item.id)}}
                     >
+                        <div style={{width:"12px",height:"12px",backgroundImage:`url(${icon_like_btn})`,marginRight:"4px",backgroundPosition:"center",backgroundSize:"100% 100%"}}></div>
+                        <div>추천 ({item.like_count})</div>
+                    </div>
+                    {item.user_email===localStorage.getItem("email")&& 
+                        <div style={{
+                            width:"32px",
+                            cursor:"pointer",
+                            height:"100%",
+                            marginRight:"8px",
+                            backgroundPosition:"center",
+                            backgroundRepeat:"no-repeat",
+                            backgroundColor:listHover===3&&"#efe5fd",
+                            textAlign:"center",
+                            position:"relative",
+                            lineHeight:"32px",
+                            backgroundImage:`url(${icon_commentModify})`,
+                            borderRadius:"8px"
+                            }}
+                        onMouseLeave={()=>{setListHover(0)}}
+                        onMouseOver={()=>{setListHover(3)}}
+                        onClick={(e)=>{setModal(!modal);e.stopPropagation()}}
+                        >
                         {modal&&<div style={{position:"absolute",zIndex:"999",width:"64px",height:"72px",padding:"4px0px4px0px",backgroundColor:"#fff",bottom:-76,left:0,boxShadow:"0px 4px 8px 2px rgba(0,0,0,0.1)",display:"flex",flexDirection:"column",justifyContent:"center"}}>
                             <div style={{width:"100%",height:"32px",display:"flex",justifyContent:"center",alignItems:"center",backgroundColor:hover===1&&"rgba(156, 49, 198, 0.1)"}}
                             onMouseLeave={()=>{setHover(0)}}
@@ -254,33 +331,37 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
     const [copyState,setCopyState] =useState(false);
     const [deviceWidth,setDeviceWidth] = useState(0);
     const [product,setProduct] =useState({
-        id:0,
-        email:'',
-        user_id:"",
-        title:"",
-        sub_title:"",
-        like_count:0,
-        main_text:".",
-        payment_type:"",
-        category:"",
-        image:[
-            {id:0,imageUrl:"0"},
-            {id:1,imageUrl:"1"},
-            {id:2,imageUrl:"2"},
-            {id:3,imageUrl:"3"},
-            {id:4,imageUrl:"4"},
-        ],
-        link:"",
-        ios_link:"",
-        android_link:"",
-        make_by:"",
-        thumbnail:"",
-    })
-
-    const [producer,setProducer] = useState({
-        nick:"",
-        position:"",
-        department:""
+        product:{
+                    ago_time:0,
+                    id:0,
+                    email:'',
+                    user_id:"",
+                    title:"",
+                    sub_title:"",
+                    like_count:0,
+                    main_text:".",
+                    payment_type:"",
+                    category:"",
+                    image:[
+                        {id:0,imageUrl:"0"},
+                        {id:1,imageUrl:"1"},
+                        {id:2,imageUrl:"2"},
+                        {id:3,imageUrl:"3"},
+                        {id:4,imageUrl:"4"},
+                    ],
+                    link:"",
+                    ios_link:"",
+                    android_link:"",
+                    make_by:"",
+                    thumbnail:"",
+                },
+        user_info:{
+                    nick:"",
+                    position:"",
+                    department:"",
+                    thumbnail:"/",
+                    point:0
+                }
     })
     const [btnOnOff,setBtnOnOff] = useState(false);
     const [bigImgWindow,setBigImgWindow] = useState(false);
@@ -312,7 +393,7 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
         const videoThumbnail = url.substring(subNum);
         return(
             <>
-            {(product.youtube!=="undefined"&&product.youtube!=="")&&<div>
+            {(product.product.youtube!=="undefined"&&product.product.youtube!=="")&&<div>
                 {item.type==="video"&&<div style={{width:"40px",height:"40px",marginRight:"8px",backgroundImage:`url(https://img.youtube.com/vi/${videoThumbnail}/default.jpg)`,cursor:"pointer",
                     backgroundSize:"cover",backgroundRepeat:"no-repeat",backgroundPosition:"center",
                     border:imgNum===item.id ? "1px solid #e5e5e5": "1px solid transparent"}}
@@ -326,7 +407,7 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                     >      
                 </div>}
             </div>}
-            {(product.youtube==="undefined"||product.youtube==="")&&
+            {(product.product.youtube==="undefined"||product.product.youtube==="")&&
                 <div style={{width:"40px",height:"40px",marginRight:"8px",backgroundImage:`url(${item.imageUrl})`,cursor:"pointer",
                     backgroundSize:"cover",backgroundRepeat:"no-repeat",backgroundPosition:"center",
                     border:imgNum===item.id-1 ? "1px solid #e5e5e5": "1px solid transparent"}}
@@ -342,10 +423,10 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
         const height = (deviceWidth/1280)*720;
         return(
             <div>
-            {(product.youtube!=="undefined"&&product.youtube!=="")&&
+            {(product.product.youtube!=="undefined"&&product.product.youtube!=="")&&
             item.type==="video"?
             <div className="product_item_img" style={{height:phoneState&&`${height}px`}}>
-                <ReactPlayer width="100%" height={`${height}px`} playing muted url={product.youtube}></ReactPlayer>
+                <ReactPlayer width="100%" height={`${height}px`} playing muted url={product.product.youtube}></ReactPlayer>
             </div>
             :<div className="product_item_img" style={{backgroundImage:`url(${item.imageUrl})`,height:phoneState&&`${height}px`}}>      
             </div>}
@@ -353,24 +434,6 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
         )
     }
 
-    const userInfoApi =async(id)=>{
-        var data = new FormData();
-        data.append("user_id",id);
-        try{
-            await axios({
-                method:"post",
-                url : "https://proveit.co.kr/api/userTrace.php",
-                data:data
-    
-            }).then((e)=>{
-                if(e.data.ret_code === "400"){
-                    setProducer(e.data.user)
-                }
-            })
-        }catch{
-    
-        }
-    }
 
     const productListApi = async()=>{
     var data = new FormData();
@@ -385,27 +448,32 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
 
         }).then((e)=>{
             if(e.data.ret_code === "0000"){
+                console.log(e);
                 const data = e.data.product;
                 setProduct({
-                    id:data.id,
-                    title:data.title,
-                    email:data.user_email,
-                    sub_title:data.sub_title,
-                    like_count:data.like_count,
-                    main_text:data.main_text,
-                    payment_type:data.payment_type,
-                    category:data.category,
-                    image:(data.youtube!==""&&data.youtube!=="undefined")?[{id:0,type:"video",imageUrl:data.youtube},...JSON.parse(data.image)]:JSON.parse(data.image),
-                    link:data.link,
-                    ios_link:data.ios_link,
-                    android_link:data.android_link,
-                    make_by:data.make_by,
-                    thumbnail:data.thumbnail,
-                    like_m:data.like_m,
-                    youtube:data.youtube,
-                    user_id:data.user_id
+                    product:{
+                        ago_time:data.ago_time,
+                        id:data.id,
+                        title:data.title,
+                        email:data.user_email,
+                        sub_title:data.sub_title,
+                        like_count:data.like_count,
+                        main_text:data.main_text,
+                        payment_type:data.payment_type,
+                        category:data.category,
+                        image:(data.youtube!==""&&data.youtube!=="undefined")?[{id:0,type:"video",imageUrl:data.youtube},...JSON.parse(data.image)]:JSON.parse(data.image),
+                        link:data.link,
+                        ios_link:data.ios_link,
+                        android_link:data.android_link,
+                        make_by:data.make_by,
+                        thumbnail:data.thumbnail,
+                        like_m:data.like_m,
+                        youtube:data.youtube,
+                        user_id:data.user_id
+                    },
+                    user_info:e.data.user_info
                 });
-                userInfoApi(data.user_id);
+                // setProducer(data.user_info);
                 if(linkState.current===0){
                     if(data.link!==""){
                         if(data.ios_link!==""){
@@ -483,6 +551,8 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
 
     const replayListApi = async()=>{
         var data = new FormData();
+        data.append("user_email",window.localStorage.getItem("email"));
+        data.append("hash",window.localStorage.getItem("hash"));
         data.append("product_id",window.location.search.substring(12));
         try{
             await axios({
@@ -560,16 +630,16 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
           container: '#btnKakao', // 카카오공유버튼ID
           objectType: 'feed',
           content: {
-            title: product.title, // 보여질 제목
-            description: product.sub_title, // 보여질 설명
-            imageUrl: product.image[0].imageUrl, // 콘텐츠 URL
+            title: product.product.title, // 보여질 제목
+            description: product.product.sub_title, // 보여질 설명
+            imageUrl: product.product.image[0].imageUrl, // 콘텐츠 URL
             link: {
                mobileWebUrl:sendUrl,
                webUrl:sendUrl
             }
           },
           social: {
-            likeCount: product.like_count*1,
+            likeCount: product.product.like_count*1,
             commentCount: replyList.length*1,
           },
           buttons: [
@@ -587,14 +657,14 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
     const sharefacebook = ()=>{
         let sendUrl = `proveit.co.kr${window.document.location.pathname}${window.document.location.search}`; // 전달할 URL
         let opstion = "width=526, height=700, toolbar=no, menubar=no, scrollbars=no";
-        window.open("http://www.facebook.com/sharer/sharer.php?u=" + sendUrl,product.title,opstion);
+        window.open("http://www.facebook.com/sharer/sharer.php?u=" + sendUrl,product.product.title,opstion);
     }
 
     const shareTwitter=()=> {
-        let sendText = product.title; // 전달할 텍스트
+        let sendText = product.product.title; // 전달할 텍스트
         let opstion = "width=800, height=700, toolbar=no, menubar=no, scrollbars=no";
         let sendUrl = `proveit.co.kr${window.document.location.pathname}${window.document.location.search}`; // 전달할 URL
-        window.open("https://twitter.com/intent/tweet?text=" + sendText + "&url=" + sendUrl,product.title,opstion );
+        window.open("https://twitter.com/intent/tweet?text=" + sendText + "&url=" + sendUrl,product.product.title,opstion );
     }
 
     useEffect(()=>{
@@ -655,7 +725,7 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
         e.stopPropagation();
         const imgArray = document.querySelector(".mainImgArray");
         if(((currentX.current-start.current)/(deviceWidth/2))*100>55){
-           if(product.youtube!=="undefined"&&product.youtube!==""){
+           if(product.product.youtube!=="undefined"&&product.product.youtube!==""){
                 if(imgNum!==1){
                     setImgNum(imgNum-1);
                 }else{
@@ -672,7 +742,7 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
         }
         }else if(((currentX.current-start.current)/(deviceWidth/2))*100<-55){
           
-                if(imgNum+1!==product.image.length){
+                if(imgNum+1!==product.product.image.length){
                     setImgNum(imgNum+1);
                     imgArray.style.left=`-${imgNum*100}%`;
                 }else{
@@ -692,7 +762,6 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
         start.current=0;
         currentX.current=0;
     }
-
     return(
     <>
         {renderState&&<div id="pageBody" style={{width:'100%',backgroundColor:"#f9f9f9",display:"flex",alignItems:"center",flexDirection:"column"}}
@@ -700,16 +769,17 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                 <a id="replyNavi" style={{display:"none"}} href={`#${localStorage.getItem("replyId")}`}></a>
                 <div style={{textAlign:"left",marginTop:"48px",marginBottom:"23px"}}>
                 <div className="product_item">
-                    <div className="product_thumbnail" style={{backgroundImage:`url(${product.thumbnail})`}}></div>
+                    <div className="product_thumbnail" style={{backgroundImage:`url(${product.product.thumbnail})`}}></div>
                     
                     <div style={{width:"100%",textAlign:"left"}}>
-                        <h1 className="product_item_title">{product.title}</h1>
-                        <h2 className="product_item_subtitle" >{product.sub_title}</h2>
+                        <h1 className="product_item_title">{product.product.title}</h1>
+                        <h2 className="product_item_subtitle" >{product.product.sub_title}</h2>
                         <div style={{display:"flex",height:"24px",alignItems:"center"}}>
-                            <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282"}}>{product.payment_type}</div>
+                            <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282"}}>{product.product.payment_type}</div>
                             <div style={{width:"4px",margin:"0px 4px",color:"#7b7b7b"}}>·</div>
-                            <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282"}}>{product.category}</div>
+                            <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282"}}>{product.product.category}</div>
                             <div style={{width:"4px",margin:"0px 4px",color:"#7b7b7b"}}>·</div>
+                            <div style={{height:"100%",fontSize:"13px",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282"}}>{product.product.ago_time}</div>
                         </div>
                     </div>
                     
@@ -720,18 +790,18 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                         <div className="btn_two" style={{width:"100%",maxWidth:"144px",height:"100%",marginRight:"8px"}} onClick={()=>{
                             const alink = document.createElement("a");
                             alink.target="blink";
-                            alink.href = product.link;
+                            alink.href = product.product.link;
                             alink.click();
                         }}>써보러 가기</div>
                         :
                         <div className="btn_two" style={{width:"100%",maxWidth:"144px",height:"100%",marginRight:"8px"}} onClick={()=>{
                             const alink = document.createElement("a");
                             alink.target="blink";
-                            alink.href = product.link;
+                            alink.href = product.product.link;
                             alink.click();
                         }}>써보러 가기</div>
                         }
-                        {product.like_m==="0"&&<div className="btn_one_big" style={{width:"100%",height:"56px",marginBottom:"8px"}}
+                        {product.product.like_m==="0"&&<div className="btn_one_big" style={{width:"100%",height:"56px",marginBottom:"8px"}}
                         onClick={()=>{
                             if(localStorage.getItem("hash")){
                                 likeApi();
@@ -742,9 +812,9 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                             >
                             <div style={{width:'24px',height:"24px",backgroundImage:`url(${icon_like_off})`,marginRight:"4px"}}></div>
                             <div>추천하기</div>
-                                <div style={{width:"48px",height:"16px",lineHeight:"16px",textAlign:"center"}}>{product.like_count}</div>
+                                <div style={{width:"48px",height:"16px",lineHeight:"16px",textAlign:"center"}}>{product.product.like_count}</div>
                             </div>}
-                        {product.like_m==="1"&&<div className="btn_one_big2" style={{width:"100%",height:"56px",marginBottom:"8px"}}
+                        {product.product.like_m==="1"&&<div className="btn_one_big2" style={{width:"100%",height:"56px",marginBottom:"8px"}}
                         onClick={()=>{
                             if(localStorage.getItem("hash")){
                                 likeApi();
@@ -755,7 +825,7 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                         >
                             <div style={{width:'24px',height:"24px",backgroundImage:`url(${icon_like_on})`,marginRight:"4px"}}></div>
                             <div>추천 취소</div>
-                                <div style={{width:"48px",height:"16px",lineHeight:"16px",textAlign:"center"}}>{product.like_count}</div>
+                                <div style={{width:"48px",height:"16px",lineHeight:"16px",textAlign:"center"}}>{product.product.like_count}</div>
                             </div>}
                     </div>
                 <div className="product_item_sort">
@@ -775,8 +845,8 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                             onMouseLeave={()=>{setBtnOnOff(false)}}
 
                             onClick={(e)=>{e.stopPropagation();if(!phoneState){setBigImgWindow(true)}}}>
-                                {(product.youtube!==""&&product.youtube!=="undefined"&&imgNum===0)&&<div style={{width:"100%",height:"100%",position:"absolute"}}>
-                                    <ReactPlayer playing muted url={product.youtube}></ReactPlayer>
+                                {(product.product.youtube!==""&&product.product.youtube!=="undefined"&&imgNum===0)&&<div style={{width:"100%",height:"100%",position:"absolute"}}>
+                                    <ReactPlayer playing muted url={product.product.youtube}></ReactPlayer>
                                 </div>}
                                 {(btnOnOff||phoneState)&&<div>
                                     {imgNum!==0&&<div style={{width:phoneState?"80px":"40px",height:"100%",position:"absolute",display:"flex",alignItems:"center",cursor:"pointer",justifyContent:"center",zIndex:"999"}}
@@ -786,7 +856,7 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                                         <div style={{backgroundImage:`url(${icon_upBtn_black})`,backgroundRepeat:"no-repeat",backgroundPosition:"center",width:"20px",height:'13px',transform:"rotate(270deg)"}}>
                                         </div>
                                     </div>}
-                                    {imgNum+1!==product.image.length&&
+                                    {imgNum+1!==product.product.image.length&&
                                     <div style={{width:phoneState?"80px":"40px",height:"100%",position:"absolute",right:"0px",display:"flex",alignItems:"center",cursor:"pointer",justifyContent:"center",zIndex:"999"}}
                                     onClick={(e)=>{e.stopPropagation();setImgNum(imgNum+1);}}
                                     onMouseOver={(e)=>{e.stopPropagation();e.target.style.backgroundColor="rgba(255,255,255,0.3)"}}
@@ -796,16 +866,16 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                                     </div>}
                                 </div>}
                                 <div className="mainImgArray" style={{position:"absolute",display:"flex",left:`${(imgNum*-100)}%`,transition:"0.3s"}}>
-                                    {product.image.map((item)=>(<ImageMainArray deviceWidth={deviceWidth} phoneState={phoneState} key={item.id} imgNum={imgNum} item={item} product={product}></ImageMainArray>))}
+                                    {product.product.image.map((item)=>(<ImageMainArray deviceWidth={deviceWidth} phoneState={phoneState} key={item.id} imgNum={imgNum} item={item} product={product}></ImageMainArray>))}
                                 </div>
                             </div>
                            
                             <div className="product_img_previewArray">
-                                {product.image.map((item)=>(<ImageArray item={item} product={product} imgNum={imgNum} key={item.id} setImgNum={setImgNum}></ImageArray>))}
+                                {product.product.image.map((item)=>(<ImageArray item={item} product={product} imgNum={imgNum} key={item.id} setImgNum={setImgNum}></ImageArray>))}
                             </div>
                             <div className="product_main_text" style={{width:"100%",position:"relative",marginBottom:"24px"}}>
                                 <ReactQuill theme="" readOnly
-                                value={product.main_text} style={{textAlign:"left",color:"#505050",fontSize:'14px',width:"100%"}}></ReactQuill>
+                                value={product.product.main_text} style={{textAlign:"left",color:"#505050",fontSize:'14px',width:"100%"}}></ReactQuill>
                             </div>
                             <div className="product_sharebar" style={{display:"flex"}}>
                                     <div className="kakao_share" id="btnKakao"
@@ -819,15 +889,19 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                                 </div>
                         </div>
                         <div className="product_item_producer">
-                        <div style={{color:"#a5a5a5",marginBottom:"16px"}}>{product.make_by==="true"?"제작자":"소개한 사람"}</div>
+                        <div style={{color:"#7b7b7b",marginBottom:"16px"}}>{product.product.make_by==="true"?"제작자":"소개한 사람"}</div>
                         <div style={{display:"flex"}}>
-                            <Link to={product.email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${product.user_id}`}>
-                                <div style={{width:"32px",height:'32px',borderRadius:"50%",backgroundImage:`url(${producer.thumbnail})`,backgroundColor:"#c4c4c4",marginRight:"24px",
+                            <Link to={product.product.email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${product.product.user_id}`}>
+                                <div style={{width:"32px",height:'32px',borderRadius:"50%",backgroundImage:`url(${"product.user_info.thumbnail"})`,backgroundColor:"#c4c4c4",marginRight:"24px",
                                 backgroundPosition:"center",backgroundSize:"cover",backgroundRepeat:"no-repeat",cursor:"pointer"}}></div>
                             </Link>
                             <div style={{textAlign:"left"}}>
-                                <div style={{fontWeight:'bold',color:'#505050',marginBottom:"8px",height:"14px",lineHeight:"14px"}}>{producer.nick}</div>
-                                <div style={{color:"#a5a5a5",height:"14px",lineHeight:"14px"}}>{producer.position}{producer.department!==""?`,${producer.department}`:""}</div>
+                                <div style={{display:"flex",alignItems:"center",marginBottom:"8px"}}>
+                                    <div style={{fontWeight:'bold',color:'#262626',height:"14px",lineHeight:"14px"}}>{product.user_info.nick}</div>
+                                    <div style={{width:"14px",height:'14px',backgroundImage:`url(${icon_pointcoin})`,margin:"0px 8px"}}></div>
+                                    <div style={{color:"#262626",fontSize:"12px",height:'12px',lineHeight:"12px"}}>{product.user_info.point}</div>
+                                </div>
+                                <div style={{color:"#7b7b7b",height:"14px",lineHeight:"14px"}}>{product.user_info.position}{product.user_info.department!==""?`,${product.user_info.department}`:""}</div>
                             </div>
                         </div>
                     </div>
@@ -911,7 +985,7 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                         <div style={{marginBottom:"24px",width:"100%"}}>
 
                             
-                        {product.like_m==="0"&&<div className="btn_one_big" style={{width:"100%",height:"56px",marginBottom:"8px"}}
+                        {product.product.like_m==="0"&&<div className="btn_one_big" style={{width:"100%",height:"56px",marginBottom:"8px"}}
                             onClick={()=>{
                                 if(localStorage.getItem("hash")){
                                     likeApi();
@@ -922,9 +996,9 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                                 >
                                 <div style={{width:'24px',height:"24px",backgroundImage:`url(${icon_like_off})`,marginRight:"4px"}}></div>
                                 <div>추천하기</div>
-                                    <div style={{width:"40px",height:"16px",lineHeight:"16px",textAlign:"center"}}>{product.like_count}</div>
+                                    <div style={{width:"40px",height:"16px",lineHeight:"16px",textAlign:"center"}}>{product.product.like_count}</div>
                                 </div>}
-                            {product.like_m==="1"&&<div className="btn_one_big2" style={{width:"100%",height:"56px",marginBottom:"8px"}}
+                            {product.product.like_m==="1"&&<div className="btn_one_big2" style={{width:"100%",height:"56px",marginBottom:"8px"}}
                             onClick={()=>{
                                 if(localStorage.getItem("hash")){
                                     likeApi();
@@ -935,7 +1009,7 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                             >
                                 <div style={{width:'24px',height:"24px",backgroundImage:`url(${icon_like_on})`,marginRight:"4px"}}></div>
                                 <div>추천 취소</div>
-                                    <div style={{width:"40px",height:"16px",lineHeight:"16px",textAlign:"center"}}>{product.like_count}</div>
+                                    <div style={{width:"40px",height:"16px",lineHeight:"16px",textAlign:"center"}}>{product.product.like_count}</div>
                                 </div>}
                         
 
@@ -943,12 +1017,12 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                             <div className="btn_two" style={{width:"100%",height:"56px",marginRight:"8px"}} onClick={()=>{
                                 const alink = document.createElement("a");
                                 alink.target="blink";
-                                if(product.link!==""){
-                                    alink.href = product.link;
-                                }else if(product.ios_link!==""){
-                                    alink.href = product.ios_link;
-                                }else if(product.android_link!==""){
-                                    alink.href = product.android_link;
+                                if(product.product.link!==""){
+                                    alink.href = product.product.link;
+                                }else if(product.product.ios_link!==""){
+                                    alink.href = product.product.ios_link;
+                                }else if(product.product.android_link!==""){
+                                    alink.href = product.product.android_link;
                                 }
                                 alink.click();
                             }}>써보러 가기</div>
@@ -957,29 +1031,29 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                              onClick={(e)=>{
                                 setLinkWindow(!linkWindow);
                                 if( /Android/i.test(navigator.userAgent)) {
-                                    if(product.android_link!==""){
+                                    if(product.product.android_link!==""){
                                         const alink = document.createElement("a");
                                         alink.target="blink";
-                                        alink.href = product.android_link;
+                                        alink.href = product.product.android_link;
                                         alink.click();
-                                    }else if(product.link!==""){
+                                    }else if(product.product.link!==""){
                                         const alink = document.createElement("a");
                                         alink.target="blink";
-                                        alink.href = product.link;
+                                        alink.href = product.product.link;
                                         alink.click();
                                     }else{
                                         
                                     }
                                 }else if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-                                    if(product.ios_link!==""){
+                                    if(product.product.ios_link!==""){
                                         const alink = document.createElement("a");
                                         alink.target="blink";
-                                        alink.href = product.ios_link;
+                                        alink.href = product.product.ios_link;
                                         alink.click();
-                                    }else if(product.link!==""){
+                                    }else if(product.product.link!==""){
                                         const alink = document.createElement("a");
                                         alink.target="blink";
-                                        alink.href = product.link;
+                                        alink.href = product.product.link;
                                         alink.click();
                                     }else{
 
@@ -1004,33 +1078,33 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                                 top:"54px",
                                 left:"50%",
                                 transform:"translate(-50%,0)"}}>
-                                {product.link&&<div className="product_linkitem"
+                                {product.product.link&&<div className="product_linkitem"
                                 onClick={()=>{
                                     const alink = document.createElement("a");
                                     alink.target="blink";
-                                    alink.href = product.link;
+                                    alink.href = product.product.link;
                                     alink.click();
                                 }}>
                                     <div style={{width:"16px",height:"16px",minWidth:"16px",backgroundImage:`url(${icon_product_link})`,marginRight:"8px"}}></div>
                                     <div style={{width:"132px"}}>웹사이트</div>
                                     <div style={{width:"20px",height:"20px",backgroundImage:`url(${icon_product_link_arrow})`}}></div>
                                 </div>}
-                                {product.ios_link&&<div className="product_linkitem"
+                                {product.product.ios_link&&<div className="product_linkitem"
                                 onClick={()=>{
                                     const alink = document.createElement("a");
                                     alink.target="blink";
-                                    alink.href = product.ios_link;
+                                    alink.href = product.product.ios_link;
                                     alink.click();
                                 }}>
                                     <div style={{width:"16px",height:"16px",minWidth:"16px",backgroundImage:`url(${icon_product_ios})`,marginRight:"8px"}}></div>
                                     <div style={{width:"132px"}}>App Store</div>
                                     <div style={{width:"20px",height:"20px",backgroundImage:`url(${icon_product_link_arrow})`}}></div>
                                 </div>}
-                                {product.android_link&&<div className="product_linkitem"
+                                {product.product.android_link&&<div className="product_linkitem"
                                 onClick={()=>{
                                     const alink = document.createElement("a");
                                     alink.target="blink";
-                                    alink.href = product.android_link;
+                                    alink.href = product.product.android_link;
                                     alink.click();
                                 }}>
                                     <div style={{width:"16px",height:"16px",minWidth:"16px",backgroundImage:`url(${icon_product_adroid})`,marginRight:"8px"}}></div>
@@ -1043,17 +1117,24 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                             
                         </div>
                         <div style={{width:"100%",height:"108px",backgroundColor:"#fff",borderRadius:"2px",fontSize:"14px",padding:"16px 24px 24px 24px",textAlign:"left"}}>
-                            <div style={{color:"#a5a5a5",marginBottom:"16px"}}>{product.make_by==="true"?"제작자":"소개한 사람"}</div>
+                            <div style={{display:"flex",alignItems:"center",marginBottom:"16px"}}>
+                                <div style={{width:"16px",height:"16px",marginRight:"4px",backgroundImage:`url(${icon_maker})`}}></div>
+                                <div style={{color:"#7b7b7b"}}>{product.product.make_by==="true"?"제작자":"소개한 사람"}</div>
+                            </div>
                             <div style={{display:"flex"}}>
-                            <Link to={product.email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${product.user_id}`}>
-                                <div style={{width:"32px",height:'32px',borderRadius:"50%",backgroundImage:`url(${producer.thumbnail})`,backgroundColor:"#c4c4c4",marginRight:"24px",
+                            <Link to={product.product.email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${product.product.user_id}`}>
+                                <div style={{width:"32px",height:'32px',borderRadius:"50%",backgroundImage:`url(${product.user_info.thumbnail})`,backgroundColor:"#c4c4c4",marginRight:"8px",
                                 backgroundPosition:"center",backgroundSize:"cover",backgroundRepeat:"no-repeat",cursor:"pointer"}}></div>
                             </Link>
                                 <div style={{textAlign:"left"}}>
-                                    <Link to={product.email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${product.user_id}`}>
-                                    <div style={{fontWeight:'bold',color:'#505050',marginBottom:"8px",height:"14px",lineHeight:"14px"}}>{producer.nick}</div>
+                                    <Link to={product.product.email===localStorage.getItem("email")?`/profile`:`/anotheruserinfo?${product.product.user_id}`}>
+                                    <div style={{display:"flex",alignItems:"center",marginBottom:"8px"}}>
+                                        <div style={{fontWeight:'bold',color:'#505050',height:"14px",lineHeight:"14px"}}>{product.user_info.nick}</div>
+                                        <div style={{width:"14px",height:'14px',backgroundImage:`url(${icon_pointcoin})`,margin:"0px 8px"}}></div>
+                                        <div style={{color:"#262626",fontSize:"12px",height:'12px',lineHeight:"12px"}}>{product.user_info.point}</div>
+                                    </div>
                                     </Link>
-                                    <div style={{color:"#a5a5a5",height:"14px",lineHeight:"14px"}}>{producer.position}{producer.department!==""?`,${producer.department}`:""}</div>
+                                    <div style={{color:"#7b7b7b",height:"12px",lineHeight:"12px",fontSize:"12px"}}>{product.user_info.position}{product.user_info.department!==""?`,${product.user_info.department}`:""}</div>
                                 </div>
                             </div>
                         </div>
@@ -1061,13 +1142,13 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                 </div>
                 {bigImgWindow&&
                 <div className="bigImgWindow">
-                    <div style={{width:"1040px",backgroundColor:"#fff",height:"586px",backgroundImage:`url(${product.image[imgNum].imageUrl})`,zIndex:999,
+                    <div style={{width:"1040px",backgroundColor:"#fff",height:"586px",backgroundImage:`url(${product.product.image[imgNum].imageUrl})`,zIndex:999,
                     backgroundSize:"cover",backgroundRepeat:"no-repeat",backgroundPosition:"center",transition:"0.3s",top:"50%",transform:"translate(0,-50%)",position:"fixed",display:"flex"}}
                     onMouseOver={()=>{setBtnOnOff(true);}}
                     onMouseLeave={()=>{setBtnOnOff(false)}}
                     onClick={(e)=>{e.stopPropagation();}}>
-                        {(product.youtube!=="undefined"&&imgNum===0)&&<div style={{width:"100%",height:"100%",position:"absolute"}}>
-                            <ReactPlayer width="100%" height="100%" playing muted url={product.youtube}></ReactPlayer>
+                        {(product.product.youtube!=="undefined"&&imgNum===0)&&<div style={{width:"100%",height:"100%",position:"absolute"}}>
+                            <ReactPlayer width="100%" height="100%" playing muted url={product.product.youtube}></ReactPlayer>
                         </div>}
                         {btnOnOff&&<div>
                             {imgNum!==0&&<div style={{width:"40px",height:"100%",position:"absolute",display:"flex",alignItems:"center",cursor:"pointer",justifyContent:"center"}}
@@ -1077,7 +1158,7 @@ const Body = ({setModal,modal,setLoginWindow,linkWindow,setLinkWindow})=>{
                                 <div style={{backgroundImage:`url(${icon_upBtn_black})`,backgroundRepeat:"no-repeat",backgroundPosition:"center",width:"20px",height:'13px',transform:"rotate(270deg)"}}>
                                 </div>
                             </div>}
-                            {imgNum+1!==product.image.length&&<div style={{width:"40px",height:"100%",position:"absolute",right:"0px",display:"flex",alignItems:"center",cursor:"pointer",justifyContent:"center"}}
+                            {imgNum+1!==product.product.image.length&&<div style={{width:"40px",height:"100%",position:"absolute",right:"0px",display:"flex",alignItems:"center",cursor:"pointer",justifyContent:"center"}}
                             onClick={(e)=>{setImgNum(imgNum+1);e.stopPropagation();}}
                             onMouseOver={(e)=>{e.stopPropagation();e.target.style.backgroundColor="rgba(255,255,255,0.3)"}}
                             onMouseLeave={(e)=>{e.stopPropagation();e.target.style.backgroundColor="transparent"}}>
@@ -1202,7 +1283,7 @@ const Product = ()=>{
       return(
         <div className="contentsBody" style={{
             width:"100%",
-            height:window.innerHeight,
+            minHeight:window.innerHeight,
           }}
       onClick={()=>{setModal(false);setLinkWindow(false);setAlarmModal(false);}}
       >

@@ -126,7 +126,7 @@ const Introduce = ()=>{
   return(
     <div className="contentsBody" style={{
         width:"100%",
-        height:window.innerHeight,
+        minHeight:window.innerHeight,
       }}
   onClick={()=>{setModal(false);setAlarmModal(false);}}
   >

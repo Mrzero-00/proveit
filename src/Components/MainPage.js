@@ -145,6 +145,7 @@ const RenderList =({item,index,length,setRenderState,setLoginWindow,indexNum})=>
   
     }
   }
+  console.log(item);
 
   return( 
     <>
@@ -168,7 +169,7 @@ const RenderList =({item,index,length,setRenderState,setLoginWindow,indexNum})=>
           <div style={{width:"4px",margin:"0px 4px",color:"#7b7b7b"}}>·</div>
           <div style={{height:"100%",display:"flex",justifyContent:"center",alignItems:"center",color:"#7b7b7b"}}>{item.payment_type}</div>
           <div style={{width:"4px",margin:"0px 4px",color:"#7b7b7b"}}>·</div>
-          <div style={{height:"14px",display:"flex",justifyContent:"center",alignItems:"center",color:"#7b7b7b",width:"1px",backgroundColor:"#e5e5e5"}}></div>
+          <div style={{height:"14px",display:"flex",justifyContent:"center",alignItems:"center",color:"#7b7b7b"}}>{item.ago_time}</div>
           <div style={{width:"4px",margin:"0px 4px",color:"#7b7b7b"}}>·</div>
           <div style={{color:"#6200EE"}}>{item.review_count}개의 댓글</div>
           {/* <div style={{height:"100%",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>
@@ -452,13 +453,13 @@ const Body=({productOrderState,setProductOrderState,setLoginWindow,scrollY})=>{
     > 
 
           <div className="homepage_title">
-            <p className="hompage_title_main">
-              안녕하세요?<br/>
-              혹시 서비스를 만들고 계신가요?
-            </p>
-            <div style={{display:"flex",alignItems:"center",width:"100%"}}>
-              <Link to="/startQuestion?yes"><button className="homepage_main_btn1">네</button></Link>
-              <Link to="/startQuestion?no"><button className="homepage_main_btn2">아니오</button></Link>
+            <div className="homepage_title_gif"></div>
+            <div className="homepage_title_textcontents">
+              <div className="homepage_title_text">
+              매달 획득한 커뮤니티 포인트에 따라
+              한 달치 커피를 지원합니다.
+              </div>
+              <Link to="/event"><div className="homepage_title_btn">자세히 보기</div></Link>
             </div>
           </div>
 

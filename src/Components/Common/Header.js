@@ -103,7 +103,7 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
     const [hover,setHover] = useState(0);
     const [header,setHeader] = useState(0);
     const [hambug,setHambug] =useState(false);
-    const [height,setHeight] = useState(144);
+    const [height,setHeight] = useState(96);
     const [rendering,setRendering] = useState(false); 
     const currentScroll=useRef(0);
     const [scrollState,setScrollState] =useState(false);  
@@ -177,10 +177,10 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
                     setScrollState(true);
                 }
                 
-                if(scrollPosition>=144&&scrollPosition<=288){
-                    setHeader(scrollPosition-144);
-                }else if(scrollPosition>144){
-                    setHeader(144);
+                if(scrollPosition>=96&&scrollPosition<=192){
+                    setHeader(scrollPosition-96);
+                }else if(scrollPosition>96){
+                    setHeader(96);
                 }else{
                     setHeader(0);
                 }      
@@ -219,7 +219,7 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
         upBtnMount_phone();
         setTimeout(() => {
             if(window.innerWidth>767){
-                setHeight(144);
+                setHeight(96);
             }else{
                 setHeight(64);
             }
