@@ -11,9 +11,10 @@ import icon_dropBox from '../../image/icon_dropBox.svg';
 import icon_leaveUnChecked from '../../image/icon_leaveUnChecked.svg';
 import icon_leaveChecked from '../../image/icon_leaveChecked.svg';
 import icon_profile_commentIcon from '../../image/icon_profile_commentIcon.png';
-
+import icon_pointcoin from '../../image/icon_pointcoin.svg';
 import icon_review_title from '../../image/icon_review_title.svg';
 import icon_community_title_icon from '../../image/icon_community_title_icon.png';
+import icon_like from '../../image/likeIcon.svg';
 
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -38,7 +39,12 @@ const Body =()=>{
         make:0,
         community:0
     });
-
+    const today = new Date();
+    const [point,setPoint] = useState(0);
+    const [currentYear,setCurrentYear] = useState(`${today.getFullYear()}`);
+    const [currentMonth,setCurrentMonth] = useState(today.getMonth()<10?`0${today.getMonth()+1}`:`${today.getMonth()+1}`);
+    const [pointSum,setPointSum] = useState(0);
+    const [pointList,setPointList] = useState([]);
     const [nickCheck,setNickCheck] = useState(false);
     const [renderList,setRenderList]= useState("like");
     const [modifyState,setModifyState]= useState(false);
@@ -59,6 +65,10 @@ const Body =()=>{
         }
     )
 
+    const [yearWindow,setYearWindow] = useState(false);
+    const [monthWindow,setMonthWindow] = useState(false);
+    const yearlist = ["2021"]; 
+    const monthlist = ["01","02","03","04","05","06","07","08","09","10","11","12"]; 
     const reasonList =[
         {id:1,text:"자주 사용하지 않아요"},
         {id:2,text:"이용이 불편하고 장애가 많아요"},
@@ -116,6 +126,119 @@ const Body =()=>{
             </div>
         )
     }
+
+    const ProductRender =({item,type,index})=>{
+        return(
+            <>
+            {item.category&&<div style={{position:"relative"}}>
+                {type==="like"&&<Link to={`/product?productnum=${item.id}`}>
+                    <div id={item.id} 
+                        onClick={(e)=>{e.stopPropagation();}}
+                        className="profile_item_render"
+                        >
+                        <div className="profile_product_thumbnail" style={{backgroundImage:`url(${item.thumbnail})`}}></div>
+                        <div className="profile_product_info">
+                            <div className="profile_product_title">{item.title}</div>
+                            <div style={{display:"flex",alignItems:"center"}}>
+                                <div style={{width:'16px',minWidth:"16px",height:"16px",backgroundImage:`url(${icon_profile_item_comment})`,backgroundSize:'cover',marginRight:"8px"}}></div>
+                                <div className="profile_product_info_text">{item.review_count}</div>
+                                <div style={{width:'16px',minWidth:"16px",height:"16px",backgroundImage:`url(${icon_profile_item_like})`,backgroundSize:'cover',marginRight:"8px",marginLeft:"8px"}}></div>
+                                <div className="profile_product_info_text">{item.like_count}</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </Link>}
+                {(type==="myProduct"&&item.make_by==="true")&&<Link to={`/product?productnum=${item.id}`}>
+                    <div id={item.id} 
+                        onClick={(e)=>{e.stopPropagation();}}
+                        className="profile_item_render"
+                        >
+                        <div className="profile_product_thumbnail" style={{backgroundImage:`url(${item.thumbnail})`}}></div>
+                        <div className="profile_product_info">
+                            <div className="profile_product_title">{item.title}</div>
+                            <div style={{display:"flex",alignItems:"center"}}>
+                                <div style={{width:'16px',minWidth:"16px",height:"16px",backgroundImage:`url(${icon_profile_item_comment})`,backgroundSize:'cover',marginRight:"8px"}}></div>
+                                <div className="profile_product_info_text">{item.review_count}</div>
+                                <div style={{width:'16px',minWidth:"16px",height:"16px",backgroundImage:`url(${icon_profile_item_like})`,backgroundSize:'cover',marginRight:"8px",marginLeft:"8px"}}></div>
+                                <div className="profile_product_info_text">{item.like_count}</div>
+                            </div>
+                        </div>
+                        <Link to={`/modifyproduct?productnum=${item.id}`}><div className="btn_modify" style={{width:"48px",height:"32px",zIndex:"99",borderRadius:"4px",marginLeft:"8px"}}
+                        onClick={(e)=>{e.stopPropagation();}}>수정</div></Link>
+                    </div>
+                </Link>}
+                {(type==="introduceProduct"&&item.make_by==="false")&&<Link to={`/product?productnum=${item.id}`}>
+                    <div id={item.id} 
+                        onClick={(e)=>{e.stopPropagation();}}
+                        className="profile_item_render"
+                        >
+                        <div className="profile_product_thumbnail" style={{backgroundImage:`url(${item.thumbnail})`}}></div>
+                        <div className="profile_product_info">
+                            <div className="profile_product_title">{item.title}</div>
+                            <div style={{display:"flex",alignItems:"center"}}>
+                                <div style={{width:'16px',minWidth:"16px",height:"16px",backgroundImage:`url(${icon_profile_item_comment})`,backgroundSize:'cover',marginRight:"8px"}}></div>
+                                <div className="profile_product_info_text">{item.review_count}</div>
+                                <div style={{width:'16px',minWidth:"16px",height:"16px",backgroundImage:`url(${icon_profile_item_like})`,backgroundSize:'cover',marginRight:"8px",marginLeft:"8px"}}></div>
+                                <div className="profile_product_info_text">{item.like_count}</div>
+                            </div>
+                        </div>
+                        <Link to={`/modifyproduct?productnum=${item.id}`}><div className="btn_modify" style={{width:"48px",height:"32px",zIndex:"99",borderRadius:"4px",marginLeft:"8px"}}
+                        onClick={(e)=>{e.stopPropagation();}}>수정</div></Link>
+                    </div>
+                </Link>}
+            </div>}
+            </>
+        )
+    }
+
+    const ReplyRender =({item,index})=>{
+        return(
+            <>
+            {item!==null&&<div className="profile_comment" onClick={
+                ()=>{
+                    localStorage.setItem("replyId",item.id);
+                    const alink = document.createElement("a");
+                    alink.href =item.url;
+                    alink.click();
+                }
+                }>
+                <div className="profile_comment_icon" style={{backgroundImage:`url(${icon_profile_commentIcon})`}}></div>
+                <div style={{width:'100%',overflow:"hidden"}}>
+                    <div style={{display:"flex",alignItems:"center",marginBottom:"5px",height:"16px",lineHeight:'16px',flexWrap:"nowrap",width:"1000px"}}>
+                        {item.target==="blog"&&<div style={{backgroundImage:`url(${icon_review_title})`,width:'16px',height:'16px',backgroundSize:'cover',marginRight:"4px"}}></div>}
+                        {item.target==="community"&&<div style={{backgroundImage:`url(${icon_community_title_icon})`,width:'16px',height:'16px',backgroundSize:'cover',marginRight:"4px"}}></div>}
+                        <div style={{fontSize:"14px",fontWeight:"500",color:"#6200EE"}}>{item.target==="product"?`${item.title}`:`"${item.title}"`}</div>
+                        <div style={{fontSize:"14px"}}>에 남긴 코멘트</div>
+                    </div>
+                    <div style={{width:"100%",position:"relative",height:'16px'}}>
+                        <ReactQuill theme=""
+                        className="profile_comment_quill"
+                        value={item.reply.length>56?item.reply.slice(0,50)+"···":item.reply} style={{textAlign:"left",color:"#505050",fontSize:'13px',width:"100%",height:'16px',lineHeight:"16px",overflow:"hidden"}}></ReactQuill>
+                        {/* <ReactQuill theme=""
+                        value={item.reply} style={{textAlign:"left",color:"#505050",fontSize:'13px',width:"100%",height:'16px',lineHeight:"16px"}}></ReactQuill> */}
+                        <div style={{width:"100%",height:"100%",position:'absolute',top:0,left:0}}></div>
+                    </div>
+                </div>
+            </div>}
+            </>
+        )
+    }   
+
+    const PointRender =({item,index,currentMonth,currentYear})=>{
+        return(
+        <>
+            {(currentMonth===item.created_at.slice(5,7)&&currentYear===item.created_at.slice(0,4))&&<div className="profile_point_list_item">
+                {item.type==="plus"?<div className="point_plus">적립</div>:<div className="point_minus">차감</div>}
+                <div className="profile_point_list_item_comment">{item.comment}</div>
+                <div className="profile_point_list_item_date">{item.created_at.slice(0,4)}.{item.created_at.slice(5,7)}.{item.created_at.slice(8,10)}</div>
+                {item.type==="plus"?
+                <div className="profile_point_list_item_point_p">+{item.point} 포인트</div>:
+                <div className="profile_point_list_item_point_m">{item.point} 포인트</div>}
+            </div>}
+        </>
+        )
+    }   
 
     useEffect(()=>{
         if(JSON.parse(localStorage.getItem("userInfo"))){
@@ -184,6 +307,7 @@ const Body =()=>{
                 data:data
       
             }).then((e)=>{
+                console.log(e);
                 if(e.data.ret_code === "0000"){
                     localStorage.setItem("userInfo",JSON.stringify(e.data.user));
                     setModifyState(true);
@@ -244,6 +368,65 @@ const Body =()=>{
         }
     }
 
+    const pointGetApi = async()=>{
+        var data = new FormData();
+        data.append('email', localStorage.getItem("email"));
+        data.append('token', localStorage.getItem("hash"));
+        data.append('type', "select");
+        try{
+            await axios({
+                method:"post",
+                url : "https://proveit.co.kr/api/user.php",
+                data:data
+      
+            }).then((e)=>{
+                if(e.data.ret_code === "0000"){
+                    setPoint(e.data.user.point);
+                    setPointSum(e.data.user.point_sum);
+                }else if(e.data.ret_code ==="500"){
+                    alert("로그인 해쉬가 만료되었습니다. 다시 로그인해주세요");
+                    const alink = document.createElement("a");
+                    alink.href="/";
+                    setTimeout(() => {
+                        localStorage.clear();
+                        alink.click();
+                    }, 0);
+                }
+            })
+        }catch{
+      
+        }
+    }
+
+    const pointListGetApi = async()=>{
+        var data = new FormData();
+        data.append('user_email', localStorage.getItem("email"));
+        data.append('hash', localStorage.getItem("hash"));
+        data.append('type', "getList");
+        try{
+            await axios({
+                method:"post",
+                url : "https://proveit.co.kr/api/point.php",
+                data:data
+      
+            }).then((e)=>{
+                if(e.data.ret_code === "0000"){
+                    setPointList(e.data.list);
+                }else if(e.data.ret_code ==="500"){
+                    alert("로그인 해쉬가 만료되었습니다. 다시 로그인해주세요");
+                    const alink = document.createElement("a");
+                    alink.href="/";
+                    setTimeout(() => {
+                        localStorage.clear();
+                        alink.click();
+                    }, 0);
+                }
+            })
+        }catch{
+      
+        }
+    }
+
     const userOutApi = async()=>{
         var data = new FormData();
         data.append('email', localStorage.getItem("email"));
@@ -283,6 +466,8 @@ const Body =()=>{
     }
     
     useEffect(()=>{
+        pointGetApi();
+        pointListGetApi();
         nickNameCheck(currentUserInfo.nick);
         if(profileInofo){
             setProfileInofo(false);
@@ -302,70 +487,6 @@ const Body =()=>{
         }
     },[renderList])
 
-    const ProductRender =({item,type,index})=>{
-        return(
-            <>
-            {item.category&&<div style={{position:"relative"}}>
-                {type==="like"&&<Link to={`/product?productnum=${item.id}`}>
-                    <div id={item.id} 
-                        onClick={(e)=>{e.stopPropagation();}}
-                        className="profile_item_render"
-                        >
-                        <div className="profile_product_thumbnail" style={{backgroundImage:`url(${item.thumbnail})`}}></div>
-                        <div className="profile_product_info">
-                            <div className="profile_product_title">{item.title}</div>
-                            <div style={{display:"flex",alignItems:"center"}}>
-                                <div style={{width:'16px',minWidth:"16px",height:"16px",backgroundImage:`url(${icon_profile_item_comment})`,backgroundSize:'cover',marginRight:"8px"}}></div>
-                                <div className="profile_product_info_text">{item.review_count}</div>
-                                <div style={{width:'16px',minWidth:"16px",height:"16px",backgroundImage:`url(${icon_profile_item_like})`,backgroundSize:'cover',marginRight:"8px",marginLeft:"8px"}}></div>
-                                <div className="profile_product_info_text">{item.like_count}</div>
-                            </div>
-                        </div>
-
-                    </div>
-                </Link>}
-                {(type==="myProduct"&&item.make_by==="true")&&<Link to={`/product?productnum=${item.id}`}>
-                    <div id={item.id} 
-                        onClick={(e)=>{e.stopPropagation();}}
-                        className="profile_item_render"
-                        >
-                        <div className="profile_product_thumbnail" style={{backgroundImage:`url(${item.thumbnail})`}}></div>
-                        <div className="profile_product_info">
-                            <div className="profile_product_title">{item.title}</div>
-                            <div style={{display:"flex",alignItems:"center"}}>
-                                <div style={{width:'16px',minWidth:"16px",height:"16px",backgroundImage:`url(${icon_profile_item_comment})`,backgroundSize:'cover',marginRight:"8px"}}></div>
-                                <div className="profile_product_info_text">{item.review_count}</div>
-                                <div style={{width:'16px',minWidth:"16px",height:"16px",backgroundImage:`url(${icon_profile_item_like})`,backgroundSize:'cover',marginRight:"8px",marginLeft:"8px"}}></div>
-                                <div className="profile_product_info_text">{item.like_count}</div>
-                            </div>
-                        </div>
-                        <Link to={`/modifyproduct?productnum=${item.id}`}><div className="btn_modify" style={{width:"48px",height:"32px",zIndex:"99",borderRadius:"4px",marginLeft:"8px"}}
-                        onClick={(e)=>{e.stopPropagation();}}>수정</div></Link>
-                    </div>
-                </Link>}
-                {(type==="introduceProduct"&&item.make_by==="false")&&<Link to={`/product?productnum=${item.id}`}>
-                    <div id={item.id} 
-                        onClick={(e)=>{e.stopPropagation();}}
-                        className="profile_item_render"
-                        >
-                        <div className="profile_product_thumbnail" style={{backgroundImage:`url(${item.thumbnail})`}}></div>
-                        <div className="profile_product_info">
-                            <div className="profile_product_title">{item.title}</div>
-                            <div style={{display:"flex",alignItems:"center"}}>
-                                <div style={{width:'16px',minWidth:"16px",height:"16px",backgroundImage:`url(${icon_profile_item_comment})`,backgroundSize:'cover',marginRight:"8px"}}></div>
-                                <div className="profile_product_info_text">{item.review_count}</div>
-                                <div style={{width:'16px',minWidth:"16px",height:"16px",backgroundImage:`url(${icon_profile_item_like})`,backgroundSize:'cover',marginRight:"8px",marginLeft:"8px"}}></div>
-                                <div className="profile_product_info_text">{item.like_count}</div>
-                            </div>
-                        </div>
-                        <Link to={`/modifyproduct?productnum=${item.id}`}><div className="btn_modify" style={{width:"48px",height:"32px",zIndex:"99",borderRadius:"4px",marginLeft:"8px"}}
-                        onClick={(e)=>{e.stopPropagation();}}>수정</div></Link>
-                    </div>
-                </Link>}
-            </div>}
-            </>
-        )
-    }
 
     window.history.pushState(null,"",window.location.href);
     window.onpopstate = ()=>{
@@ -380,81 +501,66 @@ const Body =()=>{
 
     }
 
-    const ReplyRender =({item,index})=>{
-        return(
-            <>
-            {item!==null&&<div className="profile_comment" onClick={
-                ()=>{
-                    localStorage.setItem("replyId",item.id);
-                    const alink = document.createElement("a");
-                    alink.href =item.url;
-                    alink.click();
-                }
-                }>
-                <div className="profile_comment_icon" style={{backgroundImage:`url(${icon_profile_commentIcon})`}}></div>
-                <div style={{width:'100%',overflow:"hidden"}}>
-                    <div style={{display:"flex",alignItems:"center",marginBottom:"5px",height:"16px",lineHeight:'16px',flexWrap:"nowrap",width:"1000px"}}>
-                        {item.target==="blog"&&<div style={{backgroundImage:`url(${icon_review_title})`,width:'16px',height:'16px',backgroundSize:'cover',marginRight:"4px"}}></div>}
-                        {item.target==="community"&&<div style={{backgroundImage:`url(${icon_community_title_icon})`,width:'16px',height:'16px',backgroundSize:'cover',marginRight:"4px"}}></div>}
-                        <div style={{fontSize:"14px",fontWeight:"500",color:"#9c31c6"}}>{item.target==="product"?`${item.title}`:`"${item.title}"`}</div>
-                        <div style={{fontSize:"14px"}}>에 남긴 코멘트</div>
-                    </div>
-                    <div style={{width:"100%",position:"relative",height:'16px'}}>
-                        <ReactQuill theme=""
-                        className="profile_comment_quill"
-                        value={item.reply.length>56?item.reply.slice(0,50)+"···":item.reply} style={{textAlign:"left",color:"#505050",fontSize:'13px',width:"100%",height:'16px',lineHeight:"16px",overflow:"hidden"}}></ReactQuill>
-                        {/* <ReactQuill theme=""
-                        value={item.reply} style={{textAlign:"left",color:"#505050",fontSize:'13px',width:"100%",height:'16px',lineHeight:"16px"}}></ReactQuill> */}
-                        <div style={{width:"100%",height:"100%",position:'absolute',top:0,left:0}}></div>
-                    </div>
-                </div>
-            </div>}
-            </>
-        )
-    }   
-
     return(
         <div id="pageBody" style={{minHeigth:window.innerHeight-48}}>
         {(render&&pageNum===0)&&
-        <div style={{width:"100%",display:"flex",alignItems:"center",flexDirection:"column"}}>
+        <div style={{width:"100vw",display:"flex",alignItems:"center",flexDirection:"column"}}>
             <div className="profile_header_info">
                 <div className="profile_main_myinfo">
                     <div className="profile_main_thumbnail" style={{
                         backgroundImage:localStorage.getItem("userInfo")&&`url(${JSON.parse(localStorage.getItem("userInfo")).thumbnail})`
                         }}></div>
                     <div>
-                        <div className="profile_main_nick">{JSON.parse(localStorage.getItem("userInfo")).nick}</div>
+                        <div style={{display:"flex",alignItems:"center"}}>
+                            <div className="profile_main_nick">{JSON.parse(localStorage.getItem("userInfo")).nick}</div>
+                            <div className="profile_main_nick" 
+                                style={{
+                                    width:'16px',
+                                    height:"16px",
+                                    backgroundImage:`url(${icon_pointcoin})`,
+                                    backgroundSize:"contain",
+                                    backgroundPosition:"center",
+                                    backgroundRepeat:"no-repeat",
+                                    marginLeft:"8px",marginRight:"4px"}}></div>
+                            <div className="profile_main_nick" style={{color:"#6200EE",fontSize:"14px"}}>{pointSum}</div>
+                        </div>
+                        <div className="profile_main_join">{localStorage.getItem("email")}</div>
+                        <div className="profile_main_join">
+                            {JSON.parse(localStorage.getItem("userInfo")).created_at.slice(0,4)}년 {JSON.parse(localStorage.getItem("userInfo")).created_at.slice(5,7)}월 {JSON.parse(localStorage.getItem("userInfo")).created_at.slice(8,10)}일에 가입함
+                        </div>
                         <div className="profile_main_position">
                             {JSON.parse(localStorage.getItem("userInfo")).position}{JSON.parse(localStorage.getItem("userInfo")).department?`,${JSON.parse(localStorage.getItem("userInfo")).department}`:""}
                         </div>
-                        <div className="profile_main_join">
-                            {JSON.parse(localStorage.getItem("userInfo")).created_at.slice(0,4)}년 {JSON.parse(localStorage.getItem("userInfo")).created_at.slice(5,7)}월 {JSON.parse(localStorage.getItem("userInfo")).created_at.slice(8,10)}일에 가입함
-                            </div>
                         <div className="btn_three profile_main_modifyBtn"
                         onClick={()=>{setPageNum(1)}}>프로필 수정</div>
                     </div>
                 </div>
                 <div className="profile_main">
                    <div className="profile_category"
-                   style={{color:renderList==="like"&&"#9C31C6",
-                           borderBottom:renderList==="like"&&"2px solid#9C31C6",
+                   style={{color:renderList==="like"&&"#6200EE",
+                           borderBottom:renderList==="like"&&"2px solid#6200EE",
                            fontWeight:renderList==="like"&&"500"}}
                     onClick={()=>{setRenderList("like")}}>추천({productNum.like})</div>
                    <div className="profile_category"
-                   style={{color:renderList==="make"&&"#9C31C6",
-                           borderBottom:renderList==="make"&&"2px solid#9C31C6",
+                   style={{color:renderList==="make"&&"#6200EE",
+                           borderBottom:renderList==="make"&&"2px solid#6200EE",
                            fontWeight:renderList==="make"&&"500"}}
                     onClick={()=>{setRenderList("make")}}>제작({productNum.make})</div>
                    <div className="profile_category"
-                   style={{color:renderList==="introduce"&&"#9C31C6",
-                           borderBottom:renderList==="introduce"&&"2px solid#9C31C6",
+                   style={{color:renderList==="introduce"&&"#6200EE",
+                           borderBottom:renderList==="introduce"&&"2px solid#6200EE",
                            fontWeight:renderList==="introduce"&&"500"}}
                     onClick={()=>{setRenderList("introduce")}}>소개({productNum.introduce})</div>
                    <div className="profile_category"
-                   style={{color:renderList==="comment"&&"#9C31C6",
-                           borderBottom:renderList==="comment"&&"2px solid#9C31C6",
+                   style={{color:renderList==="comment"&&"#6200EE",
+                           borderBottom:renderList==="comment"&&"2px solid#6200EE",
                            fontWeight:renderList==="comment"&&"500"}}
                     onClick={()=>{setRenderList("comment")}}>코멘트</div>
+                    <div className="profile_category"
+                   style={{color:renderList==="point"&&"#6200EE",
+                           borderBottom:renderList==="point"&&"2px solid#6200EE",
+                           fontWeight:renderList==="point"&&"500"}}
+                    onClick={()=>{setRenderList("point")}}>포인트</div>
                 </div>
                 <div style={{width:"100%",height:"1px",backgroundColor:"#c4c4c4",position:"absolute",bottom:0,left:0}}></div>
             </div>
@@ -470,6 +576,68 @@ const Body =()=>{
                 </div>}
                 {renderList==="comment"&&<div>
                     {myReply.map((item,index)=>(<ReplyRender key={index} myReply={myReply} item={item}></ReplyRender>))}
+                </div>}
+                {renderList==="point"&&<div>
+                    <div className="profile_point_header">
+                        <div className="profile_point_header_text">
+                            <div
+                                style={{
+                                    width:'16px',
+                                    height:"16px",
+                                    backgroundImage:`url(${icon_pointcoin})`,
+                                    backgroundSize:"contain",
+                                    backgroundPosition:"center",
+                                    backgroundRepeat:"no-repeat",
+                                    marginRight:"4px"}}>
+                                </div>
+                            <div>{today.getFullYear()}년 {today.getMonth()+1}월 획득 포인트:</div>
+                            <div>{point}</div>
+                            <div
+                                style={{
+                                    width:'16px',
+                                    height:"16px",
+                                    backgroundImage:`url(${icon_pointcoin})`,
+                                    backgroundSize:"contain",
+                                    backgroundPosition:"center",
+                                    backgroundRepeat:"no-repeat",
+                                    marginLeft:"12px",
+                                    marginRight:"4px"}}>
+                                </div>
+                            <b>누적 포인트:</b>
+                            <b>{pointSum}</b>
+                        </div>
+                        <div className="profile_point_header_datelist">
+                            <div className="profile_point_header_datelist_dropMenu"
+                            onClick={()=>{setYearWindow(!yearWindow)}}>
+                                <div className="profile_point_header_datelist_text">{currentYear}</div>
+                                <div style={{
+                                    width:"20px",
+                                    height:"20px",
+                                    backgroundImage:`url(${icon_like})`,
+                                    transform:"rotate(180deg)",
+                                    backgroundPosition:"center"}}></div>
+                            </div>
+                            <div className="profile_point_header_datelist_dropMenu"
+                            onClick={()=>{setMonthWindow(!monthWindow)}}>
+                                <div className="profile_point_header_datelist_text">{currentMonth}월</div>
+                                <div style={{
+                                    width:"20px",
+                                    height:"20px",
+                                    backgroundImage:`url(${icon_like})`,
+                                    transform:"rotate(180deg)",
+                                    backgroundPosition:"center"}}></div>
+                            </div>
+                            {yearWindow&&<div className="profile_date_item_list" style={{top:"32px",right:"77px"}}>
+                                {yearlist.map((item)=>(<div className="profile_date_item" onClick={()=>{setCurrentYear(item);setYearWindow(false)}}>{item}</div>))}
+                            </div>}
+                            {monthWindow&&<div className="profile_date_item_list" style={{right:"0px",top:"32px"}} >
+                                {monthlist.map((item)=>(<div className="profile_date_item" onClick={()=>{setCurrentMonth(item);setMonthWindow(false)}}>{item}월</div>))}
+                            </div>}
+                        </div>
+                    </div>
+                    <div className="profile_point_header_list">
+                        {pointList.map((item,index)=>(<PointRender key={index} currentMonth={currentMonth} currentYear={currentYear} item={item}></PointRender>))}
+                    </div>
                 </div>}
                 {(productNum.like===0&&renderList==="like")&&<div className="profile_not_item">
                     <div style={{width:"16px",height:'16px',backgroundImage:`url(${icon_profile_notItem})`,marginRight:"8px"}}></div>
@@ -637,7 +805,6 @@ const Profile = ()=>{
       return(
         <div className="contentsBody" style={{
             width:"100%",
-            minHeight:window.innerHeight,
           }}
       onClick={()=>{setModal(false);setAlarmModal(false);}}
       onScroll={scrollEvent}>

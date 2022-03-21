@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import icon_logo from '../../image/logo.svg';
 import icon_checked from '../../image/checked.svg';
 import icon_nonChecked from '../../image/nonChecked.svg';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 
@@ -18,7 +17,7 @@ const SignUp = ()=>{
     const [termsOfServiceWindow,setTermsOfService] =useState(false);
     const [historyBack,setHistoryBack] =useState(false);
     const [nickCheck,setNickCheck] = useState(false);
-    const [currentImg,setCurrentImg] = useState(JSON.parse(localStorage.getItem("googleProfile")).imageUrl);
+    const [currentImg,setCurrentImg] = useState( JSON.parse(localStorage.getItem("profile")).type ==="google"? JSON.parse(localStorage.getItem("profile")).imageUrl : "");
     const [currentUserInfo,setCurrnetUserInfo] =useState({
         nick:"",
         department:"",
@@ -28,8 +27,7 @@ const SignUp = ()=>{
     const [imgFile,setImgFile] = useState("");
 
     const convertURLtoFile = async (url,setImgFile) => {
-        const response = await fetch(url);
-        // here image is url/location of image
+        const response = await fetch(JSON.parse(localStorage.getItem("profile")).imageUrl);
         const blob = await response.blob();
         const file = new File([blob], 'image.jpg', {type: blob.type});
         setImgFile(file);
@@ -39,7 +37,9 @@ const SignUp = ()=>{
         if(currentUserInfo!==""){
             setRenderState(true);
         }
-        convertURLtoFile(JSON.parse(localStorage.getItem("googleProfile")).imageUrl,setImgFile);
+        if(JSON.parse(localStorage.getItem("profile")).type ==="google"){
+            convertURLtoFile(JSON.parse(localStorage.getItem("profile")).imageUrl,setImgFile);
+        }
     },[]);
 
     const Privacy =()=>{
@@ -352,6 +352,7 @@ const SignUp = ()=>{
         data.append('department', currentUserInfo.department);
         data.append('position', currentUserInfo.position);
         data.append('mailing', currentUserInfo.mailing);
+        data.append('recommend_email', currentUserInfo.recommend_eamil);
         try{
             await axios({
                 method:"post",
@@ -453,9 +454,9 @@ const SignUp = ()=>{
                     </div>
                     <div className="signup_group">
                         <div style={{height:"14px",fontSize:"14px",lineHeight:'14px',fontWeight:'bold',color:"#262626",width:"100%",textAlign:"left"}}>이름</div>
-                        <div style={{width:"100%",fontSize:"13px",textAlign:"left",marginTop:"16px",color:"#7b7b7b"}}>{JSON.parse(localStorage.getItem("googleProfile")).name}</div>
+                        <div style={{width:"100%",fontSize:"13px",textAlign:"left",marginTop:"16px",color:"#7b7b7b"}}>{JSON.parse(localStorage.getItem("profile")).name}</div>
                         <div style={{height:"14px",fontSize:"14px",lineHeight:'14px',marginTop:"24px",fontWeight:'bold',color:"#262626",width:"100%",textAlign:"left"}}>이메일</div>
-                        <div style={{width:"100%",fontSize:"13px",textAlign:"left",marginTop:"16px",color:"#7b7b7b"}}>{JSON.parse(localStorage.getItem("googleProfile")).email}</div>
+                        <div style={{width:"100%",fontSize:"13px",textAlign:"left",marginTop:"16px",color:"#7b7b7b"}}>{JSON.parse(localStorage.getItem("profile")).email}</div>
                     </div>
                 </div>
                 <div style={{marginTop:"40px",marginBottom:"24px",width:"100%"}}>
@@ -482,7 +483,7 @@ const SignUp = ()=>{
                                 <div style={{fontWeight:"bold",fontSize:'14px',height:'14px',lineHeight:"14px",textAlign:"left"}}>닉네임</div>
                                 {nickCheck&&<div style={{marginLeft:"8px",fontSize:13,height:"14px",lineHeight:"14px",color:"#EA4335",fontWeight:500}}>닉네임은 한글 또는 알파벳으로 입력해 주세요</div>}
                             </div>
-                            <input name="nick" placeholder="입력하지 않으면 구글 계정명으로 표시됩니다." value={currentUserInfo.nick} onChange={inputLogic}
+                            <input name="nick" placeholder="입력하지 않으면 계정명으로 표시됩니다." value={currentUserInfo.nick} onChange={inputLogic}
 
 
                              className="signup_input"></input>
@@ -499,7 +500,7 @@ const SignUp = ()=>{
                         </div>  
                         <div style={{textAlign:"left",marginTop:'16px'}}>
                             <div style={{fontWeight:"bold",fontSize:'14px',height:'14px',lineHeight:"14px",marginBottom:"10px",textAlign:"left"}}>추천인 이메일</div>
-                            <input name="proposer" placeholder="추천인 이메일 입력시 1000포인트가 지급됩니다." value={currentUserInfo.department} onChange={inputLogic}
+                            <input name="recommend_eamil" placeholder="추천인 이메일 입력시 1000포인트가 지급됩니다." value={currentUserInfo.recommend_eamil} onChange={inputLogic}
                             className="signup_input"></input>
                         </div>  
                         <div style={{display:"flex",marginTop:'24px'}}>
@@ -542,7 +543,7 @@ const SignUp = ()=>{
                 <div style={{width:"100%",display:"flex",flexDirection:"column",alignItems:"center",position:"relative"}}>
                     <div className="btn_one" style={{width:"104px",height:'32px',marginBottom:"32px"}}
                     onClick={(e)=>{userInfoApi();}}>가입 완료</div>
-                    {(currentUserInfo.position===""||!checkState1||nickCheck)&&<div className="btn_one_disible" style={{width:"104px",height:'32px',top:"0px",position:'absolute'}}>가입 완료</div>}
+                    {(currentUserInfo.position===""||!checkState1||nickCheck)&&<div className="btn_one_disible" style={{width:"106px",height:'34px',top:"-1px",position:'absolute'}}>가입 완료</div>}
                     
                 </div>
                 {(privacyWindow||termsOfServiceWindow)&&<div style={{width:"100%",height:"100%",position:'absolute',top:"0px",left:"0px",backgroundColor:"rgba(80,80,80,0.8)",display:"flex",flexDirection:"column",alignItems:"center",paddingTop:"80px"}} onClick={()=>{setPrivacyWindow(false);setTermsOfService(false)}}>

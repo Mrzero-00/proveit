@@ -460,6 +460,9 @@ const Review = ()=>{
     const [scrollY,setScrollY]=useState(0);
 
     const submitGoogleData= async(name,id,token)=>{
+        //유효성 검사
+        //let crt = document.getElementById('crt');
+        // e.preventDefault();
         var data = new FormData();
         data.append('name',name);
         data.append('email',id);
@@ -468,12 +471,14 @@ const Review = ()=>{
             await axios({
                 method:"post",
                 url : "https://www.proveit.co.kr/api/login.php",
+                headers: {
+                    //'Header-110': 'UxgOISh44O3eJxbKInDj3',
+                },
                 data:data
     
             }).then((e)=>{
                 if(e.data.ret_code === "0000"){
                     window.localStorage.setItem("hash",e.data.hash);
-                    window.localStorage.setItem("token",token);
                     window.localStorage.setItem("email",id);
                     window.localStorage.setItem("userName",name);
                     userInfoApi(id,token);
@@ -481,7 +486,7 @@ const Review = ()=>{
                     setLoginWindow(false);
     
                 }else if(e.data.ret_code ==="1000"){
-                  window.localStorage.setItem("token",token);
+                  window.localStorage.setItem("hash",e.data.hash);
                   window.localStorage.setItem("email",id);
                   window.localStorage.setItem("userName",name);
                   const alink = document.createElement("a");
@@ -492,15 +497,35 @@ const Review = ()=>{
         }catch{
     
         }
-    }
+      }
       
-    const responseGoogle = (response) => {
-    const profileObj = response.profileObj;
-    const tokenObj = response.tokenObj;
-    localStorage.setItem("googleProfile",JSON.stringify(response.profileObj));
-    localStorage.setItem("token",tokenObj.access_token);
-    submitGoogleData(profileObj.givenName,profileObj.email,tokenObj.access_token);
-    }
+      const responseGoogle = (response) => {
+        const profileObj = response.profileObj;
+        const tokenObj = response.tokenObj;
+        console.log(response);
+        localStorage.setItem("profile",JSON.stringify({
+          type:"google",
+          name:profileObj.name,
+          imageUrl:profileObj.imageUrl,
+          email:profileObj.email
+        }));
+        localStorage.setItem("token",tokenObj.access_token);
+        submitGoogleData(profileObj.givenName,profileObj.email,tokenObj.access_token);
+      }
+    
+      const responseKakao = (response) => {
+        const res = response;
+        const profile = res.profile.kakao_account;
+        console.log(profile);
+        localStorage.setItem("profile",JSON.stringify({
+          type:"kakao",
+          name:res.profile.kakao_account.profile.nickname,
+          imageUrl:"",
+          email:profile.email
+        }));
+        localStorage.setItem("token",res.access_token);
+        submitGoogleData(profile.profile.nickname,profile.email,res.access_token);
+      }
     
     const userInfoApi = async(id,token)=>{
       var data = new FormData();
@@ -528,7 +553,6 @@ const Review = ()=>{
       return(
         <div className="contentsBody" style={{
             width:"100%",
-            minHeight:window.innerHeight,
           }}
       onClick={()=>{setModal(false);setAlarmModal(false);}}
       >
@@ -553,11 +577,13 @@ const Review = ()=>{
     {loginWindow&&<LoginWindow 
     responseGoogle={responseGoogle}
     setLoginWindow={setLoginWindow}
+    responseKakao={responseKakao}
     ></LoginWindow >}
 
     {signupWindow&&<SignupWindow 
     responseGoogle={responseGoogle}
     setSignUpWindow={setSignUpWindow}
+    responseKakao={responseKakao}
     ></SignupWindow>}
     </div>  
   )

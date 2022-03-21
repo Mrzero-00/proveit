@@ -63,7 +63,7 @@ const AlarmRender = ({item})=>{
                 님이 <span style={{fontWeight:"500"}}>{item.title}</span> 댓글에 {JSON.parse(localStorage.getItem("userInfo")).nick}님을 언급했습니다 :
                 <ReactQuill theme=""
                         className="profile_comment_quill"
-                        value={item.comment.length>27?item.comment.slice(0,27)+"···":item.comment.slice(0,27)} style={{textAlign:"left",color:"#505050",fontSize:'13px',width:"100%",height:'16px',lineHeight:"16px",overflow:"hidden"}}></ReactQuill>
+                        value={item.comment.length>32?item.comment.slice(0,32)+"···":item.comment} style={{textAlign:"left",color:"#505050",fontSize:'13px',width:"100%",height:'16px',lineHeight:"16px",overflow:"hidden"}}></ReactQuill>
                 <div style={{marginTop:"12px",color:"#a1a1a1",fontSize:"12px",fontWeight:"400"}}>{item.ago_time}</div>
             </div>}
 
@@ -74,7 +74,7 @@ const AlarmRender = ({item})=>{
                 님이 <span style={{fontWeight:"500"}}>{item.title}</span>에 댓글을 달았습니다 :
                 <ReactQuill theme=""
                         className="profile_comment_quill"
-                        value={item.comment.length>27?item.comment.slice(0,27)+"···":item.comment.slice(0,27)} style={{textAlign:"left",color:"#505050",fontSize:'13px',width:"100%",height:'16px',lineHeight:"16px",overflow:"hidden"}}></ReactQuill>
+                        value={item.comment.length>32?item.comment.slice(0,32)+"···":item.comment} style={{textAlign:"left",color:"#505050",fontSize:'13px',width:"100%",height:'16px',lineHeight:"16px",overflow:"hidden"}}></ReactQuill>
                 <div style={{marginTop:"12px",color:"#a1a1a1",fontSize:"12px",fontWeight:"400"}}>{item.ago_time}</div>
             </div>}
 
@@ -95,6 +95,34 @@ const AlarmRender = ({item})=>{
                     <div style={{marginTop:"12px",color:"#a1a1a1",fontSize:"12px",fontWeight:"400"}}>{item.ago_time}</div>
                 </div>
             }
+
+            {(item.type_1==="reply_like"&&item.cnt!=="1")&&<div 
+                style={{cursor:"pointer",width:"252px",minHeight:"32px",fontSize:"13px",lineHeight:"1.5"}}
+                >
+                    <span style={{color:"#9c31c6"}}>{item.nick}님외 {item.cnt-1}명의 사람들이 </span>
+                    <ReactQuill theme=""
+                        className="profile_comment_quill"
+                        value={item.comment.length>32?item.comment.slice(0,32)+"···":item.comment} 
+                        style={{textAlign:"left",color:"#505050",fontSize:'13px',width:"100%",height:'16px',lineHeight:"16px",overflow:"hidden"}}></ReactQuill>
+                    <span style={{fontWeight:"500"}}>댓글을 추천했습니다.</span>
+                    <div style={{marginTop:"12px",color:"#a1a1a1",fontSize:"12px",fontWeight:"400"}}>{item.ago_time}</div>
+                </div>
+            }
+
+            
+            {(item.type_1==="reply_like"&&item.cnt==="1")&&<div 
+                style={{cursor:"pointer",width:"252px",minHeight:"32px",fontSize:"13px",lineHeight:"1.5"}}
+                >
+                    <span style={{color:"#9c31c6"}}>{item.nick}</span>
+                    <span style={{color:"#262626"}}>님이 </span>
+                    <ReactQuill theme=""
+                        className="profile_comment_quill"
+                        value={item.comment.length>24?`"${item.comment.slice(0,24)}···"`:item.comment} 
+                        style={{textAlign:"left",color:"#505050",fontSize:'13px',width:"100%",height:'16px',lineHeight:"16px",overflow:"hidden"}}></ReactQuill>
+                    <span style={{fontWeight:"500"}}>댓글을 추천했습니다.</span>
+                    <div style={{marginTop:"12px",color:"#a1a1a1",fontSize:"12px",fontWeight:"400"}}>{item.ago_time}</div>
+                </div>
+            }
         </div>
     )
 }
@@ -103,7 +131,7 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
     const [hover,setHover] = useState(0);
     const [header,setHeader] = useState(0);
     const [hambug,setHambug] =useState(false);
-    const [height,setHeight] = useState(96);
+    const [height,setHeight] = useState(120);
     const [rendering,setRendering] = useState(false); 
     const currentScroll=useRef(0);
     const [scrollState,setScrollState] =useState(false);  
@@ -116,7 +144,7 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
             const body = document.getElementById("pageBody");
             if(currentScroll.current<scrollPosition){
                 currentScroll.current=scrollPosition;
-                if(body.scrollHeight+96-window.innerHeight-10<scrollPosition){
+                if(body.scrollHeight+144-window.innerHeight-10<scrollPosition){
                     setScrollState(true)
                 }else{
                     setScrollState(false);
@@ -126,10 +154,10 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
                 setScrollState(true);
             }
             
-            if(scrollPosition>=96&&scrollPosition<=192){
-                setHeader(scrollPosition-96);
+            if(scrollPosition>=120&&scrollPosition<=192){
+                setHeader(scrollPosition-120);
             }else if(scrollPosition>192){
-                setHeader(96);
+                setHeader(144);
             }else{
                 setHeader(0);
             }      
@@ -167,7 +195,7 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
                 const body = document.getElementById("pageBody");
                 if(currentScroll.current<scrollPosition){
                     currentScroll.current=scrollPosition;
-                    if(body.scrollHeight+144-window.innerHeight-10<scrollPosition){
+                    if(body.scrollHeight+120-window.innerHeight-10<scrollPosition){
                         setScrollState(true)
                     }else{
                         setScrollState(false);
@@ -177,10 +205,10 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
                     setScrollState(true);
                 }
                 
-                if(scrollPosition>=96&&scrollPosition<=192){
-                    setHeader(scrollPosition-96);
-                }else if(scrollPosition>96){
-                    setHeader(96);
+                if(scrollPosition>=120&&scrollPosition<=240){
+                    setHeader(scrollPosition-120);
+                }else if(scrollPosition>120){
+                    setHeader(120);
                 }else{
                     setHeader(0);
                 }      
@@ -202,10 +230,10 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
                     setScrollState(true);
                 }
                 
-                if(scrollPosition>=64&&scrollPosition<=128){
-                    setHeader(scrollPosition-64);
-                }else if(scrollPosition>64){
-                    setHeader(96);
+                if(scrollPosition>=112&&scrollPosition<=224){
+                    setHeader(scrollPosition-112);
+                }else if(scrollPosition>112){
+                    setHeader(112);
                 }else{
                     setHeader(0);
                 }
@@ -219,9 +247,9 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
         upBtnMount_phone();
         setTimeout(() => {
             if(window.innerWidth>767){
-                setHeight(96);
+                setHeight(120);
             }else{
-                setHeight(64);
+                setHeight(112);
             }
             setRendering(true);
         }, 100);
@@ -240,7 +268,6 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
                 data:data
     
             }).then((e)=>{
-                // console.log(e)
                 if(e.data.ret_code === "0000"){
                     newAlarmCheck(e.data.list);
                     setAlarmList(e.data.list);
@@ -288,7 +315,7 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
                     <div className="header_bar_menu">
                             <div style={{marginRight:"48px"}}><Link to="/">발견</Link></div>
                             <div style={{marginRight:"48px"}}><Link to="/proreviewer">매거진</Link></div>
-                            <div style={{marginRight:"48px"}}><Link to="/community">토론-토</Link></div>
+                             <div style={{marginRight:"48px"}}><Link to="/community">토론-토</Link></div>
                             <div><Link to="/introduce">소개</Link></div>
                     </div>
                     
@@ -303,10 +330,10 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
                         }
                         {localStorage.getItem("hash")!==null&&
                             <div className="header_icon_web">
-                                <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px",fontWeight:"700",fontSize:"20px"}}>
-                                    <div style={{width:"20px",height:'20px',minWidth:"20px",minHeight:"20px",backgroundImage:`url(${icon_registerIcon})`,marginRight:"4px"}}>
-                                    </div>
-                                    서비스 등록하기
+                                <Link to="/registerproduct"><div className="btn_textBtn_register">
+                                    {/* <div style={{width:"20px",height:'20px',minWidth:"20px",minHeight:"20px",backgroundImage:`url(${icon_registerIcon})`,marginRight:"4px"}}>
+                                    </div>*/}
+                                    ＋서비스 등록하기
                                     </div>
                                 </Link>
                                 <div className="btn_one" style={{
@@ -380,10 +407,10 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
                         }
                         {localStorage.getItem("hash")!==null&&
                             <div className="header_icon_web">
-                                <Link to="/registerproduct"><div className="btn_textBtn" style={{marginRight:"16px",fontWeight:"700",fontSize:"20px"}}>
-                                    <div style={{width:"20px",height:'20px',minWidth:"20px",minHeight:"20px",backgroundImage:`url(${icon_registerIcon})`,marginRight:"4px"}}>
-                                    </div>
-                                    서비스 등록하기
+                                <Link to="/registerproduct"><div className="btn_textBtn_register">
+                                    {/* <div style={{width:"20px",height:'20px',minWidth:"20px",minHeight:"20px",backgroundImage:`url(${icon_registerIcon})`,marginRight:"4px"}}>
+                                    </div>*/}
+                                    ＋서비스 등록하기
                                     </div>
                                 </Link>
                                 <div className="btn_one" style={{
@@ -477,7 +504,7 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
             
             {hambug&&<div style={{position:"fixed",left:0,top:0,width:"100vw",height:"100vh",fontSize:'14px',color:"#505050",backgroundColor:"#fff",padding:"16px 20px 16px 20px",zIndex:9999}}>
                 <div style={{display:"flex",justifyContent:"space-between",height:height,alignItems:"center",marginBottom:"16px"}}>
-                    <Link to="/"><div style={{width:"79px",height:"32px",backgroundImage:`url(${icon_logo})`,backgroundSize:"cover"}}></div></Link>
+                    <Link to="/"><div className="header_logo_modal"></div></Link>
                     <div style={{width:'24px',height:'24px',backgroundImage:`url(${icon_x})`}}
                     onClick={()=>{setHambug(false)}}></div>
                 </div>
@@ -514,14 +541,14 @@ const Header=({setModal,loginWindow,signupWindow,modal,setLoginWindow,setSignUpW
                     <Link to="/proreviewer"><div className="text_menu_icon" onClick={()=>{setHambug(false);}}>매거진</div></Link>
                     <div style={{width:"100%",height:"1px",backgroundColor:"#f1f1f1",marginBottom:"16px",marginTop:"16px"}}></div>
                     <div style={{height:"40px",lineHeight:"40px"}} onClick={()=>{setHambug(false);}}><Link to="/introduce">소개</Link></div>
-                    <div style={{height:"40px",lineHeight:"40px"}} onClick={()=>{setHambug(false);}}><Link to="/guideline">커뮤니티 가이드라인</Link></div>
+                    <div style={{height:"40px",lineHeight:"40px",display:"none"}} onClick={()=>{setHambug(false);}}><Link to="/guideline">커뮤니티 가이드라인</Link></div>
                     <div style={{height:"40px",lineHeight:"40px"}} onClick={()=>{setHambug(false);}}><Link to="/tos">이용약관</Link></div>
                     <div style={{height:"40px",lineHeight:"40px"}} onClick={()=>{setHambug(false);}}><Link to="/privacy_policy">개인정보 처리방침</Link></div>
                     <div style={{height:"40px",lineHeight:"40px"}}>이메일 문의 : hello@110corp.com</div>
                     <div style={{height:"40px",lineHeight:"40px"}}>© 2021 oneonezero Inc.</div>
                 </div>
             </div>}
-            {window.innerWidth>767&&<div className="btn_up" style={{backgroundImage:`url(${icon_upBtn})`,display:header!==96&&"none",transform:scrollState&&`translate(0,${-104}px)`}}
+            {window.innerWidth>767&&<div className="btn_up" style={{backgroundImage:`url(${icon_upBtn})`,display:header!==120&&"none",transform:scrollState&&`translate(0,${-104}px)`}}
                 onClick={upEvt}></div>}
                 
         </>

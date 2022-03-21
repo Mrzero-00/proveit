@@ -145,7 +145,6 @@ const RenderList =({item,index,length,setRenderState,setLoginWindow,indexNum})=>
   
     }
   }
-  console.log(item);
 
   return( 
     <>
@@ -161,17 +160,17 @@ const RenderList =({item,index,length,setRenderState,setLoginWindow,indexNum})=>
     >
      
       <div className="main_body_product_thumbnail" role="img" alt={`${item.title}_thumbnail`} style={{backgroundImage:`url(${item.thumbnail})`}}></div>
-      <div style={{width:"100%",textAlign:"left"}}>
+      <div style={{width:"100%",textAlign:"left",display:"flex",flexDirection:"column",justifyContent:"center",height:"100%"}}>
         <h3 className="main_body_product_title">{item.title}</h3>
         <p className="main_body_product_subtitle">{item.sub_title}</p>
         <div className="iphone" style={{display:"flex",alignItems:"center"}}>
-          <div style={{height:"100%",display:"flex",justifyContent:"center",alignItems:"center",color:"#7b7b7b"}}>{item.category}</div>
+          {/* <div style={{height:"100%",display:"flex",justifyContent:"center",alignItems:"center",color:"#7b7b7b"}}>{item.category}</div>
           <div style={{width:"4px",margin:"0px 4px",color:"#7b7b7b"}}>·</div>
           <div style={{height:"100%",display:"flex",justifyContent:"center",alignItems:"center",color:"#7b7b7b"}}>{item.payment_type}</div>
           <div style={{width:"4px",margin:"0px 4px",color:"#7b7b7b"}}>·</div>
           <div style={{height:"14px",display:"flex",justifyContent:"center",alignItems:"center",color:"#7b7b7b"}}>{item.ago_time}</div>
           <div style={{width:"4px",margin:"0px 4px",color:"#7b7b7b"}}>·</div>
-          <div style={{color:"#6200EE"}}>{item.review_count}개의 댓글</div>
+          <div style={{color:"#6200EE"}}>{item.review_count}개의 댓글</div> */}
           {/* <div style={{height:"100%",display:"flex",justifyContent:"center",alignItems:"center",color:"#828282",marginRight:"8px"}}>
             <div style={{width:"13px",height:"13px",marginRight:"4px",backgroundImage:`url(${categoryIcon})`,backgroundPosition:"center",backgroundSize:"cover"}}></div>
             <div>{item.category}</div>
@@ -180,14 +179,23 @@ const RenderList =({item,index,length,setRenderState,setLoginWindow,indexNum})=>
           </div> */}
         </div>
       </div>
-      <div className="main_body_product_likecount" style={{border:(likeState||hover)&&"1px solid #6200EE",}}
-      onMouseEnter={()=>{setHover(true);}}
-      onMouseLeave={()=>{setHover(false);}}
-      onClick={(e)=>{likeApi();e.stopPropagation();}}>
-        <div style={{height:"24px",width:"24px",backgroundImage:(likeState||hover)?`url(${icon_like_m})`:`url(${icon_like})`,backgroundRepeat:"no-repeat",backgroundPosition:"center"}}></div>
-        <div style={{height:"16px",lineHeight:"16px",width:"100%",fontSize:"14px",fontWeight:"bold",color:(likeState||hover)?"#6200EE":"#262626",textAlign:"center"}}>{likeCount*1/1000>=1?`${likeCount*1/1000}k`:likeCount}</div>
+      <div className="main_body_product_btnList">
+        <div className="main_body_product_replycount">
+          <div style={{height:"10px",minWidth:"10px",width:"10px",backgroundSize:"cover",marginLeft:"10px",backgroundImage:`url(${icon_comment})`,backgroundRepeat:"no-repeat",backgroundPosition:"center"}}></div>
+          <div style={{height:"16px",lineHeight:"16px",width:"100%",fontSize:"12px",fontWeight:"400",color:"#262626",textAlign:"center"}}>
+            {item.review_count}
+          </div>
+        </div>
+        <div className="main_body_product_likecount" style={{border:(likeState||hover)&&"1px solid #6200EE",}}
+        onMouseEnter={()=>{setHover(true);}}
+        onMouseLeave={()=>{setHover(false);}}
+        onClick={(e)=>{likeApi();e.stopPropagation();}}>
+          <div style={{height:"16px",minWidth:"16px",width:"16px",marginLeft:"5px",backgroundImage:(likeState||hover)?`url(${icon_like_m})`:`url(${icon_like})`,backgroundRepeat:"no-repeat",backgroundPosition:"center"}}></div>
+          <div style={{height:"16px",lineHeight:"16px",width:"100%",fontSize:"12px",fontWeight:"400",color:(likeState||hover)?"#6200EE":"#262626",textAlign:"center"}}>
+            {likeCount*1/1000>=1?`${likeCount*1/1000}k`:likeCount}
+            </div>
+        </div>
       </div>
-      
     </div>
 
     {/* {indexNum*8>index&&
@@ -339,20 +347,20 @@ const Body=({productOrderState,setProductOrderState,setLoginWindow,scrollY})=>{
               fontSize:"14px",
               marginRight:"8px",
               cursor:"pointer",
-              fontWeight:productOrderState==="popular"&&"bold",
+              fontWeight:productOrderState==="popular"?"700":"400",
               color:productOrderState==="popular"?"#323232":"#828282",
           }} onClick={()=>{setProductOrderState("popular")}}>인기순 |</div>
             <div style={{
               fontSize:"14px",
               cursor:"pointer",
-              fontWeight:productOrderState==="fastest"&&"bold",
+              fontWeight:productOrderState==="fastest"?"700":"400",
               color:productOrderState==="fastest"?"#323232":"#828282",}} 
               onClick={()=>{setProductOrderState("fastest")}}>최신순</div>
           </div>}
         </div>
        
-        {productOrderState==="fastest"&&<div>{fastestArray.map((item,index)=>(<RenderList index={index} setLoginWindow={setLoginWindow} setRenderState={setRenderState} length={length} key={item.id} item={item}></RenderList>))}</div>}
-        {productOrderState==="popular"&&<div>{popularArray.map((item,index)=>(<RenderList index={index} setLoginWindow={setLoginWindow} setRenderState={setRenderState} length={length} key={item.id} item={item}></RenderList>))}</div>}   
+        {productOrderState==="fastest"&&<div className="product_date_list_array">{fastestArray.map((item,index)=>(<RenderList index={index} setLoginWindow={setLoginWindow} setRenderState={setRenderState} length={length} key={item.id} item={item}></RenderList>))}</div>}
+        {productOrderState==="popular"&&<div className="product_date_list_array">{popularArray.map((item,index)=>(<RenderList index={index} setLoginWindow={setLoginWindow} setRenderState={setRenderState} length={length} key={item.id} item={item}></RenderList>))}</div>}   
       </div>
       )
   }
@@ -483,29 +491,29 @@ const Body=({productOrderState,setProductOrderState,setLoginWindow,scrollY})=>{
           {/* 풀버전 */}
           <div style={{marginBottom:"40px"}}>
             <div className="main_body_product_date">
-              <div style={{fontWeight:"bold"}}>전체</div>
+              <div style={{fontWeight:"bold"}}>등록된 서비스</div>
                 <div style={{display:"flex"}}>
                   <div style={{
-                    fontSize:"16px",
-                    height: "16px",
-                    lineHeight:"16px",
+                    fontSize:"14px",
+                    height: "14px",
+                    lineHeight:"14px",
                     marginRight:"8px",
                     cursor:"pointer",
-                    fontWeight:productOrderState==="popular"&&"700",
+                    fontWeight:productOrderState==="popular"?"700":"400",
                     color:productOrderState==="popular"?"#262626":"#7b7b7b",
                 }} onClick={()=>{setProductOrderState("popular");fullPopularLogic(fastestArray);}}>인기순 |</div>
                   <div style={{
-                    fontSize:"16px",
-                    height: "16px",
-                    lineHeight:"16px",
+                    fontSize:"14px",
+                    height: "14px",
+                    lineHeight:"14px",
                     cursor:"pointer",
-                    fontWeight:productOrderState==="fastest"&&"700",
+                    fontWeight:productOrderState==="fastest"?"700":"400",
                     color:productOrderState==="fastest"?"#262626":"#7b7b7b",}} 
                     onClick={()=>{setProductOrderState("fastest");fullFastestLogic(popularArray);}}>최신순</div>
                 </div>
             </div>
-            {productOrderState==="fastest"&&<div>{fastestArray.map((item,index)=>(<RenderList indexNum={indexNum} index={index} setLoginWindow={setLoginWindow} setRenderState={setRenderState}  key={item.id} item={item}></RenderList>))}</div>}
-            {productOrderState==="popular"&&<div>{popularArray.map((item,index)=>(<RenderList indexNum={indexNum} index={index} setLoginWindow={setLoginWindow} setRenderState={setRenderState}  key={item.id} item={item}></RenderList>))}</div>}   
+            {productOrderState==="fastest"&&<div className="product_list_array">{fastestArray.map((item,index)=>(<RenderList indexNum={indexNum} index={index} setLoginWindow={setLoginWindow} setRenderState={setRenderState}  key={item.id} item={item}></RenderList>))}</div>}
+            {productOrderState==="popular"&&<div className="product_list_array">{popularArray.map((item,index)=>(<RenderList indexNum={indexNum} index={index} setLoginWindow={setLoginWindow} setRenderState={setRenderState}  key={item.id} item={item}></RenderList>))}</div>}   
           </div>
           {/* 풀버전 */}
           <div style={{width:"100%",height:"19px",fontSize:'13px',color:"#7b7b7b",textAlign:"center",paddingBo:"32px"}}>더 이상 게시물이 없습니다.</div>
@@ -567,9 +575,29 @@ const MainPage = ()=>{
   const responseGoogle = (response) => {
     const profileObj = response.profileObj;
     const tokenObj = response.tokenObj;
-    localStorage.setItem("googleProfile",JSON.stringify(response.profileObj));
+    console.log(response);
+    localStorage.setItem("profile",JSON.stringify({
+      type:"google",
+      name:profileObj.name,
+      imageUrl:profileObj.imageUrl,
+      email:profileObj.email
+    }));
     localStorage.setItem("token",tokenObj.access_token);
     submitGoogleData(profileObj.givenName,profileObj.email,tokenObj.access_token);
+  }
+
+  const responseKakao = (response) => {
+    const res = response;
+    const profile = res.profile.kakao_account;
+    console.log(profile);
+    localStorage.setItem("profile",JSON.stringify({
+      type:"kakao",
+      name:res.profile.kakao_account.profile.nickname,
+      imageUrl:"",
+      email:profile.email
+    }));
+    localStorage.setItem("token",res.access_token);
+    submitGoogleData(profile.profile.nickname,profile.email,res.access_token);
   }
  
   const userInfoApi = async(id,token)=>{
@@ -604,7 +632,6 @@ const MainPage = ()=>{
   return(
   <div className="contentsBody" style={{
     width:"100%",
-    minHeight:window.innerHeight,
   }}
   onClick={()=>{
     setModal(false);
@@ -641,11 +668,13 @@ const MainPage = ()=>{
     {loginWindow&&<LoginWindow 
     responseGoogle={responseGoogle}
     setLoginWindow={setLoginWindow}
+    responseKakao={responseKakao}
     ></LoginWindow >}
 
     {signupWindow&&<SignupWindow 
     responseGoogle={responseGoogle}
     setSignUpWindow={setSignUpWindow}
+    responseKakao={responseKakao}
     ></SignupWindow>}
  
   </div>  

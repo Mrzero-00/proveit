@@ -18,9 +18,10 @@ const ReviewRender=({item,index})=>{
   return(<>
     {index<3&&
       <Link to={`/review?id=${item.id}`}>
-        <div className={window.location.pathname==="/review"?"reveiw_preview review":"reveiw_preview"} style={{borderBottom:index<3&&"1px solid #EFE5FD"}}>
-          <div style={{width:'216px',maxHeight:"32px",height:"100%",marginRight:"8px",fontSize:'13px',display:"flex",alignItems:"center",color:"#262626"}}>{item.title}</div>
-          <div style={{width:"32px",height:"32px",backgroundImage:`url(${item.thumb_m})`,backgroundPosition:"center",backgroundSize:"cover"}}></div>
+        <div className={window.location.pathname==="/review"?"reveiw_preview review":"reveiw_preview"}>
+          {/* <div style={{width:"32px",height:"32px",backgroundImage:`url(${item.thumb_m})`,backgroundPosition:"center",backgroundSize:"cover"}}></div> */}
+          <div style={{fontSize:"30px",marginRight:"8px"}}>·</div>
+          <div style={{width:'216px',maxHeight:"24px",height:"100%",marginRight:"8px",fontSize:'13px',display:"flex",alignItems:"center"}}>{item.title}</div>
         </div>
       </Link>
     }
@@ -62,7 +63,6 @@ const RankingRender =({item,index})=>{
 }
 
 const CommunityRender =({item,index})=>{
-  console.log(item);
   return(
     <Link to={`/communityitem?id=${item.id}`}>
       <div style={{borderBottom:index<2&&"1px solid #EFE5FD",display:"flex",padding:"16px 0px"}}>
@@ -201,7 +201,6 @@ const RightBar = ({setLoginWindow,categoryState,setCategoryState,scrollY})=>{
   
       }
     }
-  
     useEffect(()=>{
       upBtnMount();
       if(window.location.pathname==="/community"||window.location.pathname==="/communityitem"){
@@ -220,7 +219,7 @@ const RightBar = ({setLoginWindow,categoryState,setCategoryState,scrollY})=>{
   return(
     <>
       {pageNum===0&&<div>
-        {window.innerWidth>767&&<div className="main_proveit" style={{
+        {window.innerWidth>834&&<div className="main_proveit" style={{
         top:96,
         // position:header&&"fixed",
         margin:"0 auto",
@@ -228,22 +227,66 @@ const RightBar = ({setLoginWindow,categoryState,setCategoryState,scrollY})=>{
         flexDirection:"row-reverse",
         display:"flex",}}>
           <div>
+            <div
+            style={{
+              fontWeight:"bold",
+              marginBottom:"8px",
+              color:"#262626",
+              fontSize:'14px',
+              lineHeight:"16px",
+              height:"16px",
+              display:"flex",
+              justifyContent:"space-between",
+              alignItems:"center"}}>서비스 등록 안내</div>
+            <div style={{width:"288px",marginBottom:"24px"}}>
+              <div style={{display:"flex"}}>
+                <div style={{fontSize:"30px",marginRight:"8px"}}>·</div>
+                <div>프루브잇은 여러분의 창의적인 아이디어와 초기 단계의 서비스들을 등록하여 메이커 상호간 피드백을 주고 받을 수 있는 공간입니다. </div>
+              </div>
+              <div style={{display:"flex"}}>
+                <div style={{fontSize:"30px",marginRight:"8px"}}>·</div>
+                <div>서비스를 등록하면 발견 탭에 표시됩니다. </div>
+              </div>
+              <div style={{display:"flex"}}>
+                <div style={{fontSize:"30px",marginRight:"8px"}}>·</div>
+                <div>직접 만든 제품/서비스를 홍보해주세요. 직접 만들지는 않았더라도 유용하게 잘 쓰고 있는 서비스가 있다면 소개해주셔도 좋습니다. </div>
+              </div>
+              
+              <div style={{display:"flex"}}>
+                <div style={{fontSize:"30px",marginRight:"8px"}}>·</div>
+                <div>
+                  만약 직접 만들지 않은 앱을 소개하는 경우, 제작자에게 링크를 보내 대화에 참여할 수 있도록 알려주시면 좋습니다.<br/>
+                  <a href="/" style={{color:"#6200EE",textDecoration:"underline",textUnderlinePosition:"under",display:"none"}}>✏️ 등록 요령 자세히보기 →</a>
+                </div>
+              </div>
+              <div style={{display:"flex"}}>
+                <div style={{fontSize:"30px",marginRight:"8px"}}>·</div>
+                <div>앱/웹을 포함, 서비스/제품을 체험해 볼 수 있는 상태여야 합니다. 체험해 볼 수 있다면 MVP나 베타 버전도 당연히 등록 가능합니다. </div>
+              </div>
+              <div style={{display:"flex"}}>
+                <div style={{fontSize:"30px",marginRight:"8px"}}>·</div>
+                <div>
+                  다음과 같은 페이지는 등록할 수 없습니다. (블로그 글, 뉴스기사, 불법 사이트 등)<br/>
+                  <a href="/guideline" style={{color:"#6200EE",textDecoration:"underline",textUnderlinePosition:"under",display:'none'}}>🚨 가이드라인 자세히보기</a>     
+                </div>
+              </div>
+            </div>
+            
             <div style={{width:"288px",marginBottom:"24px"}}>
               <div style={{
                 fontWeight:"bold",
                 marginBottom:"8px",
                 color:"#262626",
-                fontSize:'16px',
-                lineHeight:"16px",
-                height:"16px",
+                fontSize:'14px',
+                lineHeight:"14px",
+                height:"14px",
                 display:"flex",
                 justifyContent:"space-between",
                 alignItems:"center"}}>
                 {/* <div style={{width:"14px",minWidth:"14px",minHeight:'14px',height:"14px",backgroundImage:`url(${icon_reviewer})`,marginRight:"4px",backgroundPosition:"center",backgroundSize:"cover"}}></div> */}
                 <Link to="/proreviewer">매거진</Link>
-                <div style={{fontWeight:"400",fontSize:"12px",color:"#7b7b7b",display:"none"}}>매거진에 관한 설명글</div>
               </div>
-              <div style={{width:"288px",height:"168px",backgroundColor:"#fff",borderRadius:"4px",border:"1px solid #EFE5FD",padding:"0px 16px"}}>
+              <div style={{width:"288px",padding:"0px 0px"}}>
                 {reviewList.map((item,index)=>(<ReviewRender item={item} index={index} key={item.id}></ReviewRender>))}
               </div>
             </div>
@@ -252,16 +295,16 @@ const RightBar = ({setLoginWindow,categoryState,setCategoryState,scrollY})=>{
                 fontWeight:"bold",
                 marginBottom:"8px",
                 color:"#262626",
-                fontSize:'16px',
-                lineHeight:"16px",
-                height:"16px",
+                fontSize:'14px',
+                lineHeight:"14px",
+                height:"14px",
                 display:"flex",
                 justifyContent:"space-between",
                 alignItems:"center"}}>
                 {/* <div style={{width:"14px",minWidth:"14px",minHeight:'14px',height:"14px",backgroundImage:`url(${icon_reviewer})`,marginRight:"4px",backgroundPosition:"center",backgroundSize:"cover"}}></div> */}
                 <Link to="/proreviewer">획득 포인트</Link>
               </div>
-              <div style={{width:"288px",backgroundColor:"#fff",borderRadius:"4px",border:"1px solid #EFE5FD",padding:"0px 16px"}}>
+              <div style={{width:"288px",borderRadius:"4px",padding:"0px 16px"}}>
                 {pointRanking.map((item,index)=>(<RankingRender item={item} index={index} key={item.id}></RankingRender>))}
               </div>
             </div>
@@ -277,12 +320,12 @@ const RightBar = ({setLoginWindow,categoryState,setCategoryState,scrollY})=>{
                 justifyContent:"space-between",
                 alignItems:"center"}}>
                 {/* <div style={{width:"14px",minWidth:"14px",minHeight:'14px',height:"14px",backgroundImage:`url(${icon_reviewer})`,marginRight:"4px",backgroundPosition:"center",backgroundSize:"cover"}}></div> */}
-                <Link to="/proreviewer">토론-토</Link>
-                <div style={{fontWeight:"400",fontSize:"12px",color:"#7b7b7b"}}>무엇이든 물어보고 토론해요</div>
+                {/* <Link to="/proreviewer">토론-토</Link> */}
+                {/* <div style={{fontWeight:"400",fontSize:"12px",color:"#7b7b7b"}}>무엇이든 물어보고 토론해요</div> */}
               </div>
-              <div style={{width:"288px",backgroundColor:"#fff",borderRadius:"4px",border:"1px solid #EFE5FD",padding:"0px 16px"}}>
+              {/* <div style={{width:"288px",backgroundColor:"#fff",borderRadius:"4px",border:"1px solid #EFE5FD",padding:"0px 16px"}}>
                 {communityList.map((item,index)=>(<CommunityRender item={item} index={index} key={item.id}></CommunityRender>))}
-              </div>
+              </div> */}
             </div>
             
             {/* <div style={{fontWeight:"bold",marginBottom:"16px",color:"#505050",fontSize:'14px',lineHeight:"30px",height:"30px",display:"flex",alignItems:"center"}}>
@@ -300,7 +343,7 @@ const RightBar = ({setLoginWindow,categoryState,setCategoryState,scrollY})=>{
               <div style={{display:"flex"}}>
                 <div><Link to="/introduce">소개</Link></div>
                 <div style={{marginLeft:"4px",marginRight:'4px'}}>·</div>
-                <div><Link to="/guideline">커뮤니티 가이드라인</Link></div>
+                <div style={{display:"none"}}><Link to="/guideline">커뮤니티 가이드라인</Link></div>
               </div>
               <div style={{display:"flex"}}>
                 <div><Link to="/tos">이용약관</Link></div>
@@ -314,7 +357,7 @@ const RightBar = ({setLoginWindow,categoryState,setCategoryState,scrollY})=>{
       </div>} 
       </div>}
       {pageNum===1&&<div>
-        {window.innerWidth>767&& <div className="main_proveit" style={{
+        {window.innerWidth>834&& <div className="main_proveit" style={{
         top:96,
         // position:header&&"fixed",
         margin:"0 auto",
@@ -390,7 +433,7 @@ const RightBar = ({setLoginWindow,categoryState,setCategoryState,scrollY})=>{
               <div style={{display:"flex"}}>
                 <div><Link to="/introduce">소개</Link></div>
                 <div style={{marginLeft:"4px",marginRight:'4px'}}>·</div>
-                <div><Link to="/guideline">커뮤니티 가이드라인</Link></div>
+                <div style={{display:'none'}}><Link to="/guideline">커뮤니티 가이드라인</Link></div>
               </div>
               <div style={{display:"flex"}}>
                 <div><Link to="/tos">이용약관</Link></div>

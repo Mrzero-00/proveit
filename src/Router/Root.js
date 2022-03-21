@@ -27,7 +27,10 @@ const Root = ()=>{
   });
 
   return(
-  <div style={{backgroundColor:"#FAFAFC"}}>
+  <div style={{
+    backgroundColor:"#FAFAFC",
+    minHeight:`${window.innerHeight}px`
+    }}>
 
       <Route exact path="/" component={MainPage}></Route>
       <Route exact path="/event" component={Event}></Route>
@@ -48,8 +51,9 @@ const Root = ()=>{
       <Route exact path="/community_modify" component={CommunityModify}></Route>
       <Route exact path="/introduce" component={Introduce}></Route>
       <Route exact path="/startQuestion" component={StartQA}></Route>
+
   </div>  
   )
-}
+} 
 
 export default Root;

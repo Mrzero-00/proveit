@@ -301,7 +301,6 @@ const CommunityModify = ()=>{
       return(
         <div className="contentsBody" style={{
             width:"100%",
-            minHeight:window.innerHeight,
           }}
       onClick={()=>{setModal(false);setAlarmModal(false);}}>
     <Header 

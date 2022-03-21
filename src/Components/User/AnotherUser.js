@@ -14,6 +14,8 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import ReactQuill from 'react-quill';
 import Header from '../Common/Header';
+import SignupWindow from '../Common/SignupWindow';
+import LoginWindow from '../Common/LoginWindow';
 
 
 const Body =()=>{
@@ -190,13 +192,13 @@ const Body =()=>{
         )
     }   
     return(
-        <div id="pageBody" style={{minHeight:window.innerHeight-48,backgroundColor:"#FFFEFC"}}>
+        <div id="pageBody" style={{minHeight:window.innerHeight-48,backgroundColor:"#FFFEFC",width:"100%"}}>
         
         <div style={{width:"100%",backgroundColor:"#FFFEFC",display:"flex",alignItems:"center",flexDirection:"column"}}>
             <div className="profile_header_info">
                 <div className="profile_main_myinfo">
                     <div className="profile_main_thumbnail" style={{
-                        backgroundImage:currentUserInfo.thumbnail
+                        backgroundImage:`url(${currentUserInfo.thumbnail})`
                         }}></div>
                     <div>
                         <div className="profile_main_nick">{currentUserInfo.nick}</div>
@@ -270,30 +272,152 @@ const Body =()=>{
 
 const AnotherUser = ()=>{
     const [loginWindow,setLoginWindow] = useState(false);
+    const [signupWindow,setSignUpWindow] = useState(false);
     const [modal,setModal] = useState(false);
     const [alarmModal,setAlarmModal] = useState(false);
-    const scrollEvent=(e)=>{
-        
-      }
+    const [productOrderState,setProductOrderState] = useState("fastest");
+    const [scrollY,setScrollY]=useState(0);
     
-      return(
-        <div className="contentsBody" style={{
-            width:"100%",
-            minHeight:window.innerHeight,
-          }}
-      onClick={()=>{setModal(false);setAlarmModal(false);}}
-      onScroll={scrollEvent}>
-    <Header 
-    setLoginWindow={setLoginWindow} 
-    loginWindow={loginWindow}
-    modal={modal}
-    setModal={setModal}
-    alarmModal={alarmModal}
-    setAlarmModal={setAlarmModal}
-    ></Header>
-    <Body
-    ></Body>
-  </div>  
+    const submitGoogleData= async(name,id,token)=>{
+      //유효성 검사
+      //let crt = document.getElementById('crt');
+      // e.preventDefault();
+      var data = new FormData();
+      data.append('name',name);
+      data.append('email',id);
+      data.append('token',token);
+      try{
+          await axios({
+              method:"post",
+              url : "https://www.proveit.co.kr/api/login.php",
+              headers: {
+                  //'Header-110': 'UxgOISh44O3eJxbKInDj3',
+              },
+              data:data
+  
+          }).then((e)=>{
+              if(e.data.ret_code === "0000"){
+                  window.localStorage.setItem("hash",e.data.hash);
+                  window.localStorage.setItem("email",id);
+                  window.localStorage.setItem("userName",name);
+                  userInfoApi(id,token);
+                  setSignUpWindow(false);
+                  setLoginWindow(false);
+  
+              }else if(e.data.ret_code ==="1000"){
+                window.localStorage.setItem("hash",e.data.hash);
+                window.localStorage.setItem("email",id);
+                window.localStorage.setItem("userName",name);
+                const alink = document.createElement("a");
+                alink.href="/signup";
+                alink.click();
+              }
+          })
+      }catch{
+  
+      }
+    }
+    
+    const responseGoogle = (response) => {
+      const profileObj = response.profileObj;
+      const tokenObj = response.tokenObj;
+      console.log(response);
+      localStorage.setItem("profile",JSON.stringify({
+        type:"google",
+        name:profileObj.name,
+        imageUrl:profileObj.imageUrl,
+        email:profileObj.email
+      }));
+      localStorage.setItem("token",tokenObj.access_token);
+      submitGoogleData(profileObj.givenName,profileObj.email,tokenObj.access_token);
+    }
+  
+    const responseKakao = (response) => {
+      const res = response;
+      const profile = res.profile.kakao_account;
+      console.log(profile);
+      localStorage.setItem("profile",JSON.stringify({
+        type:"kakao",
+        name:res.profile.kakao_account.profile.nickname,
+        imageUrl:"",
+        email:profile.email
+      }));
+      localStorage.setItem("token",res.access_token);
+      submitGoogleData(profile.profile.nickname,profile.email,res.access_token);
+    }
+   
+    const userInfoApi = async(id,token)=>{
+      var data = new FormData();
+      data.append('email', id);
+      data.append('token', token);
+      data.append('type', 'select');
+      try{
+          await axios({
+              method:"post",
+              url : "https://www.proveit.co.kr/api/user.php",
+              data:data
+  
+          }).then((e)=>{
+              if(e.data.ret_code === "0000"){
+                  localStorage.setItem("userInfo",JSON.stringify(e.data.user));
+              }else{
+  
+              }
+          })
+      }catch{
+  
+      }
+    }
+  
+    const scrollEvent=(e)=>{
+      // setScrollY(e.target.scrollTop);
+    }
+  
+   
+  
+    return(
+    <div className="contentsBody" style={{
+      width:"100%",
+    }}
+    onClick={()=>{
+      setModal(false);
+      setAlarmModal(false);
+    }}
+    onScroll={scrollEvent}>
+ 
+      <Header 
+      setScrollY={setScrollY}
+      setLoginWindow={setLoginWindow} 
+      loginWindow={loginWindow}
+      setSignUpWindow={setSignUpWindow}
+      signupWindow={signupWindow}
+      modal={modal}
+      setModal={setModal}
+      alarmModal={alarmModal}
+      setAlarmModal={setAlarmModal}
+      ></Header>
+      <Body  
+        scrollY={scrollY}
+        productOrderState={productOrderState}
+        setLoginWindow={setLoginWindow}
+        setProductOrderState={setProductOrderState}
+        ></Body>
+  
+  
+  
+      {loginWindow&&<LoginWindow 
+      responseGoogle={responseGoogle}
+      setLoginWindow={setLoginWindow}
+      responseKakao={responseKakao}
+      ></LoginWindow >}
+  
+      {signupWindow&&<SignupWindow 
+      responseGoogle={responseGoogle}
+      setSignUpWindow={setSignUpWindow}
+      responseKakao={responseKakao}
+      ></SignupWindow>}
+   
+    </div>  
   )
 }
 

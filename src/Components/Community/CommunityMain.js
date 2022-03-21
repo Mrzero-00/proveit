@@ -151,11 +151,10 @@ const Body =({setLoginWindow,scrollY})=>{
               borderRadius:"50%",
               backgroundColor:"#000",
               }}></div>
-            <div>{item.nick}</div>
+            <div style={{color:"#A5A5A5",fontSize:"14px"}}>{item.nick}</div>
           </div>
           <div className="community_item_title">{item.title}</div>
           <ReactQuill className="community_item_text"
-              placeholder="내용을 입력해주세요."
               value={item.contents}
               readOnly
               style={{height:"32px",backgroundColor:"transparent"}} theme=""></ReactQuill>
@@ -165,7 +164,7 @@ const Body =({setLoginWindow,scrollY})=>{
             <div style={{width:'12px',height:'12px',backgroundImage:`url(${icon})`,marginRight:'8px',backgroundSize:"cover"}}></div>
             <div style={{marginRight:"4px"}}>{item.category}</div>
             <div style={{marginRight:"4px"}}>·</div>
-            <div style={{marginRight:"4px"}}>1일 전</div>
+            <div style={{marginRight:"4px"}}>{item.ago_time} {item.updated}</div>
             <div style={{marginRight:"4px"}}>·</div>
             <div style={{color:"#9C31C6"}}>{`${item.reply_count}개의 댓글`}</div>
           </div>
@@ -183,14 +182,14 @@ const Body =({setLoginWindow,scrollY})=>{
               backgroundImage:`url(${item.thumbnail})`,
               backgroundRepeat:"no-repeat",
               backgroundPosition:"center",
+              backgroundSize:"cover",
               borderRadius:"50%",
               backgroundColor:"#000",
               }}></div>
-            <div>{item.nick}</div>
+            <div style={{color:"#A5A5A5",fontSize:"14px"}}>{item.nick}</div>
           </div>
           <div className="community_item_title">{item.title}</div>
           <ReactQuill className="community_item_text"
-              placeholder="내용을 입력해주세요."
               value={item.contents}
               readOnly
               style={{height:"32px",backgroundColor:"transparent"}} theme=""></ReactQuill>
@@ -200,7 +199,7 @@ const Body =({setLoginWindow,scrollY})=>{
             <div style={{width:'12px',height:'12px',backgroundImage:`url(${icon})`,marginRight:'8px',backgroundSize:"cover"}}></div>
             <div style={{marginRight:"4px"}}>{item.category}</div>
             <div style={{marginRight:"4px"}}>·</div>
-            <div style={{marginRight:"4px"}}>1일 전</div>
+            <div style={{marginRight:"4px"}}>{item.ago_time} {item.updated}</div>
             <div style={{marginRight:"4px"}}>·</div>
             <div style={{color:"#9C31C6"}}>{`${item.reply_count}개의 댓글`}</div>
           </div>
@@ -218,14 +217,14 @@ const Body =({setLoginWindow,scrollY})=>{
               backgroundImage:`url(${item.thumbnail})`,
               backgroundRepeat:"no-repeat",
               backgroundPosition:"center",
+              backgroundSize:"cover",
               borderRadius:"50%",
               backgroundColor:"#000",
               }}></div>
-            <div>{item.nick}</div>
+            <div style={{color:"#A5A5A5",fontSize:"14px"}}>{item.nick}</div>
           </div>
           <div className="community_item_title">{item.title}</div>
           <ReactQuill className="community_item_text"
-              placeholder="내용을 입력해주세요."
               value={item.contents}
               readOnly
               style={{height:"32px",backgroundColor:"transparent"}} theme=""></ReactQuill>
@@ -235,7 +234,7 @@ const Body =({setLoginWindow,scrollY})=>{
             <div style={{width:'12px',height:'12px',backgroundImage:`url(${icon})`,marginRight:'8px',backgroundSize:"cover"}}></div>
             <div style={{marginRight:"4px"}}>{item.category}</div>
             <div style={{marginRight:"4px"}}>·</div>
-            <div style={{marginRight:"4px"}}>1일 전</div>
+            <div style={{marginRight:"4px"}}>{item.ago_time} {item.updated}</div>
             <div style={{marginRight:"4px"}}>·</div>
             <div style={{color:"#9C31C6"}}>{`${item.reply_count}개의 댓글`}</div>
           </div>
@@ -314,13 +313,19 @@ const Body =({setLoginWindow,scrollY})=>{
                 </div>
           </div>
           <div className="community_contents">
-            <div>
+            <div style={{width:"100%"}}>
               <div className="community_contents_sort">
                 <div style={{display:"flex"}}>
-                  <div style={{cursor:"pointer",fontWeight:sortState&&"bold"}}
+                  <div style={{
+                    cursor:"pointer",
+                    fontWeight:sortState&&"bold",
+                  }}
                   onClick={()=>{setSortState(true);popularLogic(community);}}>추천순</div>
                   <div style={{marginLeft:"4px",marginRight:"4px"}}>|</div>
-                  <div style={{cursor:"pointer",fontWeight:!sortState&&"bold"}}
+                  <div style={{
+                    cursor:"pointer",
+                    fontWeight:!sortState&&"bold"
+                  }}
                   onClick={()=>{setSortState(false);fastestLogic(community);}}>최신순</div>
                 </div>
                 <div className="community_contetns_category">
@@ -358,52 +363,71 @@ const CommunityMain = ()=>{
     const [alarmModal,setAlarmModal] = useState(false);
 
     const submitGoogleData= async(name,id,token)=>{
-        //유효성 검사
-        //let crt = document.getElementById('crt');
-        // e.preventDefault();
-        var data = new FormData();
-        data.append('name',name);
-        data.append('email',id);
-        data.append('token',token);
-        try{
-            await axios({
-                method:"post",
-                url : "https://www.proveit.co.kr/api/login.php",
-                headers: {
-                    //'Header-110': 'UxgOISh44O3eJxbKInDj3',
-                },
-                data:data
-    
-            }).then((e)=>{
-                if(e.data.ret_code === "0000"){
-                    window.localStorage.setItem("hash",e.data.hash);
-                    window.localStorage.setItem("token",token);
-                    window.localStorage.setItem("email",id);
-                    window.localStorage.setItem("userName",name);
-                    userInfoApi(id,token);
-                    setSignUpWindow(false);
-                    setLoginWindow(false);
-    
-                }else if(e.data.ret_code ==="1000"){
-                  window.localStorage.setItem("token",token);
+      //유효성 검사
+      //let crt = document.getElementById('crt');
+      // e.preventDefault();
+      var data = new FormData();
+      data.append('name',name);
+      data.append('email',id);
+      data.append('token',token);
+      try{
+          await axios({
+              method:"post",
+              url : "https://www.proveit.co.kr/api/login.php",
+              headers: {
+                  //'Header-110': 'UxgOISh44O3eJxbKInDj3',
+              },
+              data:data
+  
+          }).then((e)=>{
+              if(e.data.ret_code === "0000"){
+                  window.localStorage.setItem("hash",e.data.hash);
                   window.localStorage.setItem("email",id);
                   window.localStorage.setItem("userName",name);
-                  const alink = document.createElement("a");
-                  alink.href="/signup";
-                  alink.click();
-                }
-            })
-        }catch{
-    
-        }
+                  userInfoApi(id,token);
+                  setSignUpWindow(false);
+                  setLoginWindow(false);
+  
+              }else if(e.data.ret_code ==="1000"){
+                window.localStorage.setItem("hash",e.data.hash);
+                window.localStorage.setItem("email",id);
+                window.localStorage.setItem("userName",name);
+                const alink = document.createElement("a");
+                alink.href="/signup";
+                alink.click();
+              }
+          })
+      }catch{
+  
+      }
     }
-      
+    
     const responseGoogle = (response) => {
-    const profileObj = response.profileObj;
-    const tokenObj = response.tokenObj;
-    localStorage.setItem("googleProfile",JSON.stringify(response.profileObj));
-    localStorage.setItem("token",tokenObj.access_token);
-    submitGoogleData(profileObj.givenName,profileObj.email,tokenObj.access_token);
+      const profileObj = response.profileObj;
+      const tokenObj = response.tokenObj;
+      console.log(response);
+      localStorage.setItem("profile",JSON.stringify({
+        type:"google",
+        name:profileObj.name,
+        imageUrl:profileObj.imageUrl,
+        email:profileObj.email
+      }));
+      localStorage.setItem("token",tokenObj.access_token);
+      submitGoogleData(profileObj.givenName,profileObj.email,tokenObj.access_token);
+    }
+  
+    const responseKakao = (response) => {
+      const res = response;
+      const profile = res.profile.kakao_account;
+      console.log(profile);
+      localStorage.setItem("profile",JSON.stringify({
+        type:"kakao",
+        name:res.profile.kakao_account.profile.nickname,
+        imageUrl:"",
+        email:profile.email
+      }));
+      localStorage.setItem("token",res.access_token);
+      submitGoogleData(profile.profile.nickname,profile.email,res.access_token);
     }
     
     const userInfoApi = async(id,token)=>{
@@ -433,7 +457,6 @@ const CommunityMain = ()=>{
     return(
       <div className="contentsBody" style={{
         width:"100%",
-        minHeight:window.innerHeight,
       }}
     onClick={()=>{setModal(false);setAlarmModal(false);}}
     >
@@ -459,13 +482,15 @@ const CommunityMain = ()=>{
     {loginWindow&&<LoginWindow 
     responseGoogle={responseGoogle}
     setLoginWindow={setLoginWindow}
+    responseKakao={responseKakao}
     ></LoginWindow >}
 
     {signupWindow&&<SignupWindow 
     responseGoogle={responseGoogle}
     setSignUpWindow={setSignUpWindow}
+    responseKakao={responseKakao}
     ></SignupWindow>}
-    </div>  
+    </div>
   )
 }
 

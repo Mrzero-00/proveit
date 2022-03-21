@@ -13,7 +13,7 @@ const Body = ()=>{
         window.scrollTo(0,0);
     },[])
     return(
-        <div id="pageBody" style={{backgroundColor:"#000"}}>
+        <div id="pageBody" style={{backgroundColor:"#000",width:"100vw"}}>
             <div style={{display:"flex",flexDirection:"column",justifyContent:"center",width:"100%",alignItems:"center",padding:"96px 20px 96px 20px"}}>
                 <div className="introduce_page">
                     <div style={{backgroundImage:`url(${logo2})`,width:"160px",height:"66px",backgroundRepeat:"no-repeat",backgroundSize:"cover",marginBottom:"76px"}}></div>
@@ -53,6 +53,7 @@ const Introduce = ()=>{
   const [modal,setModal] = useState(false);
   const [alarmModal,setAlarmModal] = useState(false);
   const [scrollY,setScrollY]=useState(0);
+  
   const submitGoogleData= async(name,id,token)=>{
     //유효성 검사
     //let crt = document.getElementById('crt');
@@ -80,7 +81,7 @@ const Introduce = ()=>{
                 setLoginWindow(false);
 
             }else if(e.data.ret_code ==="1000"){
-              window.localStorage.setItem("token",token);
+              window.localStorage.setItem("hash",e.data.hash);
               window.localStorage.setItem("email",id);
               window.localStorage.setItem("userName",name);
               const alink = document.createElement("a");
@@ -94,9 +95,31 @@ const Introduce = ()=>{
   }
   
   const responseGoogle = (response) => {
-  const profileObj = response.profileObj;
-  const tokenObj = response.tokenObj;
-  submitGoogleData(profileObj.givenName,profileObj.email,tokenObj.access_token);
+    const profileObj = response.profileObj;
+    const tokenObj = response.tokenObj;
+    console.log(response);
+    localStorage.setItem("profile",JSON.stringify({
+      type:"google",
+      name:profileObj.name,
+      imageUrl:profileObj.imageUrl,
+      email:profileObj.email
+    }));
+    localStorage.setItem("token",tokenObj.access_token);
+    submitGoogleData(profileObj.givenName,profileObj.email,tokenObj.access_token);
+  }
+
+  const responseKakao = (response) => {
+    const res = response;
+    const profile = res.profile.kakao_account;
+    console.log(profile);
+    localStorage.setItem("profile",JSON.stringify({
+      type:"kakao",
+      name:res.profile.kakao_account.profile.nickname,
+      imageUrl:"",
+      email:profile.email
+    }));
+    localStorage.setItem("token",res.access_token);
+    submitGoogleData(profile.profile.nickname,profile.email,res.access_token);
   }
 
   
@@ -126,7 +149,6 @@ const Introduce = ()=>{
   return(
     <div className="contentsBody" style={{
         width:"100%",
-        minHeight:window.innerHeight,
       }}
   onClick={()=>{setModal(false);setAlarmModal(false);}}
   >
@@ -145,11 +167,13 @@ const Introduce = ()=>{
     {loginWindow&&<LoginWindow 
     responseGoogle={responseGoogle}
     setLoginWindow={setLoginWindow}
+    responseKakao={responseKakao}
     ></LoginWindow >}
 
     {signupWindow&&<SignupWindow 
     responseGoogle={responseGoogle}
     setSignUpWindow={setSignUpWindow}
+    responseKakao={responseKakao}
     ></SignupWindow>}
  
   </div>  

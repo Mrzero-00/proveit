@@ -42,6 +42,7 @@ const Body = ({setSignUpWindow})=>{
                         <li>포인트 순위는 ‘누적 포인트’가 아니라 ‘월간 획득 포인트’로 산정합니다.</li>
                         <li>이번 달 내가 획득한 포인트의 상세내역은 마이페이지에서 확인할 수 있습니다. 커뮤니티 가이드라인에 위배되는 게시글을 포함, 무성의한 게시글은 관리자에 의해 삭제될 수 있으며 이때 적립된 포인트는 환수됩니다.</li>
                         <li>{"<커피 한 잔>"}프로그램은 예산 소진시 종료될 수 있습니다.</li>
+                        <li>첫 달은 9월 24일부터 10월 31일까지 포인트를 합산하여 11월 1일에 발표합니다.</li>
                     </ul>
                 </div>
 
@@ -163,6 +164,7 @@ const Event = ()=>{
   const [modal,setModal] = useState(false);
   const [alarmModal,setAlarmModal] = useState(false);
   const [scrollY,setScrollY]=useState(0);
+  
   const submitGoogleData= async(name,id,token)=>{
     //유효성 검사
     //let crt = document.getElementById('crt');
@@ -190,7 +192,7 @@ const Event = ()=>{
                 setLoginWindow(false);
 
             }else if(e.data.ret_code ==="1000"){
-              window.localStorage.setItem("token",token);
+              window.localStorage.setItem("hash",e.data.hash);
               window.localStorage.setItem("email",id);
               window.localStorage.setItem("userName",name);
               const alink = document.createElement("a");
@@ -204,9 +206,31 @@ const Event = ()=>{
   }
   
   const responseGoogle = (response) => {
-  const profileObj = response.profileObj;
-  const tokenObj = response.tokenObj;
-  submitGoogleData(profileObj.givenName,profileObj.email,tokenObj.access_token);
+    const profileObj = response.profileObj;
+    const tokenObj = response.tokenObj;
+    console.log(response);
+    localStorage.setItem("profile",JSON.stringify({
+      type:"google",
+      name:profileObj.name,
+      imageUrl:profileObj.imageUrl,
+      email:profileObj.email
+    }));
+    localStorage.setItem("token",tokenObj.access_token);
+    submitGoogleData(profileObj.givenName,profileObj.email,tokenObj.access_token);
+  }
+
+  const responseKakao = (response) => {
+    const res = response;
+    const profile = res.profile.kakao_account;
+    console.log(profile);
+    localStorage.setItem("profile",JSON.stringify({
+      type:"kakao",
+      name:res.profile.kakao_account.profile.nickname,
+      imageUrl:"",
+      email:profile.email
+    }));
+    localStorage.setItem("token",res.access_token);
+    submitGoogleData(profile.profile.nickname,profile.email,res.access_token);
   }
 
   
@@ -235,7 +259,6 @@ const Event = ()=>{
   return(
     <div className="contentsBody" style={{
         width:"100%",
-        minHeight:window.innerHeight,
       }}
   onClick={()=>{setModal(false);setAlarmModal(false);}}
   >
@@ -256,11 +279,13 @@ const Event = ()=>{
     {loginWindow&&<LoginWindow 
     responseGoogle={responseGoogle}
     setLoginWindow={setLoginWindow}
+    responseKakao={responseKakao}
     ></LoginWindow >}
 
     {signupWindow&&<SignupWindow 
     responseGoogle={responseGoogle}
     setSignUpWindow={setSignUpWindow}
+    responseKakao={responseKakao}
     ></SignupWindow>}
  
   </div>  

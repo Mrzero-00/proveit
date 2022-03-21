@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+import icon_maker from '../../image/icon_maker.svg';
 import icon_like from '../../image/likeIcon.svg';
 import icon_comment from '../../image/commentIcon.svg';
 import icon_checked from '../../image/icon_checked.svg';
@@ -177,7 +178,7 @@ const Body=()=>{
 
     const Page1_preview=({productInfo})=>{
          return(
-            <div style={{width:"512px",height:"120px",display:"flex",alignItems:"center",backgroundColor:"#fff",position:"relative",cursor:"pointer",borderBottom:"1px solid #e5e5e5"}}>
+            <div style={{width:"100%",height:"120px",display:"flex",alignItems:"center",backgroundColor:"#fff",position:"relative",cursor:"pointer",borderBottom:"1px solid #e5e5e5"}}>
             <div style={{width:"88px",marginLeft:"16px",height:"88px",marginRight:"16px",backgroundImage:`url(${productInfo.thumbnail})`,backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:"no-repeat",
                         border:productInfo.thumbnail===""&&"1px dashed #e5e5e5"}}></div>
             <div style={{width:"292px",textAlign:"left",marginRight:"24px"}}>
@@ -214,23 +215,23 @@ const Body=()=>{
             )
         }
         return(
-           <div style={{width:"512px",padding:"24px",alignItems:"center",backgroundColor:"#fff",position:"relative",borderBottom:"1px solid #e5e5e5"}}>
+           <div style={{width:"100%",padding:"24px",alignItems:"center",backgroundColor:"#fff",position:"relative",borderBottom:"1px solid #e5e5e5"}}>
                <div style={{
-                   width:"464px",height:"261px",backgroundImage:productInfo.image.length!==0&&`url(${productInfo.image[imgNum].imageUrl})`,backgroundPosition:"center",backgroundSize:"cover",backgroundRepeat:"no-repeat",
+                   width:"100%",height:"261px",backgroundImage:productInfo.image.length!==0&&`url(${productInfo.image[imgNum].imageUrl})`,backgroundPosition:"center",backgroundSize:"cover",backgroundRepeat:"no-repeat",
                    border:productInfo.image.length===0&&"1px dashed #e5e5e5"}}></div>
                <div style={{display:"flex",marginTop:"16px",marginBottom:"24px"}}>
                 {productInfo.image.map((item)=>(<ImageArray item={item} key={item.id} setimgNum={setimgNum}></ImageArray>))}
                </div>
-               <div style={{width:"464px",position:"relative",marginBottom:"24px"}}>
+               <div style={{width:"100%",position:"relative",marginBottom:"24px"}}>
                     <ReactQuill theme=""
                     value={productInfo.mainText} style={{textAlign:"left",color:"#505050",fontSize:'14px',width:"100%",display:"flex",flexDirection:"column"}}></ReactQuill>
                     <div style={{width:"100%",height:"100%",position:'absolute',top:0,left:0}}></div>
                </div>
                <div style={{display:"flex"}}>
-                    <div className="btn_three" style={{width:"84px",height:"40px",marginRight:"4px"}}>카카오톡</div>
-                    <div className="btn_three" style={{width:"84px",height:"40px",marginRight:"4px"}}>페이스북</div>
-                    <div className="btn_three" style={{width:"84px",height:"40px",marginRight:"4px"}}>트위터</div>
-                    <div className="btn_three" style={{width:"84px",height:"40px",marginRight:"4px"}}>링크복사</div>
+                    <div className="kakao_share"></div>
+                    <div className="facebook_share"></div>
+                    <div className="twitter_share"></div>
+                    <div className="link_share"></div>
                </div>
             </div>
         )
@@ -239,15 +240,15 @@ const Body=()=>{
     const Page3_preview=({productInfo})=>{
 
         return(
-            <div style={{width:"512px",padding:"24px",alignItems:"center",backgroundColor:"#fff",position:"relative",borderBottom:"1px solid #e5e5e5"}}>
+            <div style={{width:"100%",padding:"24px",alignItems:"center",backgroundColor:"#fff",position:"relative",borderBottom:"1px solid #e5e5e5"}}>
                 <div style={{display:"flex"}}>
-                    <div style={{width:"36px",height:"36px",borderRadius:"50%",marginRight:"20px",
+                    <div style={{width:"36px",height:"36px",borderRadius:"50%",marginRight:"20px",minHeight:"36px",minWidth:"36px",
                     backgroundImage:`url(${"https://www.proveit.co.kr"+JSON.parse(localStorage.getItem("userInfo")).thumbnail})`,backgroundColor:"#c4c4c4",
                     backgroundPosition:"center",backgroundSize:"cover",backgroundRepeat:"no-repeat"}}></div>
                         <div>
                             <div style={{display:"flex",position:"relative",marginBottom:"5px"}}>   
                                 <div style={{fontWeight:"bold",color:'#505050',lineHeight:"20px",height:"20px",fontSize:'14px',marginRight:"6px"}}>{productInfo.producerInfo.nick}</div>
-                                <div style={{color:'#9c31c6',lineHeight:"16px",height:"16px",fontSize:'10px',textAlign:"center",width:"48px",borderRadius:"8px",backgroundColor:"#f1f1f1"}}>제작자</div>
+                                <div style={{width:"16px",height:"16px",backgroundImage:`url(${icon_maker})`}}></div>
                             </div>
                             <div style={{fontSize:"14px",color:"#a5a5a5",textAlign:"left",marginBottom:"8px"}}>{productInfo.producerInfo.position},{productInfo.producerInfo.department}</div>
                             <div style={{width:"408px",position:"relative",marginBottom:"16px"}}>
@@ -700,7 +701,7 @@ const Body=()=>{
                       </div>
 
                   </div>
-                  <div className="register_preview" style={{width:"512px"}}>
+                  <div className="register_preview">
                       <div style={{color:"#505050",fontSize:"14px",marginBottom:'16px',textAlign:"left"}}>미리보기</div>
                       {pageNum===1&&<Page1_preview productInfo={productInfo}></Page1_preview>}
                       {pageNum===2&&<Page2_preview productInfo={productInfo}></Page2_preview>}
@@ -765,7 +766,6 @@ const RegisterProduct = ()=>{
       return(
         <div className="contentsBody" style={{
             width:"100%",
-            minHeight:window.innerHeight,
           }}
       onClick={()=>{setModal(false);setAlarmModal(false);}}
       onScroll={scrollEvent}>
